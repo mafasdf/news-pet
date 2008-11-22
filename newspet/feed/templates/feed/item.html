@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="post">
+    <div class="header">
+        <div>
+            <h1><a href='#'>{{item.title}}</a></h1>
+            <ul>
+                <li><a href="#">[+]</a></li>
+                <li><a href="#">[-]</a></li>
+            </ul>
+        </div>
+        <div>
+            <p class="author"><span>from</span> <a href="#">{{item.feed}}</a></p>
+        </div>
+    </div>
+    <p class="date">{{item.date_added|date:""}}Nov. 18, 2008</p>
+    <div class="text">
+        {{item.safe_html}}
+    </div>
+</div>
+{% endblock %}

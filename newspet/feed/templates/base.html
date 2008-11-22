@@ -1,0 +1,48 @@
+{% load feedtags %}
+<html>
+    <head>
+        <title>NewsPet</title>
+        <link href="/blog/feeds/all/" title="thauber: a proper noun" type="application/atom+xml" rel="alternate"/>
+        <link rel="stylesheet" type="text/css" media="all" href="/site-media/css/reset.css" />
+        <link rel="stylesheet" type="text/css" media="all" href="/site-media/css/style.css" />
+        <link rel="stylesheet" type="text/css" media="all" href="/site-media/css/960.css" />
+        
+    </head>
+    <body>
+        <div class='container_16'>
+            <div class='grid_16 omega alpha top'>
+                <div id='logo' class="alpha grid_5">
+                    <a href="#"><img src="/site-media/img/newspet.png" /></a>
+                </div>
+                <div id='header' class="grid_11 omega">
+                    <ul class="grid_6 alpha">
+                        <li><a href="{% url home %}">Home</a></li>
+                        <li><a href="{% url manage_feeds %}">+ Feed</a></li>
+                        <li><a href="{% url manage_categories %}">+ Category</a></li>
+                        <li><a href="{% url about %}">About</a></li>
+                        <li><a href="{% url help %}">Help</a></li>
+                    </ul>
+                    <p id="user-info" class="grid_5 omega">
+                        {% if user.is_authenticated %}
+                        Welcome <span id="username">{{user}}</span> (<a href="#">Log Out</a>)
+                        {% else %}
+                        Please <a href="#">Sign In!</a>
+                        {% endif %}
+                    </p>
+                </div>
+                <img id="tag" src="/site-media/img/tag.png" />
+            </div>
+            <div id="sidebar" class='grid_5 alpha'>
+                {% block sidbar %}
+                {% if user.is_authenticated %}
+                {% show_categories user %}
+                {% endif %}
+                {% endblock %}
+            </div>
+            <div id="content" class="grid_11 omega">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </body>
+</html>
