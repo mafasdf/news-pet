@@ -1,5 +1,6 @@
 package edu.iastate.coms.cs472.newspet.trainer;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingDeque;
@@ -94,7 +95,11 @@ public class TrainerService
 					NaiveBayes classifier = ClassifierDAL.getTrainerByClassifierID(123).getClassifier();
 					synchronized(classifier)
 					{
-						System.out.println(classifier.classify("SOMETHING COMPLETELY DIFFERENT").getLabeling().getBestLabel());
+						PrintWriter pw = new PrintWriter(System.out);
+						classifier.classify("fox dogs jumped blah").print(pw);
+						classifier.classify("little superman on the prairie").print(pw);
+						classifier.classify("SOMETHING COMPLETELY DIFFERENT").print(pw);
+						pw.flush();
 					}
 				}
 				catch(Exception e)
