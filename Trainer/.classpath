@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NewsPetUtils"/>
-	<classpathentry kind="lib" path="/NewsPetUtils/lib/weka.jar"/>
+	<classpathentry kind="lib" path="/NewsPetUtils/lib/mallet.jar"/>
+	<classpathentry kind="lib" path="/NewsPetUtils/lib/mallet-deps.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

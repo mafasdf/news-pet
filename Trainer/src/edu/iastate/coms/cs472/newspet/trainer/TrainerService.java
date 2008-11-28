@@ -1,12 +1,18 @@
 package edu.iastate.coms.cs472.newspet.trainer;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import weka.classifiers.Classifier;
-
+import cc.mallet.classify.Classifier;
+import cc.mallet.classify.ClassifierTrainer;
+import cc.mallet.classify.NaiveBayes;
+import cc.mallet.classify.NaiveBayesTrainer;
 import edu.iastate.coms.cs472.newspet.utils.ClassifierDAL;
 import edu.iastate.coms.cs472.newspet.utils.DocumentConversion;
 
@@ -15,10 +21,8 @@ import edu.iastate.coms.cs472.newspet.utils.DocumentConversion;
  */
 public class TrainerService
 {
-	
-	
-	//TODO: finalize what type of element we want to queue, (and wether or not we use the BlockingQueue interface)
-	private BlockingQueue<String> queue;
+	//TODO: finalize what type of element we want to queue, (and whether or not we use the BlockingQueue interface)
+	private BlockingDeque<String> queue;
 	
 	private ThreadPoolExecutor threadPool;
 	
@@ -29,7 +33,7 @@ public class TrainerService
 	public TrainerService()
 	{
 		//TODO: change to Tyson's message queue
-		queue = new LinkedBlockingQueue<String>();
+		queue = new LinkedBlockingDeque<String>();
 		
 		//TODO: fine-tune / have configurable params
 		threadPool=new ThreadPoolExecutor(32, 32, 100, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
@@ -62,32 +66,23 @@ public class TrainerService
 		
 		while(true)
 		{
-			String incomingString=null;
+			String incomingString=blockingPeekInQueue();
+			long currentClassifierID=convertMessageToTrainingItem(incomingString).getClassifierID();
 			
-			//block until something in queue
-			try
+			//get job of contiguous items for specific classifier
+			TrainerThreadJob job = new TrainerThreadJob(currentClassifierID);
+			TrainingElement currentItem;
+			while(!queue.isEmpty() && (currentItem=convertMessageToTrainingItem(blockingPeekInQueue())).getClassifierID()==currentClassifierID)
 			{
-				incomingString = queue.take();
+				job.add(currentItem);
+				queue.remove();
 			}
-			catch(InterruptedException e)
-			{
-				//TODO: lookup doc, is this the expected way to unblock?
-				throw new RuntimeException();
-			}  
 			
-			//try to convert to trainer job 
-			TrainerThreadJob toRun = convertMessageToTrainerJob(incomingString);
-			if(toRun==null)
-			{
-				System.err.println("ERROR: could not parse the following message string:");
-				System.err.println(incomingString);
-				continue;
-			}
+			
 			
 			//give to threadpool
 			//TODO threadPool.submit(toRun);
-			toRun.run(); //using sequential execution for now
-			
+			job.run(); //using sequential execution for now
 			
 			
 			//TODO: only a hack test
@@ -96,22 +91,41 @@ public class TrainerService
 				//try classifying something
 				try
 				{
-					Classifier classifier = ClassifierDAL.getClassifierByID(123);
+					NaiveBayes classifier = ClassifierDAL.getTrainerByClassifierID(123).getClassifier();
 					synchronized(classifier)
 					{
-						System.out.println(classifier.classifyInstance(DocumentConversion.documentToSingletonInstance("the quick brown fox jumped over the lazy dogs", 0).firstInstance()));
+						System.out.println(classifier.classify("SOMETHING COMPLETELY DIFFERENT").getLabeling().getBestLabel());
 					}
 				}
 				catch(Exception e)
 				{
 					throw new RuntimeException("We just lost the game"); 
 				}	
+				System.exit(0);
 			}
 		}
 	}
 
 	
-	private TrainerThreadJob convertMessageToTrainerJob(String message)
+	private String blockingPeekInQueue()
+	{
+		String toReturn = null; 
+		//block until something in queue
+		try
+		{
+			toReturn = queue.take();
+			queue.putFirst(toReturn);
+		}
+		catch(InterruptedException e)
+		{
+			//TODO: lookup doc, is this the expected way to unblock?
+			throw new RuntimeException("InterruptedException during queue block");
+		}
+		
+		return toReturn;
+	}
+
+	private TrainingElement convertMessageToTrainingItem(String message)
 	{
 		// TODO: finalize expected string format and parse accordingly
 		// TODO: handle jobs consisting of more than one item 
@@ -122,6 +136,6 @@ public class TrainerService
 		long categoryID = Long.parseLong(message.substring(commaIndex0 + 1,commaIndex1));
 		String document = message.substring(commaIndex1+1);
 		
-		return new TrainerThreadJobSingular(new TrainingItem(document,classifierID,categoryID));
+		return new TrainingElement(classifierID,categoryID,document);
 	}
 }
