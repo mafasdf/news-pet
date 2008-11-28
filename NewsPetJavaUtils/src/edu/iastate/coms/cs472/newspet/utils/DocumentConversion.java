@@ -1,92 +1,74 @@
 package edu.iastate.coms.cs472.newspet.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import weka.core.Attribute;
-import weka.core.FastVector;
-import weka.core.Instances;
-import weka.core.SparseInstance;
+import cc.mallet.pipe.CharSequence2TokenSequence;
+import cc.mallet.pipe.FeatureSequence2FeatureVector;
+import cc.mallet.pipe.Input2CharSequence;
+import cc.mallet.pipe.Pipe;
+import cc.mallet.pipe.SerialPipes;
+import cc.mallet.pipe.Target2Label;
+import cc.mallet.pipe.TokenSequence2FeatureSequence;
+import cc.mallet.pipe.TokenSequenceLowercase;
+import cc.mallet.types.Alphabet;
+import cc.mallet.types.Instance;
+import cc.mallet.types.LabelAlphabet;
 
 public class DocumentConversion
 {
-	/**
-	 * Note that the returned instance has no class / category assigned to it.
-	 */
-	//TODO: rehash 
-	public static Instances documentToSingletonInstance(String document, long categoryID)
+	//TODO: change to DB-stored alphabet
+	private static Alphabet alphabet=new Alphabet();
+	private static LabelAlphabet alphabetB=new LabelAlphabet();
+	
+	//filters to tokenize and convert document text 
+	private static SerialPipes conversionPipes;
+		
+	public static Pipe getConversionPipes()
 	{
-		//TODO: crop out html (if not done elsewhere)
-		//TODO: remove punctuation
-		document=document.toLowerCase();
+		if(conversionPipes==null)
+			generateConversionPipes();
 		
-		String[] words = document.split("[ \t\f\n\r]*");
-		
-		//collect and count
-		HashMap<String, Integer> wordBag = new HashMap<String, Integer>(words.length);
-		for(String word:words)
-		{
-			if(wordBag.containsKey(word))
-				wordBag.put(word, wordBag.get(word)+1);
-			else
-				wordBag.put(word, 1);
-		}
-		
-		int size=wordBag.size()+1;
-		FastVector attributes = new FastVector(size);
-		
-		int[] indices =new int[size];
-		double[] counts=new double[size];
-		int i=0;
-		for(Map.Entry<String,Integer> pair: wordBag.entrySet())
-		{
-			indices[i]=i;
-			counts[i]=pair.getValue();
-			attributes.addElement(new Attribute(pair.getKey()));
-			i++;
-		}
-		//set category/class
-		indices[size-1]=size-1;
-		counts[size-1]=categoryID;
-		
-		
-		Instances toReturn = new Instances("singletonInstance",attributes, size);
-		toReturn.setClassIndex(0);
-		
-		return toReturn;
-		
-		
-		/*
-		//determine indices, store counts to array, and set up vector 
-		//TODO: store on DB instead of dangerously using collidable hashcodes
-		int[] indices =new int[wordBag.size()];
-		double[] counts=new double[wordBag.size()];
-		int i=0;
-		for(Map.Entry<String,Integer> pair: wordBag.entrySet())
-		{
-			indices[i]=pair.getKey().hashCode();//TODO
-			
-			counts[i]=pair.getValue();
-			i++;
-		}
-		*/
-		
-		//return new SparseInstance(1, counts, indices, indices.length);
+		return conversionPipes;
+	}
 
+	synchronized private static void generateConversionPipes()
+	{
+		//check if another thread has been here before
+		if(conversionPipes!=null)
+			return;
 		
-		/*
-		StringTokenizer iter = new StringTokenizer(document);
+		ArrayList<Pipe> pipesArr=new ArrayList<Pipe>();
 		
-		//TODO: (experimenting) there might be better way
-		SparseInstance instance = new SparseInstance(10);
+		//tokenize
+		pipesArr.add(new CharSequence2TokenSequence());//TODO pass in pattern
+		//make lowercase
+		pipesArr.add(new TokenSequenceLowercase());
+		//TODO conversionPipes.add(new TokenSequenceRemoveStopwords(false, false));
+		//convert words to integers with centralized mapping.
+		pipesArr.add(new TokenSequence2FeatureSequence(alphabet));
 		
-		while(iter.hasMoreTokens())
-		{
-			instance.setValue(iter.nextElement().hashCode(), 1);//TODO: use different string ID system, or different Instance approach 
-		}
+		//TODO: needed?
+		//convert category ints to ints
+		pipesArr.add(new Target2Label(alphabetB));
 		
-		return instance;*/
+		
+		//TODOpipesArr.add(new TokenSequence2FeatureSequence());
+		//convert token integer set to a sparse vector
+		pipesArr.add(new FeatureSequence2FeatureVector());
+		
+		conversionPipes=new SerialPipes(pipesArr);
+	}
+	
+	/**
+	 * pass in null category for non-training instance.
+	 */
+	public static Instance generateInstance(String documentText, Long categoryID)
+	{
+		return getConversionPipes().newIteratorFrom(java.util.Collections.singleton(new Instance(documentText,categoryID, null, null)).iterator()).next();
+		//TODO: safety in case of non 1-1 pipe
 	}
 }

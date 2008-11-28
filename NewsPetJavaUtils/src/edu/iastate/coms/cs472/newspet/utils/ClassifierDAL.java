@@ -1,17 +1,16 @@
 package edu.iastate.coms.cs472.newspet.utils;
-import weka.classifiers.UpdateableClassifier;
-import weka.classifiers.bayes.NaiveBayesUpdateable;
+
+import cc.mallet.classify.NaiveBayesTrainer;
 
 
 public class ClassifierDAL
 {	
-	//TODO
-	private static NaiveBayesUpdateable theClassifier=new NaiveBayesUpdateable();
+	//TODO:remove
+	private static NaiveBayesTrainer theTrainer=new NaiveBayesTrainer();
 	
-	//TODO: use UpdateableClassifier interface?
-	public static NaiveBayesUpdateable getClassifierByID(long classifierId)
+	public static NaiveBayesTrainer getTrainerByClassifierID(long classifierId)
 	{
 		//TODO: get from DB via serialization
-		return theClassifier;
+		return theTrainer;
 	}
 }

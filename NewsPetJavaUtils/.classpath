@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/weka.jar" sourcepath="lib/weka-src.jar"/>
+	<classpathentry kind="lib" path="lib/mallet-deps.jar"/>
+	<classpathentry kind="lib" path="lib/mallet.jar" sourcepath="C:/Temp/mallet-2.0-RC2/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
