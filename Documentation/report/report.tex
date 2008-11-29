@@ -7,10 +7,11 @@
 COM S 472 : Principles of Artificial Intelligence\\Department of Computer Science\\ Iowa State University, Ames, IA 50011\\
 \texttt{\{calculo, thauber, tyson\}@cs.iastate.edu}}
 \begin{document}
+\nocopyright%TODO: do we want this?
 \maketitle
 
 \begin{abstract}
- //TODO
+For companies that do work updating data based on news stories, many manhours are wasted by reading irrelevant articles. We aim to enhance productivity of this work by creating and analyzing NewsPet: an automated news-feed categorizer which utilizes a Naive Bayes text classifier.
 \end{abstract}
 
 
@@ -19,10 +20,40 @@ COM S 472 : Principles of Artificial Intelligence\\Department of Computer Scienc
 
 \section{Architecture}
 //TODO
+\subsection{Database}
+//TODO
 
 \section{Implementation}
-//TODO\\
-We are using Mallet \cite{McCallumMALLET}.
+\subsection{Web Interface}
+//TODO
+
+\subsection{Trainer Service}
+The trainer service checks a message queue (see Message Queue subsection) to get training items (each of which consists of a classifier ID, a desired category ID, and a document's text).
+A batch of training items of the same classifier ID are collected, and a thread is spawned to process them.
+If multiple batches have the same classifier ID (for example, if new items are added to the message queue after the thread was spawned), the subsequent ones must wait for the first to finish.
+
+The actual training is done with \texttt{NaiveBayesTrainer} objects from the Mallet framework \cite{McCallumMALLET}.
+Each training thread acquires a \texttt{NaiveBayesTrainer} object (either deserialized from database, or instantiated for initial training),
+passes the training items through a filter such that they are converted to objects the Mallet framework is compatible with,
+runs these instances through the \texttt{ClassifierTrainer},
+and persists the \texttt{NaiveBayesTrainer} back to the database.
+
+\subsection{Reader/Categorizer Service}
+//TODO
+
+\subsection{Message Queue}
+\label{MessageQueueSection}
+Both the Trainer Service and the Reader Service use the same Message Queue module (with different configuration and interpreting of messages).
+//TODO
+
+\section{Analysis}
+For testing, an instance of NewsPet was batch-trained for the following categories, using data from Reuters-21578 corpus \cite{Reuters21578}:
+\begin{enumerate}
+\item //TODO
+\item //TODO
+\end{enumerate}
+//TODO
+
 
 \section{Results}
 //TODO
