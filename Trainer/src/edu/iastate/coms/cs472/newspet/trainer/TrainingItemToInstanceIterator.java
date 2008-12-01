@@ -2,17 +2,19 @@ package edu.iastate.coms.cs472.newspet.trainer;
 
 import java.util.Iterator;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import cc.mallet.types.Instance;
 
 /**
  * Converts a TrainingItem iterator to an Instance iterator. 
  * @author Michael Fulker
  */
-public class TrainingElementIterator implements Iterator<Instance>
+public class TrainingItemToInstanceIterator implements Iterator<Instance>
 {
-	private Iterator<TrainingElement> source;
+	private Iterator<TrainingItem> source;
 	
-	public TrainingElementIterator(Iterator<TrainingElement> source)
+	public TrainingItemToInstanceIterator(Iterator<TrainingItem> source)
 	{
 		this.source = source;
 	}
@@ -27,11 +29,9 @@ public class TrainingElementIterator implements Iterator<Instance>
 		return source.next().getData();
 	}
 	
-	@Override
 	public void remove()
 	{
-	// TODO Auto-generated method stub
-	
+		source.remove();
 	}
 	
 }

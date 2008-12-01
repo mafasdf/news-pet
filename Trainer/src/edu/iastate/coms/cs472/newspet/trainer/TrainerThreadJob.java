@@ -8,35 +8,42 @@ import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.InstanceList;
 import edu.iastate.coms.cs472.newspet.utils.ClassifierDAL;
 import edu.iastate.coms.cs472.newspet.utils.DocumentConversion;
+import edu.iastate.coms.cs472.newspet.utils.ClassifierDAL.TrainerCheckoutData;
 
-public class TrainerThreadJob implements Runnable, Iterable<TrainingElement>
+public class TrainerThreadJob implements Runnable, Iterable<TrainingItem>
 {	
-	private List<TrainingElement> trainingItems;
+	private List<TrainingItem> trainingItems;
 	private long classifierID;
 	
 	public TrainerThreadJob(long classifierID)
 	{
-		trainingItems=new ArrayList<TrainingElement>();
+		trainingItems=new ArrayList<TrainingItem>();
 		this.classifierID=classifierID;
 	}
 	
 	public void run()
 	{
-		//TODO: lock properly
-		NaiveBayesTrainer trainer = ClassifierDAL.getTrainerByClassifierID(classifierID); 
+		//get trainer (lock by ID)
+		TrainerCheckoutData checkoutData = ClassifierDAL.getTrainerForUpdating(classifierID); 
 		
-		InstanceList trainingInstanceList = new  InstanceList(DocumentConversion.getConversionPipes());
-		trainingInstanceList.addThruPipe(new TrainingElementIterator(trainingItems.iterator()));
+		//set up filters
+		InstanceList trainingInstanceList = new  InstanceList(checkoutData.getPipe());
+		trainingInstanceList.addThruPipe(new TrainingItemToInstanceIterator(trainingItems.iterator()));
 		
-		trainer.trainIncremental(trainingInstanceList);
+		//train
+		checkoutData.getTrainer().trainIncremental(trainingInstanceList);
+		
+		//persist
+		//(will unlock by ID)
+		ClassifierDAL.updateTrainerAndClassifier(checkoutData);
 	}
 
-	public Iterator<TrainingElement> iterator()
+	public Iterator<TrainingItem> iterator()
 	{
 		return trainingItems.iterator();
 	}
 	
-	public void add(TrainingElement item)
+	public void add(TrainingItem item)
 	{
 		trainingItems.add(item);
 	}
