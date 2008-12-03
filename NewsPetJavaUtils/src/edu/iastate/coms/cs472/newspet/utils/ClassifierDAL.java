@@ -22,8 +22,8 @@ public class ClassifierDAL
 {
 	//the 
 	private static final String LOCK_PREFIX = "classifierUpdate_";
-	private static final String TABLE_NAME = "classifier";
-	private static final String CLASSIFIERGROUP_COLUMN = "classifier";
+	private static final String TABLE_NAME = "Classifier";
+	private static final String CLASSIFIERGROUP_COLUMN = "serializedClassifier";
 	private static final String ID_COLUMN = "ID";
 	
 	/**
