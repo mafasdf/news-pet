@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+    {% for category in categories %}
+    <p>
+        <a class="category{% if category.has_unread %} unread{% endif %}" href="{{category.get_absolute_url}}">
+        {{category.name}}
+        </a>
+    </p>
+    <ul>
+        <a href={% url f_delete_category category.id %}>delete</a>
+        <a href={% url f_edit_category category.id %}>edit</a>
+    </ul>
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+<h1>Manage Categories</h1>
+<form method="post" action"">
+    <dl>
+    {% for field in category_form %}
+        <dt>{{field.label}}:</dt>
+        <dd>{{field}}</dd>
+    {% endfor %}
+    </dl>
+    
+    <input type="submit" />
+</form>
+{% endblock %}
