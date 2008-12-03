@@ -82,3 +82,5 @@ INSTALLED_APPS = (
     'feed',
     'django_extensions'
 )
+
+LOGIN_REDIRECT_URL = '/feed/home/'

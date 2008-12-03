@@ -27,7 +27,7 @@ class FeedItem(models.Model):
     title = models.CharField(max_length=255)
     body = models.TextField()
     opinion = models.IntegerField(default=0)
-    link = models.URLFeild()
+    link = models.URLField()
     category = models.ForeignKey("Category")
     feed = models.ForeignKey("Feed")
     was_viewed = models.BooleanField(default=False)
@@ -38,7 +38,7 @@ class FeedItem(models.Model):
         return reverse('f_item', args=[self.id])
     
     def get_external_url(self):
-        return ''
+        return self.link
     
     def __unicode__(self):
         return self.title
@@ -62,3 +62,13 @@ class Category(models.Model):
     
     def __unicode__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse('f_category', args=[self.id])
+        
+class PreTrainedClassifier(models.Model):
+    name = models.CharField(max_length=255)
+    
+    def __unidcode__(self):
+        return self.name
+    

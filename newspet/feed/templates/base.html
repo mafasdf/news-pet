@@ -17,10 +17,10 @@
                 <div id='header' class="grid_11 omega">
                     <ul class="grid_6 alpha">
                         <li><a href="{% url home %}">Home</a></li>
-                        <li><a href="{% url manage_feeds %}">+ Feed</a></li>
-                        <li><a href="{% url manage_categories %}">+ Category</a></li>
-                        <li><a href="{% url about %}">About</a></li>
-                        <li><a href="{% url help %}">Help</a></li>
+                        <li><a href="{% url f_manage_feeds %}">+ Feed</a></li>
+                        <li><a href="{% url f_manage_categories %}">+ Category</a></li>
+                        <li><a href="">About</a></li>
+                        <li><a href="">Help</a></li>
                     </ul>
                     <p id="user-info" class="grid_5 omega">
                         {% if user.is_authenticated %}
@@ -33,7 +33,7 @@
                 <img id="tag" src="/site-media/img/tag.png" />
             </div>
             <div id="sidebar" class='grid_5 alpha'>
-                {% block sidbar %}
+                {% block sidebar %}
                 {% if user.is_authenticated %}
                 {% show_categories user %}
                 {% endif %}

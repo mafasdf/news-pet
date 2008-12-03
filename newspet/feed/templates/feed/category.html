@@ -1,3 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h1>{{category}}</h1>
+{% if category.feeditem_set.all %}
+{% for item in category.feeditem_set.all %}
+<div class="post-header">
+    <div>
+        <h1><a href='{{item.get_internal_url}}'>{{item.title}}</a></h1>
+        <ul>
+            <li><a href="{% url update_category post,1">[+]</a></li>
+            <li><a href="{% url update_category post,-1}">[-]</a></li>
+        </ul>
+    </div>
+    <div>
+        <p class="author"><span>from</span> <a href="#">{{item.feed}}</a></p>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<p>There are no items in this category yet</p>
+{% endif %}
+{% endblock %}

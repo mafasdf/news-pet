@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     # (r'^newspet/', include('newspet.foo.urls')),
     url(r'^site-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),#(r'^blog/', include('blog.urls')),
     (r'^feed/', include('newspet.feed.urls')),
-    url(r'^$', 'newspet.views.home' name="home"),
+    url(r'^$', 'feed.views.home', name="home"),
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
