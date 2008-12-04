@@ -1,12 +1,16 @@
 package edu.iastate.coms.cs472.newspet.utils;
 
-public class TestMessageQueueThread
+import java.io.IOException;
+import java.net.UnknownHostException;
+
+public class TestMessageQueueThreadServer
 {
-	public static void main(String[] args) throws InterruptedException
+	public static void main(String[] args) throws InterruptedException, UnknownHostException, IOException
 	{
-		testServerEcho(8000);
+		int port = 8000;
+		testServerEcho(port);
 	}
-	
+
 	public static void testServerEcho(int port) throws InterruptedException
 	{
 		MessageQueueThread mqt = new MessageQueueThread(port);
