@@ -164,7 +164,7 @@ public class MessageQueueThread extends Thread
 					}
 					catch(IOException e)
 					{
-						System.err.println("IOException during readUTF() for a DataInputStream: " + dataIn);
+						System.err.println("IOException during readUTF() for a DataInputStream");
 						System.err.println(e.getMessage());
 					}
 				}
@@ -177,7 +177,7 @@ public class MessageQueueThread extends Thread
 				}
 				catch(IOException e)
 				{
-					System.err.println("IOException while closing the a DataInputStream: " + dataIn);
+					System.err.println("IOException while closing the a DataInputStream");
 					System.err.println(e.getMessage());
 				}
 				
