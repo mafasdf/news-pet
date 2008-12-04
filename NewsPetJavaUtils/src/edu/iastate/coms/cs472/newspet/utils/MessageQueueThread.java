@@ -95,7 +95,7 @@ public class MessageQueueThread extends Thread
 				}
 				catch(IOException e)
 				{
-					System.err.println("IOException while trying to accept a new client connection!");
+					System.err.println(e.getClass().getName() + " while trying to accept a new client connection!");
 					System.err.println(e.getMessage());
 				}
 			}
@@ -157,7 +157,7 @@ public class MessageQueueThread extends Thread
 			}
 			catch(IOException e)
 			{
-				String errorMessage = "IOException duing getInputStream() for Socket: " + clientSocket;
+				String errorMessage = e.getClass().getName() + " duing getInputStream() for Socket: " + clientSocket;
 				System.err.println(errorMessage);
 				throw new RuntimeException(errorMessage);
 			}
@@ -200,7 +200,7 @@ public class MessageQueueThread extends Thread
 				}
 				catch(IOException e)
 				{
-					System.err.println("IOException while closing the a BufferedInputStream!");
+					System.err.println(e.getClass().getName() + " while closing the a BufferedInputStream!");
 					System.err.println(e.getMessage());
 				}
 
@@ -210,7 +210,7 @@ public class MessageQueueThread extends Thread
 				}
 				catch(IOException e)
 				{
-					System.err.println("IOException while closing the client Socket: " + clientSocket);
+					System.err.println(e.getClass().getName() + " while closing the client Socket: " + clientSocket);
 					System.err.println(e.getMessage());
 				}
 			}
