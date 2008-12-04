@@ -15,33 +15,33 @@ import java.util.LinkedList;
 public class MessageQueueThread extends Thread
 {
 	private boolean listeningForNewClients;
-	
+
 	private int port;
 	private int timeout;
-	
+
 	private Collection<MessageQueueWorkerThread> workerThreads;
-	
+
 	private OurLinkedBlockingDeque<String> messageQueue = new OurLinkedBlockingDeque<String>();
-	
+
 	public MessageQueueThread(int port, int timeout)
 	{
 		if(port < 0 || port > 65535) throw new IllegalArgumentException("Port out of range: " + port);
 		if(timeout < 0) throw new IllegalArgumentException("Timeout cannot be negative: " + timeout);
-		
+
 		this.port = port;
 		this.timeout = timeout;
 	}
-	
+
 	public MessageQueueThread(int port)
 	{
 		this(port, 1000);
 	}
-	
+
 	public OurLinkedBlockingDeque<String> getMessageQueue()
 	{
 		return messageQueue;
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -54,7 +54,7 @@ public class MessageQueueThread extends Thread
 		{
 			throw new RuntimeException(e);
 		}
-		
+
 		try
 		{
 			serverSocket.setSoTimeout(timeout);
@@ -64,9 +64,9 @@ public class MessageQueueThread extends Thread
 			System.err.println("SocketException during setSoTimeout() for the ServerSocket: " + serverSocket);
 			System.err.println(e.getMessage());
 		}
-		
+
 		workerThreads = new LinkedList<MessageQueueWorkerThread>();
-		
+
 		listeningForNewClients = true;
 		try
 		{
@@ -75,14 +75,14 @@ public class MessageQueueThread extends Thread
 				try
 				{
 					Socket clientSocket = serverSocket.accept();
-					
+
 					MessageQueueWorkerThread newWorkerThread = new MessageQueueWorkerThread(clientSocket);
 					newWorkerThread.run();
 					workerThreads.add(newWorkerThread);
 				}
 				catch(SocketTimeoutException e)
 				{
-					//do nothing
+					// do nothing
 				}
 				catch(IOException e)
 				{
@@ -104,7 +104,7 @@ public class MessageQueueThread extends Thread
 			}
 		}
 	}
-	
+
 	public void stopQueue()
 	{
 		listeningForNewClients = false;
@@ -125,18 +125,18 @@ public class MessageQueueThread extends Thread
 			}
 		}
 	}
-	
+
 	private class MessageQueueWorkerThread extends Thread
 	{
 		private boolean listenToClient;
-		
+
 		private Socket clientSocket;
-		
+
 		public MessageQueueWorkerThread(Socket clientSocket)
 		{
 			this.clientSocket = clientSocket;
 		}
-		
+
 		@Override
 		public void run()
 		{
@@ -152,7 +152,7 @@ public class MessageQueueThread extends Thread
 				System.err.println(errorMessage);
 				throw new RuntimeException(errorMessage);
 			}
-			
+
 			try
 			{
 				listenToClient = true;
@@ -161,12 +161,13 @@ public class MessageQueueThread extends Thread
 					try
 					{
 						String message = dataIn.readUTF();
-						
+
 						getMessageQueue().add(message);
 					}
 					catch(EOFException e)
-					{System.err.println("EOFException: Signals that an end of file or end of stream has been reached unexpectedly during input!");
-					System.err.println(e.getMessage());
+					{
+						System.err.println("EOFException: Signals that an end of file or end of stream has been reached unexpectedly during input!");
+						System.err.println(e.getMessage());
 					}
 					catch(UTFDataFormatException e)
 					{
@@ -191,7 +192,7 @@ public class MessageQueueThread extends Thread
 					System.err.println("IOException while closing the a DataInputStream");
 					System.err.println(e.getMessage());
 				}
-				
+
 				try
 				{
 					clientSocket.close();
@@ -203,7 +204,7 @@ public class MessageQueueThread extends Thread
 				}
 			}
 		}
-		
+
 		public void stopListening()
 		{
 			listenToClient = false;
