@@ -1,6 +1,7 @@
 package edu.iastate.coms.cs472.newspet.utils;
 
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UTFDataFormatException;
@@ -163,6 +164,10 @@ public class MessageQueueThread extends Thread
 						
 						getMessageQueue().add(message);
 					}
+					catch(EOFException e)
+					{System.err.println("EOFException: Signals that an end of file or end of stream has been reached unexpectedly during input!");
+					System.err.println(e.getMessage());
+					}
 					catch(UTFDataFormatException e)
 					{
 						System.err.println("UTFDataFormatException: Malformed string in modified UTF-8  format has been read!");
@@ -170,7 +175,7 @@ public class MessageQueueThread extends Thread
 					}
 					catch(IOException e)
 					{
-						System.err.println("IOException during readUTF() for a DataInputStream");
+						System.err.println(e.getClass().getName() + " during readUTF() for a DataInputStream");
 						System.err.println(e.getMessage());
 					}
 				}
