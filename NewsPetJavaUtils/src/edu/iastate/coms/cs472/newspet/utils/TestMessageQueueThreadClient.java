@@ -22,7 +22,7 @@ public class TestMessageQueueThreadClient
 		
 		for(int i = 0; i < 10; i++)
 		{
-			String s = "" + i + "\n";
+			String s = i + "\n";
 			output.write(s);
 		}
 		
