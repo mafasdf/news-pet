@@ -8,23 +8,22 @@ public class OurLinkedBlockingDeque<E> extends LinkedBlockingDeque<E>
 {	
 	private static final long serialVersionUID = 1L;
 	
-	private List<Thread> threadsBlockedOnPeek = new LinkedList<Thread>();
+	private Object lock = new Object();
 	
 	public E blockingPeek() throws InterruptedException
 	{
 		E e = super.peek();
 		if(e != null) return e;
 		
-		synchronized(threadsBlockedOnPeek)
+		synchronized(lock)
 		{
 			//check again
 			e = super.peek();
 			if(e != null) return e;
 			
-			threadsBlockedOnPeek.add(Thread.currentThread());
+			lock.wait();
 		}
 		
-		this.wait();
 		return blockingPeek();
 	}
 	
@@ -33,12 +32,9 @@ public class OurLinkedBlockingDeque<E> extends LinkedBlockingDeque<E>
 	{
 		boolean retVal = super.add(e);
 		
-		synchronized(threadsBlockedOnPeek)
+		synchronized(lock)
 		{
-			for(Thread t : threadsBlockedOnPeek)
-			{
-				t.notify();
-			}
+			lock.notifyAll();
 		}
 		
 		return retVal;
