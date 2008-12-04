@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -76,6 +77,10 @@ public class MessageQueueThread extends Thread
 					MessageQueueWorkerThread newWorkerThread = new MessageQueueWorkerThread(clientSocket);
 					workerThreads.add(newWorkerThread);
 				}
+				catch(SocketTimeoutException e)
+				{
+					//do nothing
+				}
 				catch(IOException e)
 				{
 					System.err.println("IOException while trying to accept a new client connection!");
@@ -145,18 +150,43 @@ public class MessageQueueThread extends Thread
 				throw new RuntimeException(errorMessage);
 			}
 			
-			listenToClient = true;
-			while(listenToClient)
+			try
+			{
+				listenToClient = true;
+				while(listenToClient)
+				{
+					try
+					{
+						String message = dataIn.readUTF();
+						
+						getMessageQueue().add(message);
+					}
+					catch(IOException e)
+					{
+						System.err.println("IOException during readUTF() for a DataInputStream: " + dataIn);
+						System.err.println(e.getMessage());
+					}
+				}
+			}
+			finally
 			{
 				try
 				{
-					String message = dataIn.readUTF();
-					
-					getMessageQueue().add(message);
+					dataIn.close();
 				}
 				catch(IOException e)
 				{
-					System.err.println("IOException during readUTF() for a DataInputStream: " + dataIn);
+					System.err.println("IOException while closing the a DataInputStream: " + dataIn);
+					System.err.println(e.getMessage());
+				}
+				
+				try
+				{
+					clientSocket.close();
+				}
+				catch(IOException e)
+				{
+					System.err.println("IOException while closing the client Socket: " + clientSocket);
 					System.err.println(e.getMessage());
 				}
 			}
@@ -169,7 +199,6 @@ public class MessageQueueThread extends Thread
 			 * TODO can't figure out how to force dataIn.readUTF() to stop
 			 * blocking. Probably is
 			 */
-
 		}
 	}
 }
