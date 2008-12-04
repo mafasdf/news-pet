@@ -4,12 +4,12 @@ public class TestMessageQueueThread
 {
 	public static void main(String[] args) throws InterruptedException
 	{
-		testEcho();
+		testEcho(8000);
 	}
 	
-	public static void testEcho() throws InterruptedException
+	public static void testEcho(int port) throws InterruptedException
 	{
-		MessageQueueThread mqt = new MessageQueueThread(8000);
+		MessageQueueThread mqt = new MessageQueueThread(port);
 		mqt.run();
 		
 		while(true)
