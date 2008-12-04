@@ -79,7 +79,7 @@ public class MessageQueueThread extends Thread
 					Socket clientSocket = serverSocket.accept();
 
 					MessageQueueWorkerThread newWorkerThread = new MessageQueueWorkerThread(clientSocket);
-					newWorkerThread.run();
+					newWorkerThread.start();
 					workerThreads.add(newWorkerThread);
 				}
 				catch(SocketTimeoutException e)

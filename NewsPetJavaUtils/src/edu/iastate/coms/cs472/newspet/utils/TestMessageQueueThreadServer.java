@@ -14,7 +14,7 @@ public class TestMessageQueueThreadServer
 	public static void testServerEcho(int port) throws InterruptedException
 	{
 		MessageQueueThread mqt = new MessageQueueThread(port);
-		mqt.run();
+		mqt.start();
 		
 		while(true)
 		{
