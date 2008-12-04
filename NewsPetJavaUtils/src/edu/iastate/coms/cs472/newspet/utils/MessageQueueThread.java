@@ -3,6 +3,7 @@ package edu.iastate.coms.cs472.newspet.utils;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UTFDataFormatException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -161,6 +162,11 @@ public class MessageQueueThread extends Thread
 						String message = dataIn.readUTF();
 						
 						getMessageQueue().add(message);
+					}
+					catch(UTFDataFormatException e)
+					{
+						System.err.println("UTFDataFormatException: Malformed string in modified UTF-8  format has been read!");
+						System.err.println(e.getMessage());
 					}
 					catch(IOException e)
 					{
