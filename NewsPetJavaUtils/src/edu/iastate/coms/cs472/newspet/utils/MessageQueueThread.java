@@ -16,19 +16,29 @@ public class MessageQueueThread extends Thread
 	private boolean listeningForNewClients;
 
 	private int port;
-	private int timeout;
+	
+	//In milliseconds
+	private int serverThreadTimeout;
+	private int clientThreadTimeout;
 
 	private Collection<MessageQueueWorkerThread> workerThreads;
 
 	private OurLinkedBlockingDeque<String> messageQueue = new OurLinkedBlockingDeque<String>();
+	
+	public MessageQueueThread(int port, int serverThreadTimeout, int clientThreadTimeout)
+	{
+		if(port < 0 || port > 65535) throw new IllegalArgumentException("Port out of range: " + port);
+		if(serverThreadTimeout < 0) throw new IllegalArgumentException("serverThreadTimeout cannot be negative: " + serverThreadTimeout);
+		if(clientThreadTimeout < 0) throw new IllegalArgumentException("clientThreadTimeout cannot be negative: " + clientThreadTimeout);
+
+		this.port = port;
+		this.serverThreadTimeout = serverThreadTimeout;
+		this.clientThreadTimeout = clientThreadTimeout;
+	}
 
 	public MessageQueueThread(int port, int timeout)
 	{
-		if(port < 0 || port > 65535) throw new IllegalArgumentException("Port out of range: " + port);
-		if(timeout < 0) throw new IllegalArgumentException("Timeout cannot be negative: " + timeout);
-
-		this.port = port;
-		this.timeout = timeout;
+		this(port, timeout, timeout);
 	}
 
 	public MessageQueueThread(int port)
@@ -56,7 +66,7 @@ public class MessageQueueThread extends Thread
 
 		try
 		{
-			serverSocket.setSoTimeout(timeout);
+			serverSocket.setSoTimeout(serverThreadTimeout);
 		}
 		catch(SocketException e)
 		{
@@ -165,15 +175,14 @@ public class MessageQueueThread extends Thread
 
 							getMessageQueue().add(message);
 						}
+						
 						try
 						{
-							Thread.sleep(1000);
+							Thread.sleep(clientThreadTimeout);
 						}
 						catch(InterruptedException e)
 						{
-							/*
-							 * TODO do nothing for now
-							 */
+							//do nothing
 						}
 					}
 					catch(IOException e)
@@ -210,10 +219,6 @@ public class MessageQueueThread extends Thread
 		public void stopListening()
 		{
 			listenToClient = false;
-			/*
-			 * TODO can't figure out how to force dataIn.readUTF() to stop
-			 * blocking. Probably is
-			 */
 		}
 	}
 }
