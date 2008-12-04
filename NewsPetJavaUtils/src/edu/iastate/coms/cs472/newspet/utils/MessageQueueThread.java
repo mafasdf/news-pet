@@ -13,20 +13,20 @@ import java.util.LinkedList;
 
 public class MessageQueueThread extends Thread
 {
-	private static final int DEFAULT_TIMEOUT = 1000; //milliseconds
-	
+	private static final int DEFAULT_TIMEOUT = 1000; // milliseconds
+
 	private boolean listeningForNewClients;
 
 	private int port;
-	
-	//In milliseconds
+
+	// in milliseconds
 	private int serverThreadTimeout;
 	private int clientThreadTimeout;
 
 	private Collection<MessageQueueWorkerThread> workerThreads;
 
 	private OurLinkedBlockingDeque<String> messageQueue = new OurLinkedBlockingDeque<String>();
-	
+
 	public MessageQueueThread(int port, int serverThreadTimeout, int clientThreadTimeout)
 	{
 		if(port < 0 || port > 65535) throw new IllegalArgumentException("Port out of range: " + port);
@@ -177,14 +177,14 @@ public class MessageQueueThread extends Thread
 
 							getMessageQueue().add(message);
 						}
-						
+
 						try
 						{
 							Thread.sleep(clientThreadTimeout);
 						}
 						catch(InterruptedException e)
 						{
-							//do nothing
+							// do nothing
 						}
 					}
 					catch(IOException e)
