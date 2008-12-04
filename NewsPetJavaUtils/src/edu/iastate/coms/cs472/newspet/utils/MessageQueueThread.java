@@ -162,9 +162,22 @@ public class MessageQueueThread extends Thread
 				{
 					try
 					{
-						String message = input.readLine();
+						if(input.ready())
+						{
+							String message = input.readLine();
 
-						getMessageQueue().add(message);
+							getMessageQueue().add(message);
+						}
+						try
+						{
+							Thread.sleep(1000);
+						}
+						catch(InterruptedException e)
+						{
+							/*
+							 * TODO do nothing for now
+							 */
+						}
 					}
 					catch(IOException e)
 					{
