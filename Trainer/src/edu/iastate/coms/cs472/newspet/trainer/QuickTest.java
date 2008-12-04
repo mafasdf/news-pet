@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 import cc.mallet.classify.NaiveBayes;
-import edu.iastate.coms.cs472.newspet.utils.ClassifierDAL;
+import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL;
 
 public class QuickTest
 {

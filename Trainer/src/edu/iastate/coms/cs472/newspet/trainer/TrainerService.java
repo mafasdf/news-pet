@@ -23,8 +23,8 @@ import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayes;
 import cc.mallet.classify.NaiveBayesTrainer;
-import edu.iastate.coms.cs472.newspet.utils.ClassifierDAL;
 import edu.iastate.coms.cs472.newspet.utils.DocumentConversion;
+import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL;
 
 /**
  * @author Michael Fulker
@@ -60,7 +60,7 @@ public class TrainerService
 	{
 		//TODO: artificial queue-priming for testing only
 		//TODO: testing speed
-		for(int i=0;i<40;i++)
+		for(int i=0;i<2;i++)
 		{
 			queue.add("123,1,the quick brown fox jumped over the lazy dogs");
 			queue.add("123,1,quick brown fox jumped over the lazy dogs the");
@@ -113,9 +113,6 @@ public class TrainerService
 			
 			//give to threadpool
 			threadPool.execute(job);
-			//job.run();
-			
-			
 		}
 		
 		threadPool.shutdown();
@@ -132,8 +129,7 @@ public class TrainerService
 		}
 		catch(InterruptedException e)
 		{
-			//TODO: lookup doc, is this the expected way to unblock?
-			throw new RuntimeException("InterruptedException during queue block");
+			throw new RuntimeException("InterruptedException during queue block", e);
 		}
 		
 		return toReturn;

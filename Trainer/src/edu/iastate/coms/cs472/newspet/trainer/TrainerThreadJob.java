@@ -6,9 +6,9 @@ import java.util.List;
 
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.InstanceList;
-import edu.iastate.coms.cs472.newspet.utils.ClassifierDAL;
 import edu.iastate.coms.cs472.newspet.utils.DocumentConversion;
-import edu.iastate.coms.cs472.newspet.utils.ClassifierDAL.TrainerCheckoutData;
+import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL;
+import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL.TrainerCheckoutData;
 
 public class TrainerThreadJob implements Runnable, Iterable<TrainingItem>
 {	
