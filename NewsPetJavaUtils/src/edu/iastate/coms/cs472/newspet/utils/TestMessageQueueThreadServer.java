@@ -10,7 +10,7 @@ public class TestMessageQueueThreadServer
 		int port = 8000;
 		testServerEcho(port);
 	}
-
+	
 	public static void testServerEcho(int port) throws InterruptedException
 	{
 		MessageQueueThread mqt = new MessageQueueThread(port);

@@ -27,5 +27,5 @@ public class TestMessageQueueThreadClient
 		
 		output.close();
 		socket.close();
-	}	
+	}
 }
