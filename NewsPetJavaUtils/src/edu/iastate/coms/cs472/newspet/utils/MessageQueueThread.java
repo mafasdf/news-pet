@@ -13,6 +13,8 @@ import java.util.LinkedList;
 
 public class MessageQueueThread extends Thread
 {
+	private static final int DEFAULT_TIMEOUT = 1000; //milliseconds
+	
 	private boolean listeningForNewClients;
 
 	private int port;
@@ -43,7 +45,7 @@ public class MessageQueueThread extends Thread
 
 	public MessageQueueThread(int port)
 	{
-		this(port, 1000);
+		this(port, DEFAULT_TIMEOUT);
 	}
 
 	public OurLinkedBlockingDeque<String> getMessageQueue()
