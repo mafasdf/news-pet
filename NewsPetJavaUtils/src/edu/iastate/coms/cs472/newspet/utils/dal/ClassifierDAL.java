@@ -1,4 +1,4 @@
-package edu.iastate.coms.cs472.newspet.utils;
+package edu.iastate.coms.cs472.newspet.utils.dal;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,7 +17,14 @@ import java.sql.SQLException;
 import cc.mallet.classify.NaiveBayes;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.pipe.Pipe;
+import edu.iastate.coms.cs472.newspet.utils.ClassifierObjectGroup;
+import edu.iastate.coms.cs472.newspet.utils.DocumentConversion;
 
+/**
+ * Data access layer for Classifier objects.
+ * 
+ * @author Michael Fulker
+ */
 public class ClassifierDAL
 {
 	//the 
@@ -41,7 +48,7 @@ public class ClassifierDAL
 	 */
 	public static TrainerCheckoutData getTrainerForUpdating(long classifierId)
 	{
-		Connection conn = createConnection();
+		Connection conn = ConnectionConfig.createConnection();
 		
 		try
 		{
@@ -64,7 +71,7 @@ public class ClassifierDAL
 			//New trainer: we need to create one.
 			if(!results.next())
 			{
-				PreparedStatement insertNew = conn.prepareStatement("INSERT INTO " + TABLE_NAME + " (ID) values (?)");
+				PreparedStatement insertNew = conn.prepareStatement("INSERT INTO " + TABLE_NAME + " (ID) values (?);");
 				insertNew.setLong(1, classifierId);
 				insertNew.executeUpdate();
 				insertNew.close();
@@ -112,7 +119,7 @@ public class ClassifierDAL
 			Object toPersist = new ClassifierObjectGroup(checkin.trainer.getClassifier(), checkin.trainer, checkin.pipe);
 			
 			PreparedStatement update = checkin.connection.prepareStatement("UPDATE " + TABLE_NAME + " SET " + CLASSIFIERGROUP_COLUMN + "=? WHERE "
-					+ ID_COLUMN + "=?");
+					+ ID_COLUMN + "=?;");
 			update.setBlob(1, getInputStreamFromObject(toPersist));
 			update.setLong(2, checkin.classifierID);
 			update.executeUpdate();
@@ -145,7 +152,7 @@ public class ClassifierDAL
 	 */
 	public static NaiveBayes getClassifier(long classifierID)
 	{
-		Connection conn = createConnection();
+		Connection conn = ConnectionConfig.createConnection();
 		
 		ClassifierObjectGroup group;
 		try
@@ -165,6 +172,11 @@ public class ClassifierDAL
 			if(blob == null) return null;
 			
 			group = (ClassifierObjectGroup) getObjectFromStream(blob.getBinaryStream());
+			
+			results.close();
+			getGroup.close();
+			//don't commit(): autocommit = true
+			conn.close();
 		}
 		catch(SQLException e)
 		{
@@ -205,32 +217,6 @@ public class ClassifierDAL
 			return pipe;
 		}
 		
-	}
-	
-	private static Connection createConnection()
-	{
-		try
-		{
-			//TODO: make configurable
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			return DriverManager.getConnection("jdbc:mysql://localhost/newspet", "root", "34eszx");
-		}
-		catch(SQLException e)
-		{
-			throw new RuntimeException("Could not establish connection with database", e);
-		}
-		catch(InstantiationException e)
-		{
-			throw new RuntimeException("Could not instantiate jdbc driver", e);
-		}
-		catch(IllegalAccessException e)
-		{
-			throw new RuntimeException("Could not instantiate jdbc driver", e);
-		}
-		catch(ClassNotFoundException e)
-		{
-			throw new RuntimeException("Could not instantiate jdbc driver", e);
-		}
 	}
 	
 	/**
