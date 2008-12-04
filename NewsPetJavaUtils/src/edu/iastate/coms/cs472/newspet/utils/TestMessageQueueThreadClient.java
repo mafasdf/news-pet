@@ -1,7 +1,9 @@
 package edu.iastate.coms.cs472.newspet.utils;
 
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -16,15 +18,15 @@ public class TestMessageQueueThreadClient
 	private static void testJavaClient(String host, int port) throws UnknownHostException, IOException
 	{
 		Socket socket = new Socket(host, port);
-		DataOutputStream dataOut = new DataOutputStream(socket.getOutputStream());
+		BufferedWriter output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		
 		for(int i = 0; i < 10; i++)
 		{
-			String s = "" + i;
-			dataOut.write(s.getBytes());
+			String s = "" + i + "\n";
+			output.write(s);
 		}
 		
-		dataOut.close();
+		output.close();
 		socket.close();
 	}	
 }

@@ -1,9 +1,11 @@
 package edu.iastate.coms.cs472.newspet.utils;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UTFDataFormatException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -140,11 +142,11 @@ public class MessageQueueThread extends Thread
 		@Override
 		public void run()
 		{
-			DataInputStream dataIn;
+			BufferedReader input;
 			try
 			{
 				InputStream inputStream = clientSocket.getInputStream();
-				dataIn = new DataInputStream(inputStream);
+				input = new BufferedReader(new InputStreamReader(inputStream));
 			}
 			catch(IOException e)
 			{
@@ -160,23 +162,13 @@ public class MessageQueueThread extends Thread
 				{
 					try
 					{
-						String message = dataIn.readUTF();
+						String message = input.readLine();
 
 						getMessageQueue().add(message);
 					}
-					catch(EOFException e)
-					{
-						System.err.println("EOFException: Signals that an end of file or end of stream has been reached unexpectedly during input!");
-						System.err.println(e.getMessage());
-					}
-					catch(UTFDataFormatException e)
-					{
-						System.err.println("UTFDataFormatException: Malformed string in modified UTF-8  format has been read!");
-						System.err.println(e.getMessage());
-					}
 					catch(IOException e)
 					{
-						System.err.println(e.getClass().getName() + " during readUTF() for a DataInputStream");
+						System.err.println(e.getClass().getName() + " during readLine() for a BufferedReader!");
 						System.err.println(e.getMessage());
 					}
 				}
@@ -185,11 +177,11 @@ public class MessageQueueThread extends Thread
 			{
 				try
 				{
-					dataIn.close();
+					input.close();
 				}
 				catch(IOException e)
 				{
-					System.err.println("IOException while closing the a DataInputStream");
+					System.err.println("IOException while closing the a BufferedInputStream!");
 					System.err.println(e.getMessage());
 				}
 
