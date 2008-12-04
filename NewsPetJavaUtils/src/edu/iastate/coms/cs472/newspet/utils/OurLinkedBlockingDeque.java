@@ -1,7 +1,5 @@
 package edu.iastate.coms.cs472.newspet.utils;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class OurLinkedBlockingDeque<E> extends LinkedBlockingDeque<E>

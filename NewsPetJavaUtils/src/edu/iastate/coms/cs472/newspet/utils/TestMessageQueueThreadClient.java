@@ -1,7 +1,6 @@
 package edu.iastate.coms.cs472.newspet.utils;
 
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
