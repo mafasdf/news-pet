@@ -120,7 +120,7 @@ public class ItemClassificationJob implements Runnable
 		Pair<Integer, Double> best = null;
 		for(Pair<Integer, Double> candidate : categoryProbabilities)
 		{
-			if(best == null || candidate.getB().doubleValue() > best.getB().doubleValue()) best = candidate;
+			if(best == null || candidate.getB() > best.getB()) best = candidate;
 		}
 		return best;
 	}
