@@ -4,21 +4,19 @@ import java.util.Date;
 
 /**
  * Class to represent a feed retrieved from the database.
+ * 
  * @author Michael Fulker
  */
 public class Feed
-{	
-	int id;
-	String url;
-	int userId;
-	Date lastCrawled;
+{
+	private int id;
 	
-	/**
-	 * @param id
-	 * @param url
-	 * @param userId
-	 * @param lastCrawled
-	 */
+	private String url;
+	
+	private int userId;
+	
+	private Date lastCrawled;
+	
 	public Feed(int id, String url, int userId, Date lastCrawled)
 	{
 		this.id = id;
@@ -27,19 +25,21 @@ public class Feed
 		this.lastCrawled = lastCrawled;
 	}
 	
-	
 	public int getId()
 	{
 		return id;
 	}
+	
 	public String getUrl()
 	{
 		return url;
 	}
+	
 	public int getUserId()
 	{
 		return userId;
 	}
+	
 	public Date getLastCrawled()
 	{
 		return lastCrawled;
