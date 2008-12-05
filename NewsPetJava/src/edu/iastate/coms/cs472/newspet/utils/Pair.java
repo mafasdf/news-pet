@@ -1,9 +1,11 @@
 package edu.iastate.coms.cs472.newspet.utils;
 
-public class Pair<A,B>
-{	
+public class Pair<A, B>
+{
 	private A a;
+	
 	private B b;
+	
 	/**
 	 * @param a
 	 * @param b
@@ -13,22 +15,27 @@ public class Pair<A,B>
 		this.a = a;
 		this.b = b;
 	}
+	
 	public A getA()
 	{
 		return a;
 	}
+	
 	public void setA(A a)
 	{
 		this.a = a;
 	}
+	
 	public B getB()
 	{
 		return b;
 	}
+	
 	public void setB(B b)
 	{
 		this.b = b;
 	}
+	
 	@Override
 	public int hashCode()
 	{
@@ -38,13 +45,14 @@ public class Pair<A,B>
 		result = prime * result + ((b == null) ? 0 : b.hashCode());
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj)
 	{
 		if(this == obj) return true;
 		if(obj == null) return false;
 		if(getClass() != obj.getClass()) return false;
-		final Pair<?,?> other = (Pair<?,?>) obj;
+		final Pair<?, ?> other = (Pair<?, ?>) obj;
 		if(a == null)
 		{
 			if(other.a != null) return false;
@@ -57,6 +65,5 @@ public class Pair<A,B>
 		else if(!b.equals(other.b)) return false;
 		return true;
 	}
-	
 	
 }
