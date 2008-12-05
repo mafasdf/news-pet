@@ -28,7 +28,7 @@ public class OriginalToNewFormat
 	
 	public static void main(String[] args) throws IOException
 	{
-		Map<String, PrintWriter> mapTopicsToFiles = getMapToTopicFiles();
+		Map<String, PrintWriter> mapTopicsToPrintWriters = getMapToTopicFiles();
 		
 		for(int i = 0; i <= 21; i++)
 		{
@@ -71,7 +71,7 @@ public class OriginalToNewFormat
 						
 						for(String topic : topics)
 						{
-							PrintWriter topicPW = mapTopicsToFiles.get(topic);
+							PrintWriter topicPW = mapTopicsToPrintWriters.get(topic);
 							topicPW.print(line + " ");
 						}
 						
@@ -97,6 +97,11 @@ public class OriginalToNewFormat
 					break;
 				}
 			}
+		}
+		
+		for(String topic : mapTopicsToPrintWriters.keySet())
+		{
+			mapTopicsToPrintWriters.get(topic).close();
 		}
 	}
 	
