@@ -27,11 +27,6 @@ public class ReaderService
 		threadPool = new ThreadPoolExecutor(32, 32, 100, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 	
-	public static void main(String[] args)
-	{
-		(new ReaderService()).run();
-	}
-	
 	private void run()
 	{
 		long lastRunTime = 0;//will store UTC time in milliseconds
@@ -100,4 +95,8 @@ public class ReaderService
 		}
 	}
 	
+	public static void main(String[] args)
+	{
+		(new ReaderService()).run();
+	}
 }
