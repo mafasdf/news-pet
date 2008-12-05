@@ -85,9 +85,9 @@ public class ItemClassificationJob implements Runnable
 		int bestCategoryID;
 		//check if probability scaled by the number of categories is at least some cutoff value
 		//(If the probability is too close to 1/numCategories, trash is the chosen category)  
-		if(bestCategory.getB().doubleValue() * categoryProbabilities.size() > PROBABILITY_SIGNIFICANCE_RATIO)
+		if(bestCategory.getB() * categoryProbabilities.size() > PROBABILITY_SIGNIFICANCE_RATIO)
 		{
-			bestCategoryID = bestCategory.getA().intValue();
+			bestCategoryID = bestCategory.getA();
 		}
 		else
 		{
@@ -117,10 +117,12 @@ public class ItemClassificationJob implements Runnable
 	
 	private Pair<Integer, Double> findBestCategory(List<Pair<Integer, Double>> categoryProbabilities)
 	{
-		Pair<Integer, Double> best = null;
-		for(Pair<Integer, Double> candidate : categoryProbabilities)
+		//assuming that there will always be at least one element in the List
+		Pair<Integer, Double> best = categoryProbabilities.get(0);
+		for(int i = 1; i < categoryProbabilities.size(); i++)
 		{
-			if(best == null || candidate.getB() > best.getB()) best = candidate;
+			Pair<Integer, Double> candidate = categoryProbabilities.get(i);
+			if(candidate.getB() > best.getB()) best = candidate;
 		}
 		return best;
 	}
