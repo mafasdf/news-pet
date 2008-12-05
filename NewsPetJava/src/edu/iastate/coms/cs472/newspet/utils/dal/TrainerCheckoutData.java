@@ -1,13 +1,11 @@
 package edu.iastate.coms.cs472.newspet.utils.dal;
 
-import java.sql.Connection;
-
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.pipe.Pipe;
 
 /**
  * Class for returning multiple values in
- * {@link ClassifierDAL#getTrainerForUpdating(int)}
+ * {@link DatabaseAccessLayer#getTrainerForUpdating(int)}
  * 
  * @author Michael Fulker
  */
