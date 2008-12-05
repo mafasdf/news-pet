@@ -108,7 +108,7 @@ public class ItemClassificationJob implements Runnable
 		{
 			Label label = classificationResultVector.labelAtLocation(i);
 			Integer categoryID = (Integer) label.getEntry();
-			Pair<Integer, Double> toAdd = new Pair<Integer, Double>(categoryID, Double.valueOf(probabilities[i]));
+			Pair<Integer, Double> toAdd = new Pair<Integer, Double>(categoryID, probabilities[i]);
 			toReturn.add(toAdd);
 		}
 		
