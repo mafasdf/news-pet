@@ -48,7 +48,15 @@ public class ItemClassificationJob implements Runnable
 		if(FeedItemDAL.existsURL(feedItem.getLink().toString(), feed.getUserId())) return;
 		
 		Classifier classifier = DatabaseAccessLayer.getClassifier(feed.getUserId());
-		int trashCategory = CategoryDAL.getTrashCategoryIDForUser(feed.getUserId());
+		
+		Integer trashCategory = CategoryDAL.getTrashCategoryIDForUser(feed.getUserId());
+		
+		//if no classifier trained yet, put all in trash
+		if(classifier==null)
+		{
+			FeedItemDAL.saveNewFeedItem(feedItem.getTitle(), feedItem.getCreator(), feedItem.getDescription(), feedItem.getLink().toString(), trashCategory, feed.getId(), feed.getUserId());
+			return;
+		}
 		
 		//extract out all textual information
 		StringBuilder text = new StringBuilder();

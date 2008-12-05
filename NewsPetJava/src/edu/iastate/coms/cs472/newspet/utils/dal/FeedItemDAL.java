@@ -33,12 +33,12 @@ public class FeedItemDAL
 	
 	static final String WASVIEWED_COLUMN = "was_viewed";
 	static final boolean DEFAULT_WASVIEWED_VALUE = false;
-
 	
 	//used in multiple methods
-	static final String URL_EXISTS_QUERY = String.format("SELECT EXISTS ( SELECT * FROM %s F INNER JOIN %s C ON F.%s=C.%s WHERE F.%s=? AND C.%s=?);", TABLE_NAME, CategoryDAL.TABLE_NAME, CATEGORYID_COLUMN, CategoryDAL.ID_COLUMN, URL_COLUMN, CategoryDAL.USERID_COLUMN);
+	static final String URL_EXISTS_QUERY = String.format("SELECT EXISTS ( SELECT * FROM %s F INNER JOIN %s C ON F.%s=C.%s WHERE F.%s=? AND C.%s=?);",
+			TABLE_NAME, CategoryDAL.TABLE_NAME, CATEGORYID_COLUMN, CategoryDAL.ID_COLUMN, URL_COLUMN, CategoryDAL.USERID_COLUMN);
 	
-	private static final Object FEEDID_COLUMN = null;
+	private static final Object FEEDID_COLUMN = "feed_id";
 	
 	public static boolean existsURL(String url, int userID)
 	{
@@ -55,7 +55,7 @@ public class FeedItemDAL
 			
 			booleanResult.next();
 			
-			return booleanResult.getBoolean(0);
+			return booleanResult.getBoolean(1);
 		}
 		catch(SQLException e)
 		{
@@ -119,7 +119,7 @@ public class FeedItemDAL
 			checkExists.setInt(2, userId);
 			booleanResult = checkExists.executeQuery();
 			booleanResult.next();
-			alreadyExists = booleanResult.getBoolean(0);
+			alreadyExists = booleanResult.getBoolean(1);
 		}
 		catch(SQLException e)
 		{
@@ -153,7 +153,9 @@ public class FeedItemDAL
 			//only insert if item with same url doesn't exist
 			if(!alreadyExists)
 			{
-				insert = conn.prepareStatement(String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s, %s) values (?, ?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME, DATE_COLUMN, TITLE_COLUMN, AUTHOR_COLUMN, BODY_COLUMN, URL_COLUMN, OPINION_COLUMN, CATEGORYID_COLUMN, FEEDID_COLUMN, WASVIEWED_COLUMN));
+				insert = conn.prepareStatement(String.format(
+						"INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s, %s) values (?, ?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME, DATE_COLUMN,
+						TITLE_COLUMN, AUTHOR_COLUMN, BODY_COLUMN, URL_COLUMN, OPINION_COLUMN, CATEGORYID_COLUMN, FEEDID_COLUMN, WASVIEWED_COLUMN));
 				insert.setDate(1, new java.sql.Date(System.currentTimeMillis()));
 				insert.setString(2, title == null ? "" : title);
 				insert.setString(3, creator == null ? "" : creator);
@@ -207,9 +209,10 @@ public class FeedItemDAL
 		try
 		{
 			getFeedItem = conn.prepareStatement(query);
+			getFeedItem.setInt(1, feedItemID);
 			result = getFeedItem.executeQuery();
 			StringBuilder toReturn = new StringBuilder();
-			if(result.next())
+			if(result.next())//TODO
 			{
 				toReturn.append(result.getString(AUTHOR_COLUMN));
 				toReturn.append(" ");

@@ -39,6 +39,8 @@ public class CategoryDAL
 			conn = ConnectionConfig.createConnection();
 			
 			getTrashID = conn.prepareStatement(query);
+			getTrashID.setInt(1, userID);
+			getTrashID.setBoolean(2, true);
 			result = getTrashID.executeQuery();
 			
 			if(result.next()) return result.getInt(ID_COLUMN);

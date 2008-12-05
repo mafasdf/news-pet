@@ -24,7 +24,7 @@ public class FeedDAL
 	
 	static final String LASTCRAWLED_COLUMN = "last_crawled";
 	
-	static final String FEED_TABLE = "feed_feeditem";
+	static final String FEED_TABLE = "feed_feed";
 	
 	/**
 	 * Gets feed objects with "lastCrawled" timestamps older than the given
@@ -37,7 +37,8 @@ public class FeedDAL
 	public static List<Feed> getFeedsOlderThan(java.util.Date cutoff)
 	{
 		Connection conn = ConnectionConfig.createConnection();
-		String query = "SELECT " + ID_COLUMN + " " + URL_COLUMN + " " + USERID_COLUMN + " " + LASTCRAWLED_COLUMN + " FROM " + FEED_TABLE + " WHERE " + LASTCRAWLED_COLUMN + " < ? ORDER BY " + LASTCRAWLED_COLUMN + " ASC;";
+		//TODO: remove 1=1
+		String query = "SELECT " + ID_COLUMN + ", " + URL_COLUMN + ", " + USERID_COLUMN + ", " + LASTCRAWLED_COLUMN + " FROM " + FEED_TABLE + " WHERE " + LASTCRAWLED_COLUMN + " < ? OR 1=1 ORDER BY " + LASTCRAWLED_COLUMN + " ASC;";
 		
 		PreparedStatement getFeeds = null;
 		ResultSet feedResults = null;

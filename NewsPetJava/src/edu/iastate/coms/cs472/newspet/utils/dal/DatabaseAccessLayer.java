@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -219,12 +218,12 @@ public class DatabaseAccessLayer
 			if(!results.next()) return null;
 			
 			//get binary data
-			Blob blob = results.getBlob(CLASSIFIERGROUP_COLUMN);
+			byte[] blob = results.getBytes(CLASSIFIERGROUP_COLUMN);
 			
 			//check if first training is incomplete
 			if(blob == null) return null;
 			
-			ClassifierObjectGroup group = (ClassifierObjectGroup) getObjectFromStream(blob.getBinaryStream());
+			ClassifierObjectGroup group = (ClassifierObjectGroup) getObjectFromStream(new ByteArrayInputStream(blob));
 			
 			return group.getClassifier();
 		}
