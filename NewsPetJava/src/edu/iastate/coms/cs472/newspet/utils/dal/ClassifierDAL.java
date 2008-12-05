@@ -48,7 +48,7 @@ public class ClassifierDAL
 		{
 			this.classifierID = classifierID;
 		}
-
+		
 		public synchronized TrainerCheckoutData getClasisifier() throws InterruptedException
 		{
 			if(classifier == null)
@@ -65,7 +65,7 @@ public class ClassifierDAL
 			
 			return classifier;
 		}
-
+		
 		public synchronized void giveClassifier()
 		{
 			if(!semaphore.isHeldByCurrentThread()) return;
