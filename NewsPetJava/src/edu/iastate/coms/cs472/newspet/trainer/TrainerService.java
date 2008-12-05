@@ -1,31 +1,10 @@
 package edu.iastate.coms.cs472.newspet.trainer;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
-import cc.mallet.classify.Classifier;
-import cc.mallet.classify.ClassifierTrainer;
-import cc.mallet.classify.NaiveBayes;
-import cc.mallet.classify.NaiveBayesTrainer;
-import edu.iastate.coms.cs472.newspet.utils.DocumentConversion;
 import edu.iastate.coms.cs472.newspet.utils.MessageQueueThread;
-import edu.iastate.coms.cs472.newspet.utils.dal.DatabaseAccessLayer;
 
 /**
  * @author Michael Fulker
