@@ -53,8 +53,7 @@ public class ClassifierDAL
 		{
 			if(classifier == null)
 			{
-				//TODO get from DatabaseAccessLayer
-				classifier = null;
+				classifier = DatabaseAccessLayer.getTrainerForUpdating(this.classifierID);
 			}
 			
 			semaphoreCount++;
@@ -67,7 +66,7 @@ public class ClassifierDAL
 		{
 			if(!semaphore.isHeldByCurrentThread()) return;
 			
-			//TODO write classifier to database
+			DatabaseAccessLayer.updateTrainerAndClassifier(classifier);
 			
 			semaphoreCount--;
 			if(semaphoreCount == 0)
