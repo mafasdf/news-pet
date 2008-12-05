@@ -33,7 +33,8 @@ public class TrainerThreadJob implements Runnable
 		//convert all messages into trainingitems
 		for(Message message : trainingMessages)
 		{
-			if(message.getMessageType() == Message.MessageType.INCREMENTAL) trainingItems.add(new TrainingItem(classifierID, message.getCategoryId(), FeedItemDAL.getFeedItemText(message.getSourceId())));
+			if(message.getMessageType() == Message.MessageType.INCREMENTAL)
+				trainingItems.add(new TrainingItem(classifierID, message.getCategoryId(), FeedItemDAL.getFeedItemText(message.getSourceId())));
 			else if(message.getMessageType() == Message.MessageType.BATCH) addBatchItems(message.getSourceId(), message.getCategoryId());
 		}
 		
@@ -84,6 +85,7 @@ public class TrainerThreadJob implements Runnable
 		while(in.hasNextLine())
 		{
 			TrainingItem toAdd = new TrainingItem(classifierID, categoryId, in.nextLine());
+			trainingItems.add(toAdd);
 		}
 	}
 	
