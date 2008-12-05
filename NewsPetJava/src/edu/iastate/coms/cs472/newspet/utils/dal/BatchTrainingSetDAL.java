@@ -15,27 +15,61 @@ public class BatchTrainingSetDAL
 	
 	public static String getPath(int sourceId)
 	{
+		Connection conn = null;
+		PreparedStatement getPath = null;
+		ResultSet result = null;
 		try
 		{
-			Connection conn = ConnectionConfig.createConnection();
+			conn = ConnectionConfig.createConnection();
 			String query = String.format("SELECT %s FROM %s WHERE %s=?;", PATH_COLUMN, TABLE_NAME, ID_COLUMN);
-			PreparedStatement getPath = conn.prepareCall(query);
+			getPath = conn.prepareCall(query);
 			getPath.setInt(1, sourceId);
-			ResultSet result = getPath.executeQuery();
+			result = getPath.executeQuery();
 			String toReturn = null;
 			if(result.next())
 			{
 				toReturn = result.getString(PATH_COLUMN);
 			}
-			result.close();
-			getPath.close();
-			if(!conn.getAutoCommit()) conn.commit();
-			conn.close();
+			
 			return toReturn;
 		}
 		catch(SQLException e)
 		{
 			throw new RuntimeException("Can't retrieve trainingset:" + sourceId, e);
+		}
+		finally
+		{
+			if(result != null) try
+			{
+				result.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a ResultSet!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				if(getPath != null) getPath.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a PreparedStatement!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				if(conn != null)
+				{
+					if(!conn.getAutoCommit()) conn.commit();
+					conn.close();
+				}
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a Connection!");
+				System.err.println(e.getMessage());
+			}
 		}
 	}
 }
