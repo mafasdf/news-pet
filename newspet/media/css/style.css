@@ -13,6 +13,20 @@ body{
     font-family: trebuchet "Trebuchet MS";
     color: #4c67a2;
 }
+a{
+    cursor: pointer;
+}
+.dropdown{
+    background-color: #aec8fe;
+    padding: 5px;
+    border: 1px solid #4c67a2;;
+}
+.dropdown a{
+    color: #4c67a2;;
+}
+.dropdown li{
+    padding: 2px;
+}
 .top{
     padding-bottom: 20px;
 }
@@ -37,7 +51,7 @@ a:hover{
     padding-top: 20px;
     margin-left: 40px;
 }
-#header ul li{
+#header > ul > li{
     display: inline;
     margin-left: 8px;
     margin-right: 8px;
@@ -183,11 +197,11 @@ form ul{
     color: black;
 }
 .post-header h1{
-    width: 450;
+    width: 450px;
     font-size: 42px;
-    font-weight: none;
+    font-weight: normal;
     padding: 5px 10px;
-    float: left;x
+    float: left;
 }
 .post-header a{
     color: #4c67a2;

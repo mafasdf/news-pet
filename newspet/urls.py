@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^site-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),#(r'^blog/', include('blog.urls')),
     (r'^feed/', include('newspet.feed.urls')),
     url(r'^$', 'feed.views.home', name="home"),
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout_then_login', name = 'np_logout'),
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
