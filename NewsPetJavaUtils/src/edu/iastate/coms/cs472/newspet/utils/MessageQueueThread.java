@@ -49,6 +49,11 @@ public class MessageQueueThread extends Thread
 		this(port, DEFAULT_TIMEOUT);
 	}
 	
+	public int getClientThreadTimeout()
+	{
+		return clientThreadTimeout;
+	}
+	
 	public OurLinkedBlockingDeque<String> getMessageQueue()
 	{
 		return messageQueue;
@@ -181,7 +186,7 @@ public class MessageQueueThread extends Thread
 						
 						try
 						{
-							Thread.sleep(clientThreadTimeout);
+							Thread.sleep(getClientThreadTimeout());
 						}
 						catch(InterruptedException e)
 						{
