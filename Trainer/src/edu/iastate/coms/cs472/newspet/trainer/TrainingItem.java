@@ -4,9 +4,9 @@ import cc.mallet.types.Instance;
 
 public class TrainingItem
 {	
-	private long classifierID;
+	private int classifierID;
 	private Instance data;
-	public long getClassifierID()
+	public int getClassifierID()
 	{
 		return classifierID;
 	}
@@ -16,13 +16,13 @@ public class TrainingItem
 	}
 	
 	
-	public TrainingItem(long classifierID, Instance data)
+	public TrainingItem(int classifierID, Instance data)
 	{
 		this.classifierID = classifierID;
 		this.data = data;
 	}
 	
-	public TrainingItem(long classifierID, long targetCategory, String documentData)
+	public TrainingItem(int classifierID, int targetCategory, String documentData)
 	{
 		this(classifierID, new Instance(documentData, targetCategory, null,null));
 	}

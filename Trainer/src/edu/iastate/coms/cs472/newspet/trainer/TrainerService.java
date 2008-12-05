@@ -98,7 +98,7 @@ public class TrainerService
 		while(!queue.isEmpty())
 		{
 			String incomingString = blockingPeekInQueue();
-			long currentClassifierID = convertMessageToTrainingItem(incomingString).getClassifierID();
+			int currentClassifierID = convertMessageToTrainingItem(incomingString).getClassifierID();
 			
 			//get job of contiguous items for specific classifier
 			TrainerThreadJob job = new TrainerThreadJob(currentClassifierID);
@@ -141,9 +141,9 @@ public class TrainerService
 		// TODO: handle jobs consisting of more than one item 
 		int commaIndex0 = message.indexOf(',');
 		
-		long classifierID = Long.parseLong(message.substring(0, commaIndex0));
+		int classifierID = Integer.parseInt(message.substring(0, commaIndex0));
 		int commaIndex1 = message.indexOf(',', commaIndex0 + 1);
-		long categoryID = Long.parseLong(message.substring(commaIndex0 + 1, commaIndex1));
+		int categoryID = Integer.parseInt(message.substring(commaIndex0 + 1, commaIndex1));
 		String document = message.substring(commaIndex1 + 1);
 		
 		return new TrainingItem(classifierID, categoryID, document);

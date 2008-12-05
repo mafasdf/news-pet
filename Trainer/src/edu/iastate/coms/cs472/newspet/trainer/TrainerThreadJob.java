@@ -13,9 +13,9 @@ import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL.TrainerCheckoutDat
 public class TrainerThreadJob implements Runnable, Iterable<TrainingItem>
 {	
 	private List<TrainingItem> trainingItems;
-	private long classifierID;
+	private int classifierID;
 	
-	public TrainerThreadJob(long classifierID)
+	public TrainerThreadJob(int classifierID)
 	{
 		trainingItems=new ArrayList<TrainingItem>();
 		this.classifierID=classifierID;
