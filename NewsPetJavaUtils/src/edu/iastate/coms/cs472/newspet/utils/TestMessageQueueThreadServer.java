@@ -1,13 +1,10 @@
 package edu.iastate.coms.cs472.newspet.utils;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-
 public class TestMessageQueueThreadServer
 {
-	public static void main(String[] args) throws InterruptedException, UnknownHostException, IOException
+	public static void main(final String[] args) throws InterruptedException
 	{
-		int port = 8000;
+		final int port = 8000;
 		testServerEcho(port);
 	}
 	
