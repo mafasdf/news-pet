@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NewsPetUtils"/>
+	<classpathentry kind="lib" path="/NewsPetUtils/lib/mallet.jar" sourcepath="C:/Temp/mallet-2.0-RC2/src"/>
+	<classpathentry kind="lib" path="/NewsPetUtils/lib/mallet-deps.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
