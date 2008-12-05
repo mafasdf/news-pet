@@ -15,14 +15,15 @@ import edu.iastate.coms.cs472.newspet.utils.Pair;
 public class FeedItemDAL
 {
 	static final String TABLE_NAME = "feed_feeditem";
+	static final String ID_COLUMN = "id";
 	static final String URL_COLUMN = "link";
 	static final String CATEGORYID_COLUMN = "category_id";
-	static final Object DATE_COLUMN = null;
-	static final Object TITLE_COLUMN = null;
-	static final Object AUTHOR_COLUMN = null;
-	static final Object BODY_COLUMN = null;
-	static final Object OPINION_COLUMN = null;
-	static final Object WASVIEWED_COLUMN = null;
+	static final String DATE_COLUMN = null;
+	static final String TITLE_COLUMN = null;
+	static final String AUTHOR_COLUMN = null;
+	static final String BODY_COLUMN = null;
+	static final String OPINION_COLUMN = null;
+	static final String WASVIEWED_COLUMN = null;
 	
 	//used in multiple methods
 	static final String URL_EXISTS_QUERY = String.format(
@@ -113,5 +114,38 @@ public class FeedItemDAL
 		{
 			throw new RuntimeException("Could not insert feedItem:"+url, e);
 		}
+	}
+	
+	public String getFeedItemText(int feedItemID)
+	{
+		try
+		{
+			Connection conn = ConnectionConfig.createConnection();
+			
+			String query = String.format("SELECT %s,%s,%s  FROM %s WHERE %s=?", AUTHOR_COLUMN, TITLE_COLUMN, BODY_COLUMN, TABLE_NAME, ID_COLUMN);
+			PreparedStatement getFeedItem = conn.prepareStatement(query);
+			ResultSet result = getFeedItem.executeQuery();
+			StringBuilder toReturn = new StringBuilder();
+			if(result.next())
+			{
+				toReturn.append(result.getString(AUTHOR_COLUMN));
+				toReturn.append(" ");
+				toReturn.append(result.getString(TITLE_COLUMN));
+				toReturn.append(" ");
+				toReturn.append(result.getString(BODY_COLUMN));
+			}
+			
+			result.close();
+			getFeedItem.close();
+			if(!conn.getAutoCommit())
+				conn.commit();
+			conn.close();
+			return toReturn.toString();
+		}
+		catch(SQLException e)
+		{
+			throw new RuntimeException("Could not retreive feedItem: "+feedItemID, e);
+		}
+		
 	}
 }
