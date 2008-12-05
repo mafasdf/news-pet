@@ -14,7 +14,6 @@ import edu.iastate.coms.cs472.newspet.utils.dal.TrainerCheckoutData;
 
 public class TrainerThreadJob implements Runnable
 {
-	
 	private List<Message> trainingMessages;
 	
 	private List<TrainingItem> trainingItems;
@@ -33,8 +32,7 @@ public class TrainerThreadJob implements Runnable
 		//convert all messages into trainingitems
 		for(Message message : trainingMessages)
 		{
-			if(message.getMessageType() == Message.MessageType.INCREMENTAL)
-				trainingItems.add(new TrainingItem(classifierID, message.getCategoryId(), FeedItemDAL.getFeedItemText(message.getSourceId())));
+			if(message.getMessageType() == Message.MessageType.INCREMENTAL) trainingItems.add(new TrainingItem(classifierID, message.getCategoryId(), FeedItemDAL.getFeedItemText(message.getSourceId())));
 			else if(message.getMessageType() == Message.MessageType.BATCH) addBatchItems(message.getSourceId(), message.getCategoryId());
 		}
 		
@@ -45,7 +43,7 @@ public class TrainerThreadJob implements Runnable
 			checkoutData = ClassifierDAL.getClassifier(classifierID);
 		}
 		catch(InterruptedException e)
-		{	
+		{
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
