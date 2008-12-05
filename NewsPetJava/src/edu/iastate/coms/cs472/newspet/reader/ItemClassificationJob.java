@@ -11,7 +11,7 @@ import de.nava.informa.core.ItemIF;
 import edu.iastate.coms.cs472.newspet.utils.Feed;
 import edu.iastate.coms.cs472.newspet.utils.Pair;
 import edu.iastate.coms.cs472.newspet.utils.dal.CategoryDAL;
-import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL;
+import edu.iastate.coms.cs472.newspet.utils.dal.DatabaseAccessLayer;
 import edu.iastate.coms.cs472.newspet.utils.dal.FeedItemDAL;
 
 
@@ -51,7 +51,7 @@ public class ItemClassificationJob implements Runnable
 		if(FeedItemDAL.existsURL(feedItem.getLink().toString(), feed.getUserId()))
 			return;
 		
-		Classifier classifier = ClassifierDAL.getClassifier(feed.getUserId());
+		Classifier classifier = DatabaseAccessLayer.getClassifier(feed.getUserId());
 		int trashCategory = CategoryDAL.getTrashCategoryIDForUser(feed.getUserId());
 		
 		//extract out all textual information

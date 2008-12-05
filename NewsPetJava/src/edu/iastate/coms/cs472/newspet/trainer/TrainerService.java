@@ -25,7 +25,7 @@ import cc.mallet.classify.NaiveBayes;
 import cc.mallet.classify.NaiveBayesTrainer;
 import edu.iastate.coms.cs472.newspet.utils.DocumentConversion;
 import edu.iastate.coms.cs472.newspet.utils.MessageQueueThread;
-import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL;
+import edu.iastate.coms.cs472.newspet.utils.dal.DatabaseAccessLayer;
 
 /**
  * @author Michael Fulker

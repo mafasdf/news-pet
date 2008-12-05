@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 import cc.mallet.classify.NaiveBayes;
-import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL;
+import edu.iastate.coms.cs472.newspet.utils.dal.DatabaseAccessLayer;
 
 public class QuickTest
 {
@@ -19,7 +19,7 @@ public class QuickTest
 		//try classifying something
 		try
 		{
-			NaiveBayes classifier = ClassifierDAL.getClassifier(456);
+			NaiveBayes classifier = DatabaseAccessLayer.getClassifier(456);
 			synchronized(classifier)
 			{
 				PrintWriter pw = new PrintWriter(System.out);

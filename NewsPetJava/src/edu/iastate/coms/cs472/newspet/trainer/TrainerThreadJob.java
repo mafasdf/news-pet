@@ -7,8 +7,8 @@ import java.util.List;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.InstanceList;
 import edu.iastate.coms.cs472.newspet.utils.DocumentConversion;
-import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL;
-import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL.TrainerCheckoutData;
+import edu.iastate.coms.cs472.newspet.utils.dal.DatabaseAccessLayer;
+import edu.iastate.coms.cs472.newspet.utils.dal.TrainerCheckoutData;
 
 public class TrainerThreadJob implements Runnable, Iterable<TrainingItem>
 {	
@@ -24,7 +24,7 @@ public class TrainerThreadJob implements Runnable, Iterable<TrainingItem>
 	public void run()
 	{
 		//get trainer (lock by ID)
-		TrainerCheckoutData checkoutData = ClassifierDAL.getTrainerForUpdating(classifierID); 
+		TrainerCheckoutData checkoutData = DatabaseAccessLayer.getTrainerForUpdating(classifierID); 
 		
 		//set up filters
 		InstanceList trainingInstanceList = new  InstanceList(checkoutData.getPipe());
@@ -35,7 +35,7 @@ public class TrainerThreadJob implements Runnable, Iterable<TrainingItem>
 		
 		//persist
 		//(will unlock by ID)
-		ClassifierDAL.updateTrainerAndClassifier(checkoutData);
+		DatabaseAccessLayer.updateTrainerAndClassifier(checkoutData);
 	}
 
 	public Iterator<TrainingItem> iterator()
