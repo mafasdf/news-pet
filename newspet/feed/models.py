@@ -24,7 +24,7 @@ class FeedItemManager(models.Manager):
         return self.filter(was_viewed = False)
 
 class FeedItem(models.Model):
-    date_added = models.DateTimeField(default=datetime.datetime.now)
+    #date_added = models.DateTimeField(default=datetime.datetime.now)
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     body = models.TextField()
