@@ -30,7 +30,7 @@ def send_train_data(item, category, opinion):
     else:
         return False
     
-def init_train_category(category, training_set):
+def train_category(category, training_set):
     try:
         sock = Python2Java(settings.TRAINER_HOST, settings.TRAINER_PORT)
         sock.send('%s,%d,%d,%d' % (BATCH, category.user.id, category.id, training_set.id))

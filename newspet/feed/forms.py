@@ -11,17 +11,32 @@ TRAINING_CHOICES = (('Pre-Trained Categories', 0),
                     ('Word or Phrase', 1),
                     ('Load Batch Files', 2),)
 
-class TrainingSetForm(forms.Form):
+class TrainingSetChoiceForm(forms.Form):
     method = forms.ChoiceField( choices= TRAINING_CHOICES,
                                 widget = forms.RadioSelect())
 
-class TrainedCategoryForm(forms.Form):
-    def __init__(self):
+class TrainingSetForm(forms.Form):
+    def __init__(self, *args, **kwargs):
         """docstring for __init__"""
-        self.fields['categories'].choices = [(ptc, ptc.id) for ptc in PreTrainedCategory.objects.all()]
+        super(TrainingSetForm, self).__init__(*args, **kwargs)
+        self.fields['training_set'].choices = [(ts.id, ts) for ts in TrainingSet.objects.all()]
     
-    categories = forms.ChoiceField()
+    training_set = forms.ChoiceField(label="Category for Initial Categorization")
     
+    def clean(self):
+        super(TrainingSetForm, self).clean
+        if 'training_set' in self.cleaned_data:
+            training_set_id = self.cleaned_data['training_set']
+        else:
+            raise forms.ValidationError("You must choose initial training information")
+        try:
+            self.training_set = TrainingSet.objects.get(id = training_set_id)
+        except TrainingSet.DoesNotExist:
+            self.training_set = None
+            raise forms.ValidationError("The initial training you have choosen does not seem to exist. Please pick again.")
+    
+    def get_training_set(self):
+        return self.training_set
 class PhraseForm(forms.Form):
     phrase = forms.CharField(max_length = 127)
 
@@ -31,5 +46,5 @@ class BatchFileForm(forms.Form):
 class FeedForm(forms.ModelForm):
     class Meta:
         model = Feed
-        exclude = ('subscriber')
+        exclude = ('subscriber', 'last_crawled')
     

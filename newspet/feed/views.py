@@ -48,34 +48,56 @@ def manage_categories(request, category_id=None):
     category = None
     training_set_form = None
     if category_id is not None:
-        category = get_object_or_404(Category, id=category_id, owner=request.user)
+        category = get_object_or_404(Category, id=category_id, owner=request.user, is_trash=False)
     else:
         training_set_form = TrainingSetForm(request.POST or None)
     category_form = CategoryForm(request.POST or None, instance = category)
-    if category_form.is_valid():
+    if category_form.is_valid() and ( not training_set_form or training_set_form.is_valid() ):
         category = category_form.save(commit=False)
         category.owner = request.user
         category.save()
-        training.train_category(category)
+        if training_set_form:
+            training.train_category(category, training_set_form.get_training_set())
         return HttpResponseRedirect(reverse('f_manage_categories'))
     categories = request.user.category_set.all()
-    context = {'category_form': category_form, 'categories': categories}
+    context = {'category_form': category_form, 'categories': categories, 'training_set_form': training_set_form, 'category': category}
     return render_to_response('feed/manage_categories.html',context, context_instance = RequestContext(request))
 
 @login_required
-def manage_feeds(request):
-    return render_to_response('base.html',{}, context_instance = RequestContext(request))
-    
-@login_required
-def delete_category(request, category_id):
-    get_object_or_404(Category, id=category_id, owner=request.user)
+def manage_feeds(request, feed_id=None):
+    feed = None
+    if feed_id is not None:
+        feed = get_object_or_404(Feed, id=feed_id, subscriber=request.user)
+    feed_form = FeedForm(request.POST or None, instance = feed)
+    if feed_form.is_valid():
+        feed = feed_form.save(commit=False)
+        feed.subscriber = request.user
+        feed.save()
+        return HttpResponseRedirect(reverse('f_manage_feeds'))
+    feeds = request.user.feed_set.all()
+    context = {'feed_form': feed_form, 'feeds': feeds, 'feed': feed}
+    return render_to_response('feed/manage_feeds.html',context, context_instance = RequestContext(request))
+
+def delete_feed(request, feed_id):
+    get_object_or_404(Feed, id=feed_id, subscriber=request.user)
     return delete_object(request,
-                         model = Category,
-                         object_id = category_id,
-                         post_delete_redirect = reverse('f_manage_categories'),
+                         model = Feed,
+                         object_id = feed_id,
+                         post_delete_redirect = reverse('f_manage_feeds'),
                          template_name = "feed/delete.html",
                          login_required = login_required
                         )
+
+# @login_required
+# def delete_category(request, category_id):
+#     get_object_or_404(Category, id=category_id, owner=request.user)
+#     return delete_object(request,
+#                          model = Category,
+#                          object_id = category_id,
+#                          post_delete_redirect = reverse('f_manage_categories'),
+#                          template_name = "feed/delete.html",
+#                          login_required = login_required
+#                         )
                         
 @login_required
 def love_item(request, item_id):

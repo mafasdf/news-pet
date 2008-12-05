@@ -49,8 +49,11 @@ class CategoryManager(models.Manager):
         return self.filter(owner=user, is_trash=True)[0]
     
     def create_trash(self, user):
-        trash = Category(name="Trash", is_trash=True, owner=user)
-        trash.save()
+        try:
+            Category.objects.get(is_trash=True, owner=user)
+        except Category.DoesNotExist:
+            trash = Category(name="Trash", is_trash=True, owner=user)
+            trash.save()
     
 class Category(models.Model):
     name = models.CharField(max_length=63)
@@ -77,10 +80,10 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('f_category', args=[self.id])
         
-class PreTrainedClassifier(models.Model):
+class TrainingSet(models.Model):
     name = models.CharField(max_length=255)
     path = models.TextField()
     
-    def __unidcode__(self):
+    def __unicode__(self):
         return self.name
     

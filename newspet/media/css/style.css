@@ -117,8 +117,8 @@ hr{
     margin-top: 5px;
 }
 #sidebar h1{
-    padding: 0px 10px;
-    padding-top: 5px;
+    font-size: 26px;
+    padding-bottom: 20px;
 }
 .unread, .author{
     font-weight: bold;
@@ -142,6 +142,25 @@ input[type=submit]{
 }
 form dl{
     margin: 10px 0px;
+}
+form dl dt{
+    margin: 10px 0px;
+}
+form dl dd{
+    margin: 10px 0px;
+}
+#sidebar ul.button-list{
+    display: inline;
+}
+#sidebar ul.button-list li{
+    display: inline;
+}
+.manage-list a{
+    color: #4c67a2;
+    margin-right: auto;
+}
+.manage-list ul{
+    margin-left: auto;
 }/*
 form ul{
     list-style: none;
