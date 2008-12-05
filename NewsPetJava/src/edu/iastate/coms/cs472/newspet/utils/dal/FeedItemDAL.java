@@ -20,17 +20,20 @@ public class FeedItemDAL
 	
 	static final String CATEGORYID_COLUMN = "category_id";
 	
-	static final String DATE_COLUMN = null;
+	static final String DATE_COLUMN = "date_added";
 	
-	static final String TITLE_COLUMN = null;
+	static final String TITLE_COLUMN = "title";
 	
-	static final String AUTHOR_COLUMN = null;
+	static final String AUTHOR_COLUMN = "author";
 	
-	static final String BODY_COLUMN = null;
+	static final String BODY_COLUMN = "body";
 	
-	static final String OPINION_COLUMN = null;
+	static final String OPINION_COLUMN = "opinion";
+	static final int DEFAULT_OPINION_VALUE = 0;
 	
-	static final String WASVIEWED_COLUMN = null;
+	static final String WASVIEWED_COLUMN = "was_viewed";
+	static final boolean DEFAULT_WASVIEWED_VALUE = false;
+
 	
 	//used in multiple methods
 	static final String URL_EXISTS_QUERY = String.format("SELECT EXISTS ( SELECT * FROM %s F INNER JOIN %s C ON F.%s=C.%s WHERE F.%s=? AND C.%s=?);", TABLE_NAME, CategoryDAL.TABLE_NAME, CATEGORYID_COLUMN, CategoryDAL.ID_COLUMN, URL_COLUMN, CategoryDAL.USERID_COLUMN);
@@ -156,10 +159,10 @@ public class FeedItemDAL
 				insert.setString(3, creator == null ? "" : creator);
 				insert.setString(4, description == null ? "" : description);
 				insert.setString(5, url == null ? "" : url);
-				insert.setInt(6, 0);//default = 0
+				insert.setInt(6, DEFAULT_OPINION_VALUE);
 				insert.setInt(7, categoryId);
 				insert.setInt(8, feedId);
-				insert.setBoolean(9, false);
+				insert.setBoolean(9, DEFAULT_WASVIEWED_VALUE);
 				
 				insert.executeUpdate();
 			}
