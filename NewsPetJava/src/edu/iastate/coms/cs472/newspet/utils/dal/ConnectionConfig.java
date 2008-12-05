@@ -11,8 +11,8 @@ public class ConnectionConfig
 		try
 		{
 			//TODO: make configurable
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			return DriverManager.getConnection("jdbc:mysql://localhost/newspet", "root", "34eszx");
+			Class.forName("org.postgresql.Driver").newInstance();
+			return DriverManager.getConnection("jdbc:postgres://localhost/newspet.db", "newspet", "newspet");
 		}
 		catch(SQLException e)
 		{

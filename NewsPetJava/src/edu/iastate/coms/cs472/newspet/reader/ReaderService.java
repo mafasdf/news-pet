@@ -24,7 +24,7 @@ import edu.iastate.coms.cs472.newspet.utils.dal.FeedDAL;
 
 public class ReaderService
 {
-	private static final long RSS_POLLING_PERIOD_MILLIS = 60000;//TODO: Have be 1 minute for now.
+	private static final long RSS_POLLING_PERIOD_MILLIS = 60000;//TODO: Is 1 minute for now.
 	
 	private ThreadPoolExecutor threadPool;
 	
@@ -40,65 +40,60 @@ public class ReaderService
 	public static void main(String[] args)
 	{
 		(new ReaderService()).run();
-		
-		//TODO
-		/*Set<ItemIF> items = channel.getItems();
-		
-		ItemIF i = items.iterator().next();*/
-		
-		/*
-		 * ChannelIF c= channel; c.addCategory(null); c.addItem(null);
-		 * c.addObserver(null); c.equals(null); c.getAttributeValue(null, null);
-		 * c.getAttributeValues(null, null); c.getCategories(); c.getCloud();
-		 * c.getCopyright(); c.getCreator(); c.getDescription(); c.getDocs();
-		 * c.getElementValue(null); c.getElementValues(null, null);
-		 * c.getFormat(); c.getGenerator(); c.getId(); c.getImage();
-		 * c.getItem(0); c.getItems(); c.getLastBuildDate(); c.getLastUpdated();
-		 * c.getLastUpdated(); c.getLocation(); c.getRating(); c.getSite();
-		 * c.getTextInput();
-		 */
 	}
 	
 	private void run()
 	{
+		long lastRunTime = 0;//will store UTC time in milliseconds
+		
 		while(true)
 		{
-			Date lastRunTime = new Date(System.currentTimeMillis());
+			long currentTime = System.currentTimeMillis();
+			//wait 
+			long timeToWait = lastRunTime + RSS_POLLING_PERIOD_MILLIS - currentTime;
+			if(timeToWait >= 0) try
+			{
+				Thread.sleep(timeToWait);
+			}
+			catch(InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 			
 			//get list of RSS feeds that need checking
-			List<Feed> rssFeeds = FeedDAL.getFeedsOlderThan(new Date(System.currentTimeMillis() + RSS_POLLING_PERIOD_MILLIS));
+			List<Feed> rssFeeds = FeedDAL.getFeedsOlderThan(new Date(currentTime + RSS_POLLING_PERIOD_MILLIS));
 			
 			//list to store retrieved channel data
-			List<Pair<Feed,ChannelIF>> channelData = new ArrayList<Pair<Feed,ChannelIF>>(rssFeeds.size());
+			List<Pair<Feed, ChannelIF>> channelData = new ArrayList<Pair<Feed, ChannelIF>>(rssFeeds.size());
 			//so we can block until all retrievals are complete
-			List<Future<Object>> futures = new ArrayList<Future<Object>>(rssFeeds.size());
+			List<Future> futures = new ArrayList<Future>(rssFeeds.size());
 			
-			for(Feed rssFeed: rssFeeds)
+			for(Feed rssFeed : rssFeeds)
 			{
 				RSSRetrievalJob toRun = new RSSRetrievalJob(channelData, rssFeed);
-				threadPool.submit(toRun);
+				futures.add(threadPool.submit(toRun));
 			}
 			blockUntilDone(futures);
 			futures.clear();
 			
-			//extract out downloaded feeditem information, and create a classification job for each  
-			for(Pair<Feed,ChannelIF> channelPair : channelData)
+			//extract out downloaded feeditem information, and create (and submit) a classification job for each  
+			for(Pair<Feed, ChannelIF> channelPair : channelData)
 			{
 				for(ItemIF item : channelPair.getB().getItems())
 				{
 					ItemClassificationJob toRun = new ItemClassificationJob(channelPair.getA(), item);
+					futures.add(threadPool.submit(toRun));
 				}
 			}
+			blockUntilDone(futures);
 			
-			//TODO
-			
-			
+			lastRunTime = System.currentTimeMillis();
 		}
 	}
-
-	private void blockUntilDone(List<Future<Object>> futures)
+	
+	private void blockUntilDone(List<Future> futures)
 	{
-		for(Future future:futures)
+		for(Future future : futures)
 		{
 			try
 			{
@@ -113,8 +108,6 @@ public class ReaderService
 				e.printStackTrace();
 			}
 		}
-
-		
 	}
 	
 }

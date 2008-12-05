@@ -13,6 +13,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 import cc.mallet.classify.NaiveBayes;
 import cc.mallet.classify.NaiveBayesTrainer;
@@ -32,14 +35,10 @@ public class ClassifierDAL
 	static final String CLASSIFIERGROUP_COLUMN = "serializedClassifier";
 	static final String ID_COLUMN = "ID";
 	
+	
 	/**
 	 * Returns a group of objects consisting of a ClassifierTrainer, an instance
-	 * Pipe, and a Connection object.
-	 * <em>Since the Connection object is associated with a row-lock: In order to
-	 * allow other threads to update the same classifier, each call to this
-	 * method must be followed by a call to
-	 * {@link ClassifierDAL#updateTrainerAndClassifier(ClassifierDAL.TrainerCheckoutData)}
-	 * when processing the update is complete.</em>
+	 * Pipe, and an ID.
 	 * 
 	 * @param classifierId
 	 *        the ID of the classifier row to load the trainer for.
@@ -47,16 +46,9 @@ public class ClassifierDAL
 	 */
 	public static TrainerCheckoutData getTrainerForUpdating(int classifierId)
 	{
-		Connection conn = ConnectionConfig.createConnection();
-		
 		try
-		{
-			//acquire lock on string based on ID
-			PreparedStatement getLock = conn.prepareStatement("SELECT GET_LOCK(?, ?) ;");
-			getLock.setString(1, LOCK_PREFIX + classifierId);
-			getLock.setInt(2, Integer.MAX_VALUE);//TODO set different timeout value?
-			getLock.execute();
-			getLock.close();
+		{	
+			Connection conn = ConnectionConfig.createConnection();
 			
 			//get existing
 			PreparedStatement getGroup = conn.prepareStatement("SELECT " + CLASSIFIERGROUP_COLUMN + " FROM " + TABLE_NAME + " WHERE " + ID_COLUMN
@@ -94,8 +86,11 @@ public class ClassifierDAL
 					pipe = DocumentConversion.createConversionPipes();
 				}
 			}
-			
+		
+			results.close();
 			getGroup.close();
+			if(!conn.getAutoCommit())
+				conn.commit();
 			
 			return new TrainerCheckoutData(trainer, conn, pipe, classifierId);
 			
@@ -115,25 +110,19 @@ public class ClassifierDAL
 	{
 		try
 		{
+			Connection conn = ConnectionConfig.createConnection();
+			
 			Object toPersist = new ClassifierObjectGroup(checkin.trainer.getClassifier(), checkin.trainer, checkin.pipe);
 			
-			PreparedStatement update = checkin.connection.prepareStatement("UPDATE " + TABLE_NAME + " SET " + CLASSIFIERGROUP_COLUMN + "=? WHERE "
-					+ ID_COLUMN + "=?;");
+			PreparedStatement update = conn.prepareStatement("UPDATE " + TABLE_NAME + " SET " + CLASSIFIERGROUP_COLUMN + "=? WHERE " + ID_COLUMN
+					+ "=?;");
 			update.setBlob(1, getInputStreamFromObject(toPersist));
 			update.setInt(2, checkin.classifierID);
 			update.executeUpdate();
 			update.close();
-			
-			
-			//unlock
-			PreparedStatement releaseLock = checkin.connection.prepareStatement("SELECT RELEASE_LOCK(?) ;");
-			releaseLock.setString(1, LOCK_PREFIX + checkin.classifierID);
-			releaseLock.execute();
-			releaseLock.close();
-			
-			//TODO: java.sql.SQLException: Can't call commit when autocommit=true
-			// checkin.connection.commit();
-			checkin.connection.close();
+
+			if(!conn.getAutoCommit()) conn.commit();
+			conn.close();
 		}
 		catch(SQLException e)
 		{
@@ -194,14 +183,12 @@ public class ClassifierDAL
 	public static class TrainerCheckoutData
 	{
 		private NaiveBayesTrainer trainer;
-		private Connection connection;
 		private Pipe pipe;
 		private int classifierID;
 		
 		public TrainerCheckoutData(NaiveBayesTrainer trainer, Connection connection, Pipe pipe, int classifierID)
 		{
 			this.trainer = trainer;
-			this.connection = connection;
 			this.pipe = pipe;
 			this.classifierID = classifierID;
 		}
@@ -215,7 +202,6 @@ public class ClassifierDAL
 		{
 			return pipe;
 		}
-		
 	}
 	
 	/**
