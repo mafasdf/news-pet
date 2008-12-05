@@ -103,8 +103,8 @@ public class OriginalToNewFormat
 	
 	private static String doRegularExpressionReplacements(String line)
 	{
-		//TODO regular expression to change "&#d*;" to ""
-		//TODO regular expression to change "&lt;" to "<"
+		line=line.replaceAll("&#[0-9]*;", "");
+		line=line.replaceAll("&lt;", "<");
 		return line;
 	}
 
