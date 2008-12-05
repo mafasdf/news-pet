@@ -12,7 +12,9 @@ import cc.mallet.pipe.Pipe;
  * @author Michael Fulker
  */
 public class ClassifierObjectGroup implements Serializable
-{	
+{
+	private static final long serialVersionUID = 1L;
+	
 	private NaiveBayes classifier;
 	private NaiveBayesTrainer trainer;
 	private Pipe pipe;
