@@ -13,6 +13,7 @@ import de.nava.informa.core.ChannelIF;
 import de.nava.informa.core.ItemIF;
 import edu.iastate.coms.cs472.newspet.utils.Feed;
 import edu.iastate.coms.cs472.newspet.utils.Pair;
+import edu.iastate.coms.cs472.newspet.utils.dal.ConnectionConfig;
 import edu.iastate.coms.cs472.newspet.utils.dal.FeedDAL;
 
 public class ReaderService
@@ -100,6 +101,10 @@ public class ReaderService
 	
 	public static void main(String[] args)
 	{
+		if(args.length != 3) throw new IllegalArgumentException("Requires parameters: DBPATH LOGIN PASSWORD");
+		
+		ConnectionConfig.setupParams(args[0], args[1], args[2]);
+		
 		(new ReaderService()).run();
 	}
 }
