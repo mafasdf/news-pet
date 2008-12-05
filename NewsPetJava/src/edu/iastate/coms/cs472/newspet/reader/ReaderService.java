@@ -27,9 +27,6 @@ public class ReaderService
 		threadPool = new ThreadPoolExecutor(32, 32, 100, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 	
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args)
 	{
 		(new ReaderService()).run();
