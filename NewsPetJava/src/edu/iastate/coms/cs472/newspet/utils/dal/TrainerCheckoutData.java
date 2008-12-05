@@ -12,7 +12,9 @@ import cc.mallet.pipe.Pipe;
 public class TrainerCheckoutData
 {
 	private NaiveBayesTrainer trainer;
+	
 	private Pipe pipe;
+	
 	private int classifierID;
 	
 	public TrainerCheckoutData(NaiveBayesTrainer trainer, Pipe pipe, int classifierID)
