@@ -102,8 +102,8 @@ public class OriginalToNewFormat
 	
 	private static String doRegularExpressionReplacements(String line)
 	{
-		line=line.replaceAll("&#[0-9]*;", "");
-		line=line.replaceAll("&lt;", "<");
+		line = line.replaceAll("&#[0-9]*;", "");
+		line = line.replaceAll("&lt;", "<");
 		return line;
 	}
 
