@@ -28,7 +28,7 @@ CREATE TABLE "feed_category" (
     "owner_id" integer NOT NULL REFERENCES "auth_user" ("id")
 )
 ;
-CREATE TABLE "feed_pretrainedclassifier" (
+CREATE TABLE "feed_trainingset" (
     "id" integer NOT NULL PRIMARY KEY,
     "name" varchar(255) NOT NULL,
     "path" text NOT NULL
