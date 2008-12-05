@@ -46,7 +46,8 @@ public class TrainerThreadJob implements Runnable
 		}
 		catch(InterruptedException e)
 		{	
-
+			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 		try
