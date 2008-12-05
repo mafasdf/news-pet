@@ -14,17 +14,27 @@ import java.util.TreeSet;
 public class OriginalToNewFormat
 {
 	private static final String TOPIC_OPEN_ELEMENT = "<TOPICS>";
+	
 	private static final String TOPIC_CLOSE_ELEMENT = "</TOPICS>";
+	
 	private static final String TITLE_OPEN_ELEMENT = "<TITLE>";
+	
 	private static final String TITLE_CLOSE_ELEMENT = "</TITLE>";
+	
 	private static final String BODY_OPEN_ELEMENT = "<BODY>";
+	
 	private static final String BODY_CLOSE_ELEMENT = "</BODY>";
 	
 	private static final String PATH_TO_OLD_FILES = "data" + File.separator + "_Original Data_" + File.separator;
+	
 	private static final String PATH_TO_NEW_FILES = "data" + File.separator;
+	
 	private static final String PATH_TO_ALL_TOPICS_FILE = PATH_TO_OLD_FILES + "all-topics-strings.lc.txt";
 	
-	public enum State { LOOKING_FOR_TOPIC, LOOKING_FOR_TITLE, LOOKING_FOR_BODY }
+	public enum State
+	{
+		LOOKING_FOR_TOPIC, LOOKING_FOR_TITLE, LOOKING_FOR_BODY
+	}
 	
 	public static void main(String[] args) throws IOException
 	{
@@ -51,7 +61,7 @@ public class OriginalToNewFormat
 						final String openElement = "<D>";
 						final String closeElement = "</D>";
 						
-						for(int startIndex = line.indexOf(TOPIC_OPEN_ELEMENT) + TOPIC_OPEN_ELEMENT.length(); ; )
+						for(int startIndex = line.indexOf(TOPIC_OPEN_ELEMENT) + TOPIC_OPEN_ELEMENT.length();;)
 						{
 							startIndex = line.indexOf(openElement, startIndex);
 							if(startIndex == -1) break;
@@ -119,7 +129,7 @@ public class OriginalToNewFormat
 		line = line.replaceAll("&lt;", "<");
 		return line;
 	}
-
+	
 	private static Map<String, PrintWriter> getMapToTopicFiles() throws IOException
 	{
 		Scanner fileIn = new Scanner(new File(PATH_TO_ALL_TOPICS_FILE));
@@ -135,7 +145,7 @@ public class OriginalToNewFormat
 		
 		return mapTopicsToFiles;
 	}
-
+	
 	private static String getFileName(int i)
 	{
 		String fileNumber = "" + i;
