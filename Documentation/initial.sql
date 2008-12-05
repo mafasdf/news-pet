@@ -15,9 +15,10 @@ CREATE TABLE "feed_feeditem" (
     "author" varchar(255) NOT NULL,
     "body" text NOT NULL,
     "link" varchar(200) NOT NULL,
+    "opinion" integer NOT NULL, -- default to 0
     "category_id" integer NOT NULL,
     "feed_id" integer NOT NULL REFERENCES "feed_feed" ("id"),
-    "was_viewed" bool NOT NULL
+    "was_viewed" bool NOT NULL -- default to "false"
 )
 ;
 CREATE TABLE "feed_category" (
