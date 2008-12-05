@@ -8,7 +8,9 @@ import java.sql.SQLException;
 public class BatchTrainingSetDAL
 {
 	static final String TABLE_NAME = "feed_trainingset";
+	
 	static final String ID_COLUMN = "id";
+	
 	static final String PATH_COLUMN = "path";
 	
 	public static String getPath(int sourceId)
@@ -27,8 +29,7 @@ public class BatchTrainingSetDAL
 			}
 			result.close();
 			getPath.close();
-			if(!conn.getAutoCommit())
-				conn.commit();
+			if(!conn.getAutoCommit()) conn.commit();
 			conn.close();
 			return toReturn;
 		}
@@ -37,5 +38,4 @@ public class BatchTrainingSetDAL
 			throw new RuntimeException("Can't retrieve trainingset:" + sourceId, e);
 		}
 	}
-	
 }
