@@ -51,13 +51,15 @@ public class OriginalToNewFormat
 						final String openElement = "<D>";
 						final String closeElement = "</D>";
 						
-						for(int startIndex = line.indexOf(TOPIC_OPEN_ELEMENT) + TOPIC_OPEN_ELEMENT.length(); startIndex < line.length(); )
+						for(int startIndex = line.indexOf(TOPIC_OPEN_ELEMENT) + TOPIC_OPEN_ELEMENT.length(); ; )
 						{
-							int index = line.indexOf(openElement, startIndex);
-							if(index == -1) break;
-							startIndex = line.indexOf(closeElement);
-							String topic = line.substring(index + openElement.length(), startIndex);
+							startIndex = line.indexOf(openElement, startIndex);
+							if(startIndex == -1) break;
+							
+							int endIndex = line.indexOf(closeElement, startIndex);
+							String topic = line.substring(startIndex + openElement.length(), endIndex);
 							topics.add(topic);
+							startIndex = endIndex;
 						}
 						
 						state = State.LOOKING_FOR_TITLE;
