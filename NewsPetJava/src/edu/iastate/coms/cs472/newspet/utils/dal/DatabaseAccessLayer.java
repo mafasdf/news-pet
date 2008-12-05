@@ -36,8 +36,9 @@ public class DatabaseAccessLayer
 	static final String ID_COLUMN = "ID";
 	
 	/**
-	 * Returns a group of objects consisting of a ClassifierTrainer, an instance
-	 * Pipe, and an ID.
+	 * <p>Returns a group of objects consisting of a ClassifierTrainer, an instance
+	 * Pipe, and an ID.</p>
+	 * <p>Typically, access to this method should be done by a synchronization layer.{@link ClassifierDAL#getClassifier(int)} </p>
 	 * 
 	 * @param classifierId
 	 *        the ID of the classifier row to load the trainer for.
@@ -48,8 +49,10 @@ public class DatabaseAccessLayer
 		try
 		{	
 			Connection conn = ConnectionConfig.createConnection();
+			//make into a transaction
+			conn.setAutoCommit(false);
 			
-			//get existing
+			//try to get existing record 
 			PreparedStatement getGroup = conn.prepareStatement("SELECT " + CLASSIFIERGROUP_COLUMN + " FROM " + TABLE_NAME + " WHERE " + ID_COLUMN
 					+ "=?;");
 			getGroup.setInt(1, classifierId);
@@ -101,7 +104,9 @@ public class DatabaseAccessLayer
 	}
 	
 	/**
-	 * Persists an updated trainer and matching classifier.
+	 * <p>Persists an updated trainer and matching classifier.</p>
+	 * <p>Typically, access to this method should be done by a synchronization layer.{@link ClassifierDAL#giveClassifier(int)} </p>
+	 * 
 	 * 
 	 * @param checkin
 	 */
@@ -130,8 +135,10 @@ public class DatabaseAccessLayer
 	}
 	
 	/**
+	 * <p>
 	 * Lockless: in the case that the classifier is currently being trained, the
 	 * copy existing on the database will be returned.
+	 * </p>
 	 * <p>
 	 * Will return null if the classifier does not exist or has not yet been
 	 * trained for the first time.
