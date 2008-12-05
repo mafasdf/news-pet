@@ -22,15 +22,15 @@ public class CategoryDAL
 	 */
 	public static Integer getTrashCategoryIDForUser(int userID)
 	{
-		Connection conn = ConnectionConfig.createConnection();
 		Integer toReturn;
 		
 		String query = "SELECT " + ID_COLUMN + " FROM " + TABLE_NAME + " WHERE " + USERID_COLUMN + "=? AND " + TRASH_COLUMN + "=? ;";
 		
-		PreparedStatement getTrashID;
 		try
 		{
-			getTrashID = conn.prepareStatement(query);
+			Connection conn = ConnectionConfig.createConnection();
+			
+			PreparedStatement getTrashID = conn.prepareStatement(query);
 			java.sql.ResultSet result = getTrashID.executeQuery();
 			
 			if(!result.next())
