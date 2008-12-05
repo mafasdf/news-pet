@@ -8,10 +8,6 @@ import edu.iastate.coms.cs472.newspet.utils.dal.DatabaseAccessLayer;
 
 public class QuickTest
 {
-	
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args)
 	{
 		//TODO: only a quick test
@@ -33,7 +29,5 @@ public class QuickTest
 		{
 			throw new RuntimeException("We just lost the game", e);
 		}
-		
 	}
-	
 }
