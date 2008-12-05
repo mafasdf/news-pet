@@ -74,13 +74,16 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'feed',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    'feed',
     'django_extensions'
 )
 
 LOGIN_REDIRECT_URL = '/feed/home/'
+
+TRAINER_HOST = '129.186.67.183'
+TRAINER_PORT = 8000

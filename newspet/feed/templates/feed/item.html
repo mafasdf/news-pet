@@ -6,8 +6,8 @@
         <div>
             <h1><a href='{{item.get_external_url}}'>{{item.title}}</a></h1>
             <ul>
-                <li><a href="{% url update_category post,1">[+]</a></li>
-                <li><a href="{% url update_category post,-1}">[-]</a></li>
+                <li><a href="{% url f_love_item item.id %}">[+]</a></li>
+                <li><a href="{% url f_hate_item item.id %}">[-]</a></li>
             </ul>
         </div>
         <div>

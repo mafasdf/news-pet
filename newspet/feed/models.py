@@ -25,9 +25,10 @@ class FeedItemManager(models.Manager):
 class FeedItem(models.Model):
     date_added = models.DateTimeField(default=datetime.datetime.now)
     title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
     body = models.TextField()
-    opinion = models.IntegerField(default=0)
     link = models.URLField()
+    opinion = models.IntegerField(default=0)
     category = models.ForeignKey("Category")
     feed = models.ForeignKey("Feed")
     was_viewed = models.BooleanField(default=False)
@@ -43,13 +44,23 @@ class FeedItem(models.Model):
     def __unicode__(self):
         return self.title
     
+class CategoryManager(models.Manager):
+    def get_trash(self, user):
+        return self.filter(owner=user, is_trash=True)[0]
+    
+    def create_trash(self, user):
+        trash = Category(name="Trash", is_trash=True, owner=user)
+        trash.save()
+    
 class Category(models.Model):
     name = models.CharField(max_length=63)
     is_trash = models.BooleanField(default=False)
     owner = models.ForeignKey(User)
     
+    objects = CategoryManager()
+    
     def feed_items(self):
-        self.feeditem_set.all()
+        return self.feeditem_set.all()
         
     def has_unread(self):
         return self.unread_count() > 0
@@ -68,6 +79,7 @@ class Category(models.Model):
         
 class PreTrainedClassifier(models.Model):
     name = models.CharField(max_length=255)
+    path = models.TextField()
     
     def __unidcode__(self):
         return self.name

@@ -2,14 +2,14 @@
 
 {% block content %}
 <h1>{{category}}</h1>
-{% if category.feeditem_set.all %}
-{% for item in category.feeditem_set.all %}
+{% if category.feed_items %}
+{% for item in category.feed_items %}
 <div class="post-header">
     <div>
         <h1><a href='{{item.get_internal_url}}'>{{item.title}}</a></h1>
         <ul>
-            <li><a href="{% url update_category post,1">[+]</a></li>
-            <li><a href="{% url update_category post,-1}">[-]</a></li>
+            <li><a href="{% url f_love_item item.id %}">[+]</a></li>
+            <li><a href="{% url f_hate_item item.id %}">[-]</a></li>
         </ul>
     </div>
     <div>

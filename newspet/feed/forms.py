@@ -11,7 +11,7 @@ TRAINING_CHOICES = (('Pre-Trained Categories', 0),
                     ('Word or Phrase', 1),
                     ('Load Batch Files', 2),)
 
-class InitTrainingForm(forms.Form):
+class TrainingSetForm(forms.Form):
     method = forms.ChoiceField( choices= TRAINING_CHOICES,
                                 widget = forms.RadioSelect())
 
