@@ -7,8 +7,11 @@ import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.pipe.Pipe;
 
 /**
- * The 3 classifier-related objects that need to be persisted are: ClassifierTrainer, Classifier, and Pipe.
- * Since these share certain objects as member variables, it is more efficient to serialize them in a group, such as in this object.   
+ * The 3 classifier-related objects that need to be persisted are:
+ * ClassifierTrainer, Classifier, and Pipe. Since these share certain objects as
+ * member variables, it is more efficient to serialize them in a group, such as
+ * in this object.
+ * 
  * @author Michael Fulker
  */
 public class ClassifierObjectGroup implements Serializable
@@ -16,8 +19,11 @@ public class ClassifierObjectGroup implements Serializable
 	private static final long serialVersionUID = 1L;
 	
 	private NaiveBayes classifier;
+	
 	private NaiveBayesTrainer trainer;
+	
 	private Pipe pipe;
+	
 	/**
 	 * @param classifier
 	 * @param trainer
@@ -34,14 +40,14 @@ public class ClassifierObjectGroup implements Serializable
 	{
 		return classifier;
 	}
+	
 	public NaiveBayesTrainer getTrainer()
 	{
 		return trainer;
 	}
+	
 	public Pipe getPipe()
 	{
 		return pipe;
 	}
-	
-	
 }
