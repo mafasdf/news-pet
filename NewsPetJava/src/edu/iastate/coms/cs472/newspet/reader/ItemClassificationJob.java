@@ -95,7 +95,7 @@ public class ItemClassificationJob implements Runnable
 		}
 		
 		//persist a new FeedItem in the proper category
-		FeedItemDAL.saveNewFeedItem(feedItem.getTitle(), feedItem.getCreator(), feedItem.getDescription(), feedItem.getLink().toString(), bestCategory.getA(), feed.getId(), feed.getUserId());
+		FeedItemDAL.saveNewFeedItem(feedItem.getTitle(), feedItem.getCreator(), feedItem.getDescription(), feedItem.getLink().toString(), bestCategoryID, feed.getId(), feed.getUserId());
 	}
 	
 	public static List<Pair<Integer, Double>> getClassificationValues(LabelVector classificationResultVector)
