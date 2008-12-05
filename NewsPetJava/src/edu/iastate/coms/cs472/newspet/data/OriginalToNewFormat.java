@@ -20,8 +20,8 @@ public class OriginalToNewFormat
 	private static final String BODY_OPEN_ELEMENT = "<BODY>";
 	private static final String BODY_CLOSE_ELEMENT = "</BODY>";
 	
-	private static final String PATH_TO_OLD_FILES = "data" + File.pathSeparator + "_Original Data_" + File.pathSeparator;
-	private static final String PATH_TO_NEW_FILES = "data" + File.pathSeparator;
+	private static final String PATH_TO_OLD_FILES = "data" + File.separator + "_Original Data_" + File.separator;
+	private static final String PATH_TO_NEW_FILES = "data" + File.separator;
 	private static final String PATH_TO_ALL_TOPICS_FILE = PATH_TO_OLD_FILES + "all-topics-strings.lc.txt";
 	
 	public enum State { LOOKING_FOR_TOPIC, LOOKING_FOR_TITLE, LOOKING_FOR_BODY }
