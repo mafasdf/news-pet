@@ -6,13 +6,27 @@ import java.sql.SQLException;
 
 public class ConnectionConfig
 {
+	private static String sqliteDBPath;
+	private static String user;
+	private static String password;
+	public static void setupParams(String sqliteDBPath, String user, String password)
+	{
+		ConnectionConfig.sqliteDBPath=sqliteDBPath;
+		ConnectionConfig.user=user;
+		ConnectionConfig.password=password;
+	}
+	
+	
 	static Connection createConnection()
 	{
+		if(sqliteDBPath==null || user == null || password == null)
+			throw new RuntimeException("Must call setupParams before createConnection");
+		
 		try
 		{
 			//TODO: make configurable
-			Class.forName("org.postgresql.Driver").newInstance();
-			return DriverManager.getConnection("jdbc:postgres://localhost/newspet.db", "newspet", "newspet");
+			Class.forName("org.sqlite.JDBC").newInstance();
+			return DriverManager.getConnection("jdbc:sqlite:"+sqliteDBPath, user, password);
 		}
 		catch(SQLException e)
 		{

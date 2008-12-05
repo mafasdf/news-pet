@@ -5,6 +5,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import edu.iastate.coms.cs472.newspet.utils.MessageQueueThread;
+import edu.iastate.coms.cs472.newspet.utils.dal.ConnectionConfig;
 
 /**
  * @author Michael Fulker
@@ -26,19 +27,21 @@ public class TrainerService
 	
 	public static void main(String[] args)
 	{
-		if(args.length < 1) throw new IllegalArgumentException("Requires at least one argument for message listening port");
+		if(args.length != 5) throw new IllegalArgumentException("Requires parameters: PORT TIMEOUT DBPATH LOGIN PASSWORD");
 		
 		int port = Integer.parseInt(args[0]);
 		
-		int timeout;
-		if(args.length >= 2) timeout = Integer.parseInt(args[1]);
-		else timeout = -1;
+		int timeout = Integer.parseInt(args[1]);
+		
+		ConnectionConfig.setupParams(args[2], args[3], args[4]);
 		
 		(new TrainerService(port, timeout)).run();
 	}
 	
 	private void run()
-	{
+	{	
+		queue.start();
+		
 		while(true)
 		{
 			String incomingString = blockingPeekInQueue();
@@ -56,8 +59,6 @@ public class TrainerService
 			//give to threadpool
 			threadPool.execute(job);
 		}
-		
-		//TODO: have input-triggered clean shutdown. threadPool.shutdown();
 	}
 	
 	private String blockingPeekInQueue()
