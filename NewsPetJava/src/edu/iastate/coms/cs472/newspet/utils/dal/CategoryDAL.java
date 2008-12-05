@@ -2,6 +2,7 @@ package edu.iastate.coms.cs472.newspet.utils.dal;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -28,31 +29,58 @@ public class CategoryDAL
 	 */
 	public static Integer getTrashCategoryIDForUser(int userID)
 	{
-		Integer toReturn;
-		
 		String query = "SELECT " + ID_COLUMN + " FROM " + TABLE_NAME + " WHERE " + USERID_COLUMN + "=? AND " + TRASH_COLUMN + "=? ;";
 		
+		Connection conn = null;
+		PreparedStatement getTrashID = null;
+		ResultSet result = null;
 		try
 		{
-			Connection conn = ConnectionConfig.createConnection();
+			conn = ConnectionConfig.createConnection();
 			
-			PreparedStatement getTrashID = conn.prepareStatement(query);
-			java.sql.ResultSet result = getTrashID.executeQuery();
+			getTrashID = conn.prepareStatement(query);
+			result = getTrashID.executeQuery();
 			
-			if(!result.next()) toReturn = null;
-			else toReturn = result.getInt(ID_COLUMN);
-			
-			result.close();
-			getTrashID.close();
-			//TODO: check this in other DALs
-			if(!conn.getAutoCommit()) conn.commit();
-			conn.close();
+			if(result.next()) return result.getInt(ID_COLUMN);
+			return null;
 		}
 		catch(SQLException e)
 		{
 			throw new RuntimeException("Could not retrieve trash category for user:" + userID, e);
 		}
-		
-		return toReturn;
+		finally
+		{
+			if(result != null) try
+			{
+				result.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a ResultSet!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				if(getTrashID != null) getTrashID.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a PreparedStatement!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				if(conn != null)
+				{
+					if(!conn.getAutoCommit()) conn.commit();
+					conn.close();
+				}
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a Connection!");
+				System.err.println(e.getMessage());
+			}
+		}
 	}
 }
