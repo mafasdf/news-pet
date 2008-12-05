@@ -36,13 +36,16 @@ public class ReaderService
 			long currentTime = System.currentTimeMillis();
 			//wait 
 			long timeToWait = lastRunTime + RSS_POLLING_PERIOD_MILLIS - currentTime;
-			if(timeToWait >= 0) try
+			if(timeToWait >= 0)
 			{
-				Thread.sleep(timeToWait);
-			}
-			catch(InterruptedException e)
-			{
-				e.printStackTrace();
+				try
+				{
+					Thread.sleep(timeToWait);
+				}
+				catch(InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 			}
 			
 			//get list of RSS feeds that need checking
