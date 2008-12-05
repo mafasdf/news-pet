@@ -3,7 +3,7 @@ package edu.iastate.coms.cs472.newspet.utils;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class OurLinkedBlockingDeque<E> extends LinkedBlockingDeque<E>
-{	
+{
 	private static final long serialVersionUID = 1L;
 	
 	private Object lock = new Object();
