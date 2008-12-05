@@ -92,7 +92,7 @@ public class OriginalToNewFormat
 							line = fileIn.nextLine();
 						}
 						int endIndex = line.indexOf(BODY_CLOSE_ELEMENT);
-						sb.append(line.substring(0, endIndex));
+						sb.append(doRegularExpressionReplacements(line.substring(0, endIndex)));
 						
 						for(String topic : topics)
 						{
