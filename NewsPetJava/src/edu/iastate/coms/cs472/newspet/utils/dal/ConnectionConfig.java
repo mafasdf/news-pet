@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionConfig
-{	
+{
 	static Connection createConnection()
 	{
 		try
@@ -16,19 +16,19 @@ public class ConnectionConfig
 		}
 		catch(SQLException e)
 		{
-			throw new RuntimeException("Could not establish connection with database", e);
+			throw new RuntimeException("SQLException while trying to establish a connection with database!", e);
 		}
 		catch(InstantiationException e)
 		{
-			throw new RuntimeException("Could not instantiate jdbc driver", e);
+			throw new RuntimeException("InstantiationException: Could not instantiate jdbc driver!", e);
 		}
 		catch(IllegalAccessException e)
 		{
-			throw new RuntimeException("Could not instantiate jdbc driver", e);
+			throw new RuntimeException("IllegalAccessException while trying to instantiate jdbc driver!", e);
 		}
 		catch(ClassNotFoundException e)
 		{
-			throw new RuntimeException("Could not instantiate jdbc driver", e);
+			throw new RuntimeException("ClassNotFoundException while tyring to instantiate jdbc driver!", e);
 		}
 	}
 }
