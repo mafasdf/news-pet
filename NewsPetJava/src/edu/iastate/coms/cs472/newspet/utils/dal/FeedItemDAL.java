@@ -116,7 +116,7 @@ public class FeedItemDAL
 		}
 	}
 	
-	public String getFeedItemText(int feedItemID)
+	public static String getFeedItemText(int feedItemID)
 	{
 		try
 		{

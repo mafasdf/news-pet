@@ -11,7 +11,6 @@ import edu.iastate.coms.cs472.newspet.utils.MessageQueueThread;
  */
 public class TrainerService
 {
-	//TODO: finalize what type of element we want to queue, (and whether or not we use the BlockingQueue interface)
 	private MessageQueueThread queue;
 	
 	private ThreadPoolExecutor threadPool;
@@ -50,15 +49,15 @@ public class TrainerService
 		while(true)
 		{
 			String incomingString = blockingPeekInQueue();
-			int currentClassifierID = convertMessageToTrainingItem(incomingString).getClassifierID();
+			int currentClassifierID = (new Message(incomingString)).getUserId();
 			
 			//get job of contiguous items for specific classifier
 			TrainerThreadJob job = new TrainerThreadJob(currentClassifierID);
-			TrainingItem currentItem;
+			Message currentMessage;
 			while(!queue.getMessageQueue().isEmpty()
-					&& (currentItem = convertMessageToTrainingItem(blockingPeekInQueue())).getClassifierID() == currentClassifierID)
+					&& (currentMessage = new Message(blockingPeekInQueue())).getUserId() == currentClassifierID)
 			{
-				job.add(currentItem);
+				job.add(currentMessage);
 				queue.getMessageQueue().remove();
 			}
 			
@@ -66,7 +65,7 @@ public class TrainerService
 			threadPool.execute(job);
 		}
 		
-		//TODO: have input-triggered clean shutdown threadPool.shutdown();
+		//TODO: have input-triggered clean shutdown. threadPool.shutdown();
 	}
 	
 
@@ -83,17 +82,4 @@ public class TrainerService
 		}
 	}
 	
-	private TrainingItem convertMessageToTrainingItem(String message)
-	{
-		// TODO: finalize expected string format and parse accordingly
-		// TODO: handle jobs consisting of more than one item 
-		int commaIndex0 = message.indexOf(',');
-		
-		int classifierID = Integer.parseInt(message.substring(0, commaIndex0));
-		int commaIndex1 = message.indexOf(',', commaIndex0 + 1);
-		int categoryID = Integer.parseInt(message.substring(commaIndex0 + 1, commaIndex1));
-		String document = message.substring(commaIndex1 + 1);
-		
-		return new TrainingItem(classifierID, categoryID, document);
-	}
 }
