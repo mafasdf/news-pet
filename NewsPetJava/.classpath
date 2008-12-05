@@ -7,6 +7,6 @@
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
 	<classpathentry kind="lib" path="lib/mallet.jar" sourcepath="/MalletSrc"/>
 	<classpathentry kind="lib" path="lib/mallet-deps.jar"/>
-	<classpathentry kind="lib" path="lib/postgresql-8.3-604.jdbc4.jar"/>
+	<classpathentry kind="lib" path="lib/sqlitejdbc-v054.jar" sourcepath="C:/Temp/sqliteSrc/www.zentus.com/sqlitejdbc/src/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
