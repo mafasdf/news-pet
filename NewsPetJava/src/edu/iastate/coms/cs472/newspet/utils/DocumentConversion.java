@@ -9,8 +9,6 @@ import cc.mallet.pipe.SerialPipes;
 import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceLowercase;
-import cc.mallet.types.Alphabet;
-import cc.mallet.types.LabelAlphabet;
 
 public class DocumentConversion
 {
@@ -36,5 +34,4 @@ public class DocumentConversion
 		
 		return new SerialPipes(pipesArr);
 	}
-	
 }
