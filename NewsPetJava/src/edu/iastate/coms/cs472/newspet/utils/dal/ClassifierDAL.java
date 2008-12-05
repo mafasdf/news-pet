@@ -35,7 +35,6 @@ public class ClassifierDAL
 	static final String CLASSIFIERGROUP_COLUMN = "serializedClassifier";
 	static final String ID_COLUMN = "ID";
 	
-	
 	/**
 	 * Returns a group of objects consisting of a ClassifierTrainer, an instance
 	 * Pipe, and an ID.
@@ -92,7 +91,7 @@ public class ClassifierDAL
 			if(!conn.getAutoCommit())
 				conn.commit();
 			
-			return new TrainerCheckoutData(trainer, conn, pipe, classifierId);
+			return new TrainerCheckoutData(trainer, pipe, classifierId);
 			
 		}
 		catch(SQLException e)
@@ -112,12 +111,12 @@ public class ClassifierDAL
 		{
 			Connection conn = ConnectionConfig.createConnection();
 			
-			Object toPersist = new ClassifierObjectGroup(checkin.trainer.getClassifier(), checkin.trainer, checkin.pipe);
+			Object toPersist = new ClassifierObjectGroup(checkin.getTrainer().getClassifier(), checkin.getTrainer(), checkin.getPipe());
 			
 			PreparedStatement update = conn.prepareStatement("UPDATE " + TABLE_NAME + " SET " + CLASSIFIERGROUP_COLUMN + "=? WHERE " + ID_COLUMN
 					+ "=?;");
 			update.setBlob(1, getInputStreamFromObject(toPersist));
-			update.setInt(2, checkin.classifierID);
+			update.setInt(2, checkin.getClasifierID());
 			update.executeUpdate();
 			update.close();
 
@@ -126,7 +125,7 @@ public class ClassifierDAL
 		}
 		catch(SQLException e)
 		{
-			throw new RuntimeException("Could not persist trainer/classifier for ID " + checkin.classifierID, e);
+			throw new RuntimeException("Could not persist trainer/classifier for ID " + checkin.getClasifierID(), e);
 		}
 	}
 	
@@ -172,36 +171,6 @@ public class ClassifierDAL
 		}
 		
 		return group.getClassifier();
-	}
-	
-	/**
-	 * Class for returning multiple values in
-	 * {@link ClassifierDAL#getTrainerForUpdating(int)}
-	 * 
-	 * @author Michael Fulker
-	 */
-	public static class TrainerCheckoutData
-	{
-		private NaiveBayesTrainer trainer;
-		private Pipe pipe;
-		private int classifierID;
-		
-		public TrainerCheckoutData(NaiveBayesTrainer trainer, Connection connection, Pipe pipe, int classifierID)
-		{
-			this.trainer = trainer;
-			this.pipe = pipe;
-			this.classifierID = classifierID;
-		}
-		
-		public NaiveBayesTrainer getTrainer()
-		{
-			return trainer;
-		}
-		
-		public Pipe getPipe()
-		{
-			return pipe;
-		}
 	}
 	
 	/**
