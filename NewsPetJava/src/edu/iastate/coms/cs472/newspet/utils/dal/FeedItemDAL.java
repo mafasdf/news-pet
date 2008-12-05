@@ -17,10 +17,20 @@ public class FeedItemDAL
 	static final String TABLE_NAME = "feed_feeditem";
 	static final String URL_COLUMN = "link";
 	static final String CATEGORYID_COLUMN = "category_id";
+	static final Object DATE_COLUMN = null;
+	static final Object TITLE_COLUMN = null;
+	static final Object AUTHOR_COLUMN = null;
+	static final Object BODY_COLUMN = null;
+	static final Object OPINION_COLUMN = null;
+	static final Object WASVIEWED_COLUMN = null;
 	
-	private static final String URL_EXISTS_QUERY = String.format(
+	//used in multiple methods
+	static final String URL_EXISTS_QUERY = String.format(
 			"SELECT EXISTS ( SELECT * FROM %s F INNER JOIN %s C ON F.%s=C.%s WHERE F.%s=? AND C.%s=?);", TABLE_NAME, CategoryDAL.TABLE_NAME,
 			CATEGORYID_COLUMN, CategoryDAL.ID_COLUMN, URL_COLUMN, CategoryDAL.USERID_COLUMN);
+	private static final Object FEEDID_COLUMN = null;
+	
+	
 	
 	public static boolean existsURL(String url, int userID)
 	{
@@ -50,15 +60,18 @@ public class FeedItemDAL
 	}
 	
 	/**
-	 * Saves a new feedItem, aborting if item with the same user & url already exists.
+	 * Saves a new feedItem, aborting if item with the same user & url already
+	 * exists.
 	 */
 	public static void saveNewFeedItem(String title, String creator, String description, String url, int categoryId, int feedId, int userId)
 	{
 		Connection conn = ConnectionConfig.createConnection();		
 		
 		try
-		{	
-			//TODO: more elegant locking
+		{
+			//use a transaction to prevent multiples of the same feed item being added
+			conn.setAutoCommit(false);
+			
 			//check for existence of a feeditem
 			PreparedStatement checkExists = conn.prepareStatement(URL_EXISTS_QUERY);
 			checkExists.setString(1, url);
@@ -71,13 +84,29 @@ public class FeedItemDAL
 			//only insert if item with same url doesn't exist
 			if(!alreadyExists)
 			{
-				PreparedStatement insert = conn.prepareStatement(String.format("INSERT INTO %s (%s, %s, %s, %s) values (?, ?, ?, ?, ?);"/**/));
-				//TODO
+				PreparedStatement insert = conn.prepareStatement(String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s, %s) values (?, ?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME, 
+						DATE_COLUMN, TITLE_COLUMN, AUTHOR_COLUMN, BODY_COLUMN, 
+						URL_COLUMN, OPINION_COLUMN, CATEGORYID_COLUMN, FEEDID_COLUMN, WASVIEWED_COLUMN));
+				insert.setDate(1, new java.sql.Date(System.currentTimeMillis()));
+				insert.setString(2, title == null ? "" : title);
+				insert.setString(3, creator == null ? "" : creator);
+				insert.setString(4, description== null ? "" : description);
+				insert.setString(5, url== null ? "" : url);
+				insert.setInt(6, 0);//default = 0
+				insert.setInt(7, categoryId);
+				insert.setInt(8, feedId);
+				insert.setBoolean(9, false);
+				
+				insert.executeUpdate();
+				insert.close();
 			}
 			
-			//TODO: more closing
-			if(!conn.getAutoCommit())
-				conn.commit();
+			
+			
+			//commit transaction
+			conn.commit();
+			
+			
 			conn.close();
 		}
 		catch(SQLException e)
