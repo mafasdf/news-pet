@@ -30,13 +30,13 @@ public class OriginalToNewFormat
 	{
 		Map<String, PrintWriter> mapTopicsToPrintWriters = getMapToTopicFiles();
 		
+		Set<String> topics = new TreeSet<String>();
 		for(int i = 0; i <= 21; i++)
 		{
 			String fileName = getFileName(i);
 			Scanner fileIn = new Scanner(new File(fileName));
 			
 			State state = State.LOOKING_FOR_TOPIC;
-			Set<String> topics = new TreeSet<String>();
 			while(fileIn.hasNextLine())
 			{
 				String line = fileIn.nextLine();
