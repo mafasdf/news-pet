@@ -1,12 +1,8 @@
 package edu.iastate.coms.cs472.newspet.reader;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -15,9 +11,6 @@ import java.util.concurrent.TimeUnit;
 
 import de.nava.informa.core.ChannelIF;
 import de.nava.informa.core.ItemIF;
-import de.nava.informa.core.ParseException;
-import de.nava.informa.impl.basic.ChannelBuilder;
-import de.nava.informa.parsers.FeedParser;
 import edu.iastate.coms.cs472.newspet.utils.Feed;
 import edu.iastate.coms.cs472.newspet.utils.Pair;
 import edu.iastate.coms.cs472.newspet.utils.dal.FeedDAL;
@@ -66,7 +59,7 @@ public class ReaderService
 			//list to store retrieved channel data
 			List<Pair<Feed, ChannelIF>> channelData = new ArrayList<Pair<Feed, ChannelIF>>(rssFeeds.size());
 			//so we can block until all retrievals are complete
-			List<Future> futures = new ArrayList<Future>(rssFeeds.size());
+			List<Future<?>> futures = new ArrayList<Future<?>>(rssFeeds.size());
 			
 			for(Feed rssFeed : rssFeeds)
 			{
@@ -91,9 +84,9 @@ public class ReaderService
 		}
 	}
 	
-	private void blockUntilDone(List<Future> futures)
+	private void blockUntilDone(List<Future<?>> futures)
 	{
-		for(Future future : futures)
+		for(Future<?> future : futures)
 		{
 			try
 			{
