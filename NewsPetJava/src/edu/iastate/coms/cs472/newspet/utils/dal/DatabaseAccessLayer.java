@@ -70,10 +70,10 @@ public class DatabaseAccessLayer
 			if(results.next())
 			{
 				//deserialize
-				Blob blob = results.getBlob(CLASSIFIERGROUP_COLUMN);
+				byte[] blob = results.getBytes(CLASSIFIERGROUP_COLUMN);
 				if(blob != null)
 				{
-					ClassifierObjectGroup group = (ClassifierObjectGroup) getObjectFromStream(blob.getBinaryStream());
+					ClassifierObjectGroup group = (ClassifierObjectGroup) getObjectFromStream(new ByteArrayInputStream(blob));
 					trainer = group.getTrainer();
 					pipe = group.getPipe();
 				}
@@ -158,7 +158,7 @@ public class DatabaseAccessLayer
 		try
 		{
 			update = conn.prepareStatement("UPDATE " + TABLE_NAME + " SET " + CLASSIFIERGROUP_COLUMN + "=? WHERE " + ID_COLUMN + "=?;");
-			update.setBlob(1, getInputStreamFromObject(toPersist));
+			update.setBytes(1, getByteArrayFromObject(toPersist));
 			update.setInt(2, checkin.getClasifierID());
 			update.executeUpdate();
 		}
@@ -290,7 +290,7 @@ public class DatabaseAccessLayer
 		}
 	}
 	
-	private static InputStream getInputStreamFromObject(Object o)
+	private static byte[] getByteArrayFromObject(Object o)
 	{
 		ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
 		OutputStream compressor = new java.util.zip.DeflaterOutputStream(bytesOut);
@@ -339,6 +339,6 @@ public class DatabaseAccessLayer
 			}
 		}
 		
-		return new ByteArrayInputStream(bytesOut.toByteArray());
+		return bytesOut.toByteArray();
 	}
 }
