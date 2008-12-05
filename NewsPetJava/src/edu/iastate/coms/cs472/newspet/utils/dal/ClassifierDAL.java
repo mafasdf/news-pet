@@ -6,9 +6,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ClassifierDAL
 {
-	Map<Integer, GateKeeper> classifierIDsToGateKeeper = new HashMap<Integer, GateKeeper>();
+	private static Map<Integer, GateKeeper> classifierIDsToGateKeeper = new HashMap<Integer, GateKeeper>();
 	
-	public TrainerCheckoutData getClassifier(int classifierID)
+	public static TrainerCheckoutData getClassifier(int classifierID) throws InterruptedException
 	{
 		GateKeeper gk = classifierIDsToGateKeeper.get(classifierID);
 		if(gk == null)
@@ -28,13 +28,13 @@ public class ClassifierDAL
 		return gk.getClasisifier();
 	}
 	
-	public void giveClassifier(int classifierID)
+	public static void giveClassifier(int classifierID)
 	{
 		GateKeeper gk = classifierIDsToGateKeeper.get(classifierID);
 		gk.giveClassifier();
 	}
 	
-	private class GateKeeper
+	private static class GateKeeper
 	{
 		private int classifierID;
 		
@@ -49,13 +49,17 @@ public class ClassifierDAL
 			this.classifierID = classifierID;
 		}
 
-		public synchronized TrainerCheckoutData getClasisifier()
+		public synchronized TrainerCheckoutData getClasisifier() throws InterruptedException
 		{
 			if(classifier == null)
 			{
 				classifier = DatabaseAccessLayer.getTrainerForUpdating(this.classifierID);
 			}
 			
+			if(semaphoreCount != 0)
+			{
+				this.wait();
+			}
 			semaphoreCount++;
 			semaphore.lock();
 			
@@ -69,9 +73,14 @@ public class ClassifierDAL
 			DatabaseAccessLayer.updateTrainerAndClassifier(classifier);
 			
 			semaphoreCount--;
+			semaphore.unlock();
 			if(semaphoreCount == 0)
 			{
 				classifier = null;
+			}
+			else
+			{
+				this.notify();
 			}
 		}
 	}
