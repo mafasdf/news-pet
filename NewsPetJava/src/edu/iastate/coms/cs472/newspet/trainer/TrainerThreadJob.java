@@ -7,6 +7,7 @@ import java.util.List;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.InstanceList;
 import edu.iastate.coms.cs472.newspet.utils.DocumentConversion;
+import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL;
 import edu.iastate.coms.cs472.newspet.utils.dal.DatabaseAccessLayer;
 import edu.iastate.coms.cs472.newspet.utils.dal.TrainerCheckoutData;
 
@@ -24,18 +25,34 @@ public class TrainerThreadJob implements Runnable, Iterable<TrainingItem>
 	public void run()
 	{
 		//get trainer (lock by ID)
-		TrainerCheckoutData checkoutData = DatabaseAccessLayer.getTrainerForUpdating(classifierID); 
+		TrainerCheckoutData checkoutData=null;
+		try
+		{
+			checkoutData = ClassifierDAL.getClassifier(classifierID);
+		}
+		catch(InterruptedException e)
+		{
+			
+		} 
 		
-		//set up filters
-		InstanceList trainingInstanceList = new  InstanceList(checkoutData.getPipe());
-		trainingInstanceList.addThruPipe(new TrainingItemToInstanceIterator(trainingItems.iterator()));
+		try
+		{
+			//set up filters
+			InstanceList trainingInstanceList = new  InstanceList(checkoutData.getPipe());
+			trainingInstanceList.addThruPipe(new TrainingItemToInstanceIterator(trainingItems.iterator()));
 		
-		//train
-		checkoutData.getTrainer().trainIncremental(trainingInstanceList);
+			//train
+			checkoutData.getTrainer().trainIncremental(trainingInstanceList);
 		
-		//persist
-		//(will unlock by ID)
-		DatabaseAccessLayer.updateTrainerAndClassifier(checkoutData);
+			
+		}
+		finally
+		{
+			//persist
+			//(will unlock by ID)
+			//(DAL keeps checkoutdata in bookkeeping)
+			ClassifierDAL.giveClassifier(classifierID);
+		}
 	}
 
 	public Iterator<TrainingItem> iterator()
