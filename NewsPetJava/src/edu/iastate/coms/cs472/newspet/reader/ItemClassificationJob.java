@@ -100,7 +100,7 @@ public class ItemClassificationJob implements Runnable
 		}
 		
 		//persist a new feeditem in the proper category
-		//TODO FeedItemDAL.saveNewFeedItem(feedItem.getTitle(), feedItem.getCreator(), feedItem.getDescription(), feedItem.getLink().toString(), bestCategory);
+		FeedItemDAL.saveNewFeedItem(feedItem.getTitle(), feedItem.getCreator(), feedItem.getDescription(), feedItem.getLink().toString(), bestCategory.getA(), feed.getId(), feed.getUserId());
 	}
 
 
