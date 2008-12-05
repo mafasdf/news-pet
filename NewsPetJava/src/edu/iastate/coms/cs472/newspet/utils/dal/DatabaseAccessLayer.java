@@ -9,13 +9,9 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.sql.Blob;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReentrantLock;
 
 import cc.mallet.classify.NaiveBayes;
 import cc.mallet.classify.NaiveBayesTrainer;
@@ -31,14 +27,22 @@ import edu.iastate.coms.cs472.newspet.utils.DocumentConversion;
 public class DatabaseAccessLayer
 {
 	static final String LOCK_PREFIX = "classifierUpdate_";
+	
 	static final String TABLE_NAME = "Classifier";
+	
 	static final String CLASSIFIERGROUP_COLUMN = "serializedClassifier";
+	
 	static final String ID_COLUMN = "ID";
 	
 	/**
-	 * <p>Returns a group of objects consisting of a ClassifierTrainer, an instance
-	 * Pipe, and an ID.</p>
-	 * <p>Typically, access to this method should be done by a synchronization layer.{@link ClassifierDAL#getClassifier(int)} </p>
+	 * <p>
+	 * Returns a group of objects consisting of a ClassifierTrainer, an instance
+	 * Pipe, and an ID.
+	 * </p>
+	 * <p>
+	 * Typically, access to this method should be done by a synchronization
+	 * layer.{@link ClassifierDAL#getClassifier(int)}
+	 * </p>
 	 * 
 	 * @param classifierId
 	 *        the ID of the classifier row to load the trainer for.
@@ -47,14 +51,13 @@ public class DatabaseAccessLayer
 	public static TrainerCheckoutData getTrainerForUpdating(int classifierId)
 	{
 		try
-		{	
+		{
 			Connection conn = ConnectionConfig.createConnection();
 			//make into a transaction
 			conn.setAutoCommit(false);
 			
 			//try to get existing record 
-			PreparedStatement getGroup = conn.prepareStatement("SELECT " + CLASSIFIERGROUP_COLUMN + " FROM " + TABLE_NAME + " WHERE " + ID_COLUMN
-					+ "=?;");
+			PreparedStatement getGroup = conn.prepareStatement("SELECT " + CLASSIFIERGROUP_COLUMN + " FROM " + TABLE_NAME + " WHERE " + ID_COLUMN + "=?;");
 			getGroup.setInt(1, classifierId);
 			ResultSet results = getGroup.executeQuery();
 			
@@ -88,11 +91,10 @@ public class DatabaseAccessLayer
 					pipe = DocumentConversion.createConversionPipes();
 				}
 			}
-		
+			
 			results.close();
 			getGroup.close();
-			if(!conn.getAutoCommit())
-				conn.commit();
+			if(!conn.getAutoCommit()) conn.commit();
 			
 			return new TrainerCheckoutData(trainer, pipe, classifierId);
 			
@@ -104,9 +106,13 @@ public class DatabaseAccessLayer
 	}
 	
 	/**
-	 * <p>Persists an updated trainer and matching classifier.</p>
-	 * <p>Typically, access to this method should be done by a synchronization layer.{@link ClassifierDAL#giveClassifier(int)} </p>
-	 * 
+	 * <p>
+	 * Persists an updated trainer and matching classifier.
+	 * </p>
+	 * <p>
+	 * Typically, access to this method should be done by a synchronization
+	 * layer.{@link ClassifierDAL#giveClassifier(int)}
+	 * </p>
 	 * 
 	 * @param checkin
 	 */
@@ -118,13 +124,12 @@ public class DatabaseAccessLayer
 			
 			Object toPersist = new ClassifierObjectGroup(checkin.getTrainer().getClassifier(), checkin.getTrainer(), checkin.getPipe());
 			
-			PreparedStatement update = conn.prepareStatement("UPDATE " + TABLE_NAME + " SET " + CLASSIFIERGROUP_COLUMN + "=? WHERE " + ID_COLUMN
-					+ "=?;");
+			PreparedStatement update = conn.prepareStatement("UPDATE " + TABLE_NAME + " SET " + CLASSIFIERGROUP_COLUMN + "=? WHERE " + ID_COLUMN + "=?;");
 			update.setBlob(1, getInputStreamFromObject(toPersist));
 			update.setInt(2, checkin.getClasifierID());
 			update.executeUpdate();
 			update.close();
-
+			
 			if(!conn.getAutoCommit()) conn.commit();
 			conn.close();
 		}
@@ -151,8 +156,7 @@ public class DatabaseAccessLayer
 		ClassifierObjectGroup group;
 		try
 		{
-			PreparedStatement getGroup = conn.prepareStatement("SELECT " + CLASSIFIERGROUP_COLUMN + " FROM " + TABLE_NAME + " WHERE " + ID_COLUMN
-					+ "=?;");
+			PreparedStatement getGroup = conn.prepareStatement("SELECT " + CLASSIFIERGROUP_COLUMN + " FROM " + TABLE_NAME + " WHERE " + ID_COLUMN + "=?;");
 			getGroup.setInt(1, classifierID);
 			ResultSet results = getGroup.executeQuery();
 			
