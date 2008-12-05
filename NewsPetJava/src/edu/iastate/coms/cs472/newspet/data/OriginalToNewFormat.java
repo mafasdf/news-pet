@@ -94,6 +94,12 @@ public class OriginalToNewFormat
 						int endIndex = line.indexOf(BODY_CLOSE_ELEMENT);
 						sb.append(line.substring(0, endIndex));
 						
+						for(String topic : topics)
+						{
+							PrintWriter topicPW = mapTopicsToPrintWriters.get(topic);
+							topicPW.println(sb.toString());
+						}
+						
 						state = State.LOOKING_FOR_TOPIC;
 					}
 					break;
