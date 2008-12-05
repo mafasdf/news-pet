@@ -122,7 +122,7 @@ public class OriginalToNewFormat
 		
 		while(fileIn.hasNextLine())
 		{
-			String topic = fileIn.nextLine();
+			String topic = fileIn.nextLine().trim();
 			PrintWriter topicPW = new PrintWriter(new BufferedWriter(new FileWriter(PATH_TO_NEW_FILES + topic + ".txt")));
 			mapTopicsToFiles.put(topic, topicPW);
 		}
