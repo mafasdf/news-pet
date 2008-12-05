@@ -36,17 +36,18 @@ public class FeedDAL
 	 */
 	public static List<Feed> getFeedsOlderThan(java.util.Date cutoff)
 	{
-		List<Feed> toReturn = new ArrayList<Feed>();
-		
 		Connection conn = ConnectionConfig.createConnection();
-		
 		String query = "SELECT " + ID_COLUMN + " " + URL_COLUMN + " " + USERID_COLUMN + " " + LASTCRAWLED_COLUMN + " FROM " + FEED_TABLE + " WHERE " + LASTCRAWLED_COLUMN + " < ? ORDER BY " + LASTCRAWLED_COLUMN + " ASC;";
+		
+		PreparedStatement getFeeds = null;
+		ResultSet feedResults = null;
 		try
 		{
-			PreparedStatement getFeeds = conn.prepareStatement(query);
+			getFeeds = conn.prepareStatement(query);
 			getFeeds.setDate(1, new java.sql.Date(cutoff.getTime()));
-			ResultSet feedResults = getFeeds.executeQuery();
+			feedResults = getFeeds.executeQuery();
 			
+			List<Feed> toReturn = new ArrayList<Feed>();
 			while(feedResults.next())
 			{
 				int feedID = feedResults.getInt(ID_COLUMN);
@@ -58,15 +59,45 @@ public class FeedDAL
 				toReturn.add(toAdd);
 			}
 			
-			feedResults.close();
-			getFeeds.close();
-			conn.close();
+			return toReturn;
 		}
 		catch(SQLException e)
 		{
 			throw new RuntimeException("Could not retrieve Feed records", e);
 		}
-		
-		return toReturn;
+		finally
+		{
+			if(feedResults != null) try
+			{
+				feedResults.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a ResultSet!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				if(getFeeds != null) getFeeds.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a PreparedStatement!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				if(conn != null)
+				{
+					if(!conn.getAutoCommit()) conn.commit();
+					conn.close();
+				}
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a Connection!");
+				System.err.println(e.getMessage());
+			}
+		}
 	}
 }
