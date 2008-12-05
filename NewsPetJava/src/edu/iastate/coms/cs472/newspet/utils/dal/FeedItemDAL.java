@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import edu.iastate.coms.cs472.newspet.utils.Pair;
-
 /**
  * Data access layer for FeedItems.
  * 
@@ -15,23 +13,29 @@ import edu.iastate.coms.cs472.newspet.utils.Pair;
 public class FeedItemDAL
 {
 	static final String TABLE_NAME = "feed_feeditem";
+	
 	static final String ID_COLUMN = "id";
+	
 	static final String URL_COLUMN = "link";
+	
 	static final String CATEGORYID_COLUMN = "category_id";
+	
 	static final String DATE_COLUMN = null;
+	
 	static final String TITLE_COLUMN = null;
+	
 	static final String AUTHOR_COLUMN = null;
+	
 	static final String BODY_COLUMN = null;
+	
 	static final String OPINION_COLUMN = null;
+	
 	static final String WASVIEWED_COLUMN = null;
 	
 	//used in multiple methods
-	static final String URL_EXISTS_QUERY = String.format(
-			"SELECT EXISTS ( SELECT * FROM %s F INNER JOIN %s C ON F.%s=C.%s WHERE F.%s=? AND C.%s=?);", TABLE_NAME, CategoryDAL.TABLE_NAME,
-			CATEGORYID_COLUMN, CategoryDAL.ID_COLUMN, URL_COLUMN, CategoryDAL.USERID_COLUMN);
+	static final String URL_EXISTS_QUERY = String.format("SELECT EXISTS ( SELECT * FROM %s F INNER JOIN %s C ON F.%s=C.%s WHERE F.%s=? AND C.%s=?);", TABLE_NAME, CategoryDAL.TABLE_NAME, CATEGORYID_COLUMN, CategoryDAL.ID_COLUMN, URL_COLUMN, CategoryDAL.USERID_COLUMN);
+	
 	private static final Object FEEDID_COLUMN = null;
-	
-	
 	
 	public static boolean existsURL(String url, int userID)
 	{
@@ -66,7 +70,7 @@ public class FeedItemDAL
 	 */
 	public static void saveNewFeedItem(String title, String creator, String description, String url, int categoryId, int feedId, int userId)
 	{
-		Connection conn = ConnectionConfig.createConnection();		
+		Connection conn = ConnectionConfig.createConnection();
 		
 		try
 		{
@@ -85,14 +89,12 @@ public class FeedItemDAL
 			//only insert if item with same url doesn't exist
 			if(!alreadyExists)
 			{
-				PreparedStatement insert = conn.prepareStatement(String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s, %s) values (?, ?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME, 
-						DATE_COLUMN, TITLE_COLUMN, AUTHOR_COLUMN, BODY_COLUMN, 
-						URL_COLUMN, OPINION_COLUMN, CATEGORYID_COLUMN, FEEDID_COLUMN, WASVIEWED_COLUMN));
+				PreparedStatement insert = conn.prepareStatement(String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s, %s) values (?, ?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME, DATE_COLUMN, TITLE_COLUMN, AUTHOR_COLUMN, BODY_COLUMN, URL_COLUMN, OPINION_COLUMN, CATEGORYID_COLUMN, FEEDID_COLUMN, WASVIEWED_COLUMN));
 				insert.setDate(1, new java.sql.Date(System.currentTimeMillis()));
 				insert.setString(2, title == null ? "" : title);
 				insert.setString(3, creator == null ? "" : creator);
-				insert.setString(4, description== null ? "" : description);
-				insert.setString(5, url== null ? "" : url);
+				insert.setString(4, description == null ? "" : description);
+				insert.setString(5, url == null ? "" : url);
 				insert.setInt(6, 0);//default = 0
 				insert.setInt(7, categoryId);
 				insert.setInt(8, feedId);
@@ -102,17 +104,14 @@ public class FeedItemDAL
 				insert.close();
 			}
 			
-			
-			
 			//commit transaction
 			conn.commit();
-			
 			
 			conn.close();
 		}
 		catch(SQLException e)
 		{
-			throw new RuntimeException("Could not insert feedItem:"+url, e);
+			throw new RuntimeException("Could not insert feedItem:" + url, e);
 		}
 	}
 	
@@ -137,15 +136,13 @@ public class FeedItemDAL
 			
 			result.close();
 			getFeedItem.close();
-			if(!conn.getAutoCommit())
-				conn.commit();
+			if(!conn.getAutoCommit()) conn.commit();
 			conn.close();
 			return toReturn.toString();
 		}
 		catch(SQLException e)
 		{
-			throw new RuntimeException("Could not retreive feedItem: "+feedItemID, e);
+			throw new RuntimeException("Could not retreive feedItem: " + feedItemID, e);
 		}
-		
 	}
 }
