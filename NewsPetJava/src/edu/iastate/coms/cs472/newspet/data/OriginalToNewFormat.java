@@ -44,14 +44,14 @@ public class OriginalToNewFormat
 				switch(state)
 				{
 				case LOOKING_FOR_TOPIC:
-					if(line.startsWith(TOPIC_OPEN_ELEMENT))
+					if(line.contains(TOPIC_OPEN_ELEMENT))
 					{
 						topics.clear();
 						
 						final String openElement = "<D>";
 						final String closeElement = "</D>";
 						
-						for(int startIndex = TOPIC_OPEN_ELEMENT.length(); startIndex < line.length(); )
+						for(int startIndex = line.indexOf(TOPIC_OPEN_ELEMENT) + TOPIC_OPEN_ELEMENT.length(); startIndex < line.length(); )
 						{
 							int index = line.indexOf(openElement, startIndex);
 							if(index == -1) break;
@@ -64,9 +64,9 @@ public class OriginalToNewFormat
 					}
 					break;
 				case LOOKING_FOR_TITLE:
-					if(line.startsWith(TITLE_OPEN_ELEMENT))
+					if(line.contains(TITLE_OPEN_ELEMENT))
 					{
-						line = line.substring(TITLE_OPEN_ELEMENT.length(), line.length() - TITLE_CLOSE_ELEMENT.length());
+						line = line.substring(line.indexOf(TITLE_OPEN_ELEMENT) + TITLE_OPEN_ELEMENT.length(), line.length() - TITLE_CLOSE_ELEMENT.length());
 						line = doRegularExpressionReplacements(line);
 						
 						for(String topic : topics)
@@ -79,11 +79,11 @@ public class OriginalToNewFormat
 					}
 					break;
 				case LOOKING_FOR_BODY:
-					if(line.startsWith(BODY_OPEN_ELEMENT))
+					if(line.contains(BODY_OPEN_ELEMENT))
 					{
-						line = line.substring(BODY_OPEN_ELEMENT.length());
+						line = line.substring(line.indexOf(BODY_OPEN_ELEMENT) + BODY_OPEN_ELEMENT.length());
 						StringBuilder sb = new StringBuilder();
-						while(!line.contentEquals(BODY_CLOSE_ELEMENT))
+						while(!line.contains(BODY_CLOSE_ELEMENT))
 						{
 							line = doRegularExpressionReplacements(line);
 							sb.append(line);
