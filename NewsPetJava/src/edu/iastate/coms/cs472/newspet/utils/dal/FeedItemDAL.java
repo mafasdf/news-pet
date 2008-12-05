@@ -39,29 +39,59 @@ public class FeedItemDAL
 	
 	public static boolean existsURL(String url, int userID)
 	{
-		boolean toReturn;
 		Connection conn = ConnectionConfig.createConnection();
 		
+		PreparedStatement checkExists = null;
+		ResultSet booleanResult = null;
 		try
 		{
-			PreparedStatement checkExists = conn.prepareStatement(URL_EXISTS_QUERY);
-			ResultSet booleanResult = checkExists.executeQuery();
+			checkExists = conn.prepareStatement(URL_EXISTS_QUERY);
+			booleanResult = checkExists.executeQuery();
 			checkExists.setString(1, url);
 			checkExists.setInt(2, userID);
 			
 			booleanResult.next();
 			
-			toReturn = booleanResult.getBoolean(0);
-			booleanResult.close();
-			checkExists.close();
-			
+			return booleanResult.getBoolean(0);
 		}
 		catch(SQLException e)
 		{
 			throw new RuntimeException("Could not check for existence of FeedItem url", e);
 		}
-		
-		return toReturn;
+		finally
+		{
+			if(booleanResult != null) try
+			{
+				booleanResult.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a ResultSet!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				if(checkExists != null) checkExists.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a PreparedStatement!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				if(conn != null)
+				{
+					if(!conn.getAutoCommit()) conn.commit();
+					conn.close();
+				}
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a Connection!");
+				System.err.println(e.getMessage());
+			}
+		}
 	}
 	
 	/**
@@ -72,24 +102,55 @@ public class FeedItemDAL
 	{
 		Connection conn = ConnectionConfig.createConnection();
 		
+		PreparedStatement checkExists = null;
+		ResultSet booleanResult = null;
+		boolean alreadyExists;
 		try
 		{
 			//use a transaction to prevent multiples of the same feed item being added
 			conn.setAutoCommit(false);
 			
 			//check for existence of a feeditem
-			PreparedStatement checkExists = conn.prepareStatement(URL_EXISTS_QUERY);
+			checkExists = conn.prepareStatement(URL_EXISTS_QUERY);
 			checkExists.setString(1, url);
 			checkExists.setInt(2, userId);
-			ResultSet booleanResult = checkExists.executeQuery();
+			booleanResult = checkExists.executeQuery();
 			booleanResult.next();
-			boolean alreadyExists = booleanResult.getBoolean(0);
-			booleanResult.close();
-			checkExists.close();
+			alreadyExists = booleanResult.getBoolean(0);
+		}
+		catch(SQLException e)
+		{
+			throw new RuntimeException("Could not insert feedItem:" + url, e);
+		}
+		finally
+		{
+			if(booleanResult != null) try
+			{
+				booleanResult.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a ResultSet!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				if(checkExists != null) checkExists.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a PreparedStatement!");
+				System.err.println(e.getMessage());
+			}
+		}
+		
+		PreparedStatement insert = null;
+		try
+		{
 			//only insert if item with same url doesn't exist
 			if(!alreadyExists)
 			{
-				PreparedStatement insert = conn.prepareStatement(String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s, %s) values (?, ?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME, DATE_COLUMN, TITLE_COLUMN, AUTHOR_COLUMN, BODY_COLUMN, URL_COLUMN, OPINION_COLUMN, CATEGORYID_COLUMN, FEEDID_COLUMN, WASVIEWED_COLUMN));
+				insert = conn.prepareStatement(String.format("INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s, %s) values (?, ?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME, DATE_COLUMN, TITLE_COLUMN, AUTHOR_COLUMN, BODY_COLUMN, URL_COLUMN, OPINION_COLUMN, CATEGORYID_COLUMN, FEEDID_COLUMN, WASVIEWED_COLUMN));
 				insert.setDate(1, new java.sql.Date(System.currentTimeMillis()));
 				insert.setString(2, title == null ? "" : title);
 				insert.setString(3, creator == null ? "" : creator);
@@ -101,29 +162,49 @@ public class FeedItemDAL
 				insert.setBoolean(9, false);
 				
 				insert.executeUpdate();
-				insert.close();
 			}
 			
 			//commit transaction
 			conn.commit();
-			
-			conn.close();
 		}
 		catch(SQLException e)
 		{
 			throw new RuntimeException("Could not insert feedItem:" + url, e);
 		}
+		finally
+		{
+			try
+			{
+				if(insert != null) insert.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a PreparedStatement!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				conn.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a Connection!");
+				System.err.println(e.getMessage());
+			}
+		}
 	}
 	
 	public static String getFeedItemText(int feedItemID)
 	{
+		Connection conn = ConnectionConfig.createConnection();
+		String query = String.format("SELECT %s,%s,%s  FROM %s WHERE %s=?", AUTHOR_COLUMN, TITLE_COLUMN, BODY_COLUMN, TABLE_NAME, ID_COLUMN);
+		
+		PreparedStatement getFeedItem = null;
+		ResultSet result = null;
 		try
 		{
-			Connection conn = ConnectionConfig.createConnection();
-			
-			String query = String.format("SELECT %s,%s,%s  FROM %s WHERE %s=?", AUTHOR_COLUMN, TITLE_COLUMN, BODY_COLUMN, TABLE_NAME, ID_COLUMN);
-			PreparedStatement getFeedItem = conn.prepareStatement(query);
-			ResultSet result = getFeedItem.executeQuery();
+			getFeedItem = conn.prepareStatement(query);
+			result = getFeedItem.executeQuery();
 			StringBuilder toReturn = new StringBuilder();
 			if(result.next())
 			{
@@ -134,15 +215,45 @@ public class FeedItemDAL
 				toReturn.append(result.getString(BODY_COLUMN));
 			}
 			
-			result.close();
-			getFeedItem.close();
-			if(!conn.getAutoCommit()) conn.commit();
-			conn.close();
 			return toReturn.toString();
 		}
 		catch(SQLException e)
 		{
 			throw new RuntimeException("Could not retreive feedItem: " + feedItemID, e);
+		}
+		finally
+		{
+			if(result != null) try
+			{
+				result.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a ResultSet!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				if(getFeedItem != null) getFeedItem.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a PreparedStatement!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				if(conn != null)
+				{
+					if(!conn.getAutoCommit()) conn.commit();
+					conn.close();
+				}
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a Connection!");
+				System.err.println(e.getMessage());
+			}
 		}
 	}
 }
