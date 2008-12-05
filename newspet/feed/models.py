@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
 import datetime
 
 class Feed(models.Model):
@@ -40,6 +41,11 @@ class FeedItem(models.Model):
     
     def get_external_url(self):
         return self.link
+    
+    def get_body(self): 
+        return mark_safe(self.body)
+        
+    safe_body = property(get_body)
     
     def __unicode__(self):
         return self.title

@@ -4,6 +4,7 @@
 <h1>{{category}}</h1>
 {% if category.feed_items %}
 {% for item in category.feed_items %}
+<div class="post list-element">
 <div class="post-header">
     <div>
         <h1><a href='{{item.get_internal_url}}'>{{item.title}}</a></h1>
@@ -15,6 +16,9 @@
     <div>
         <p class="author"><span>from</span> <a href="#">{{item.feed}}</a></p>
     </div>
+</div>
+<div class="post-body">
+    {{item.safe_body}}
 </div>
 {% endfor %}
 {% else %}

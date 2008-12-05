@@ -16,8 +16,17 @@
                         .css('left',$(this).position().left)
                         .toggle("fast")
                 });
-            });    
-            function nothing(){};
+            });
+            $(function(){
+                $('.list-element .post-body').hide()
+                $('.list-element .post-header')
+                    .click(function(){
+                        $(this)
+                            .next()
+                                .toggle('fast');
+                        
+                    });
+            });
         </script>
     </head>
     <body>
