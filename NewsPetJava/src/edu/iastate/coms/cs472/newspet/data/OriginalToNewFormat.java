@@ -5,11 +5,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
+
+import edu.iastate.coms.cs472.newspet.utils.Pair;
 
 public class OriginalToNewFormat
 {
@@ -38,9 +42,15 @@ public class OriginalToNewFormat
 	
 	public static void main(String[] args) throws IOException
 	{
-		Map<String, PrintWriter> mapTopicsToPrintWriters = getMapToTopicFiles();
+		Boolean returnList = false;
+		getDataset(returnList);
+	}
+
+	public static List<Pair<String, String>> getDataset(boolean returnList) throws IOException
+	{
+		Map<String, PrintWriter> mapTopicsToPrintWriters = getMapToTopicFiles(returnList);
 		
-		Set<String> topics = new TreeSet<String>();
+		String topic = null;
 		for(int i = 0; i <= 21; i++)
 		{
 			String fileName = getFileName(i);
@@ -56,21 +66,18 @@ public class OriginalToNewFormat
 				case LOOKING_FOR_TOPIC:
 					if(line.contains(TOPIC_OPEN_ELEMENT))
 					{
-						topics.clear();
-						
 						final String openElement = "<D>";
 						final String closeElement = "</D>";
 						
-						for(int startIndex = line.indexOf(TOPIC_OPEN_ELEMENT) + TOPIC_OPEN_ELEMENT.length();;)
-						{
-							startIndex = line.indexOf(openElement, startIndex);
-							if(startIndex == -1) break;
-							
-							int endIndex = line.indexOf(closeElement, startIndex);
-							String topic = line.substring(startIndex + openElement.length(), endIndex);
-							topics.add(topic);
-							startIndex = endIndex;
-						}
+						int index = line.indexOf(openElement);
+						if(index == -1) break;
+						
+						//remove articles with multiple topics
+						if(index != line.lastIndexOf(openElement)) break;
+						
+						int startIndex = index + openElement.length();
+						int endIndex = line.indexOf(closeElement);
+						topic = line.substring(startIndex, endIndex);
 						
 						state = State.LOOKING_FOR_TITLE;
 					}
@@ -81,11 +88,8 @@ public class OriginalToNewFormat
 						line = line.substring(line.indexOf(TITLE_OPEN_ELEMENT) + TITLE_OPEN_ELEMENT.length(), line.length() - TITLE_CLOSE_ELEMENT.length());
 						line = doRegularExpressionReplacements(line);
 						
-						for(String topic : topics)
-						{
-							PrintWriter topicPW = mapTopicsToPrintWriters.get(topic);
-							topicPW.print(line + " ");
-						}
+						PrintWriter topicPW = mapTopicsToPrintWriters.get(topic);
+						topicPW.print(line + " ");
 						
 						state = State.LOOKING_FOR_BODY;
 					}
@@ -104,11 +108,8 @@ public class OriginalToNewFormat
 						int endIndex = line.indexOf(BODY_CLOSE_ELEMENT);
 						sb.append(doRegularExpressionReplacements(line.substring(0, endIndex)));
 						
-						for(String topic : topics)
-						{
-							PrintWriter topicPW = mapTopicsToPrintWriters.get(topic);
-							topicPW.println(sb.toString());
-						}
+						PrintWriter topicPW = mapTopicsToPrintWriters.get(topic);
+						topicPW.println(sb.toString());
 						
 						state = State.LOOKING_FOR_TOPIC;
 					}
@@ -117,10 +118,27 @@ public class OriginalToNewFormat
 			}
 		}
 		
-		for(String topic : mapTopicsToPrintWriters.keySet())
+		if(returnList)
 		{
-			mapTopicsToPrintWriters.get(topic).close();
+			int goodGuess = 9003;
+			List<Pair<String, String>> list = new ArrayList<Pair<String, String>>(goodGuess);
+			for(String curTopic : mapTopicsToPrintWriters.keySet())
+			{
+				for(String body : ((MyPrintWriter)mapTopicsToPrintWriters.get(curTopic)).getList())
+				{
+					list.add(new Pair<String, String>(topic, body));
+				}
+			}
+			return list;
 		}
+		
+		for(String s : mapTopicsToPrintWriters.keySet())
+		{
+			mapTopicsToPrintWriters.get(s).close();
+		}
+		
+		//not return value needed
+		return null;
 	}
 	
 	private static String doRegularExpressionReplacements(String line)
@@ -130,7 +148,7 @@ public class OriginalToNewFormat
 		return line;
 	}
 	
-	private static Map<String, PrintWriter> getMapToTopicFiles() throws IOException
+	private static Map<String, PrintWriter> getMapToTopicFiles(boolean returnList) throws IOException
 	{
 		Scanner fileIn = new Scanner(new File(PATH_TO_ALL_TOPICS_FILE));
 		
@@ -139,7 +157,15 @@ public class OriginalToNewFormat
 		while(fileIn.hasNextLine())
 		{
 			String topic = fileIn.nextLine().trim();
-			PrintWriter topicPW = new PrintWriter(new BufferedWriter(new FileWriter(PATH_TO_NEW_FILES + topic + ".txt")));
+			PrintWriter topicPW;
+			if(returnList)
+			{
+				topicPW = new MyPrintWriter();
+			}
+			else
+			{
+				topicPW = new PrintWriter(new BufferedWriter(new FileWriter(PATH_TO_NEW_FILES + topic + ".txt")));
+			}
 			mapTopicsToFiles.put(topic, topicPW);
 		}
 		
@@ -155,5 +181,35 @@ public class OriginalToNewFormat
 		}
 		
 		return PATH_TO_OLD_FILES + "reut2-" + fileNumber + ".sgm";
+	}
+	
+	private static class MyPrintWriter extends PrintWriter
+	{
+		private String temp = "";
+		
+		private List<String> list = new LinkedList<String>();
+		
+		public MyPrintWriter()
+		{
+			super(new StringWriter());
+		}
+		
+		public List<String> getList()
+		{
+			return list;
+		}
+		
+		@Override
+		public void print(String s)
+		{
+			temp = s + temp;
+		}
+		
+		@Override
+		public void println(String s)
+		{
+			list.add(temp + s);
+			temp = "";
+		}
 	}
 }
