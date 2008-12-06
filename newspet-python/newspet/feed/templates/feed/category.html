@@ -4,11 +4,14 @@
 {% block extrahead %}
 <script>
 function change_category(id){
-    $('#'+id).replaceWith('<form class="category-select" method="post" action="{% url f_move_item category.id %}" id="form-'+id+'">{% get_category_select user %}</div>');
-    $("#form-"+id+" select")
-        .change(function(){
-            $("#form-"+id).get(0).submit()
-        });
+    $('#form-category-'+id).toggle();
+    $('#category-'+id).toggle();
+    $('#change-'+id).text('Cancel').attr('href','javascript:cancel_change_category("'+id+'")');
+}
+function cancel_change_category(id, name){
+    $('#form-category-'+id).toggle();
+    $('#category-'+id).toggle();
+    $('#change-'+id).text('Move Item').attr('href','javascript:change_category("'+id+'")');
 }
 $(function() {
     $(".star").hover(turn_gold, turn_blue)
@@ -36,7 +39,11 @@ function turn_blue(e){
             {% else %}
             <li><a href="{% url f_love_item item.id %}"><img class="star" src="{{MEDIA_URL}}img/star.png"></a></li>
             {% endif %}
-            <li><span id="category-list-{{item.id}}" class='category-name'>{{item.category}}</span> <a class="change" href="javascript:change_category('category-list-{{item.id}}')">Move Item</a>
+            <li>
+                <span id="category-{{item.id}}" class='category-name'>{{item.category}}</span>
+                <form style="display: none" class="category-select" method="post" action="{% url f_move_item item.id %}" id="form-category-{{item.id}}">{% get_category_select user %}</form>
+                <a id="change-{{item.id}}" class="change" href="javascript:change_category('{{item.id}}')">Move Item</a>
+            </li>
         </ul>
     </div>
     <div>

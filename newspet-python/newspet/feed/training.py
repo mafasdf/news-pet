@@ -1,5 +1,6 @@
 from python2java import Python2Java
 from django.conf import settings
+import threading
 import sys
 
 INCREMENTAL = "INCREMENTAL"
@@ -20,19 +21,28 @@ def move_item(item, category, new_category):
 def send_train_data(item, category, opinion):
     if opinion is GOOD_OPINION:
         message = '%s,%d,%d,%d' % (INCREMENTAL, category.owner.id, category.id, item.id)
-        try:
-            sock = Python2Java(settings.TRAINER_HOST, settings.TRAINER_PORT)
-            sock.send(message)
-            return True
-        except:
-            sys.stderr.write("Connection Failed with message '%s' to Host: %s, Port %d" % (message, settings.TRAINER_HOST, settings.TRAINER_PORT))
+        host, port = settings.TRAINER_HOST, settings.TRAINER_PORT
+        TrainingThread(message, host, port).start()
     else:
         return False
     
 def train_category(category, training_set):
-    try:
-        sock = Python2Java(settings.TRAINER_HOST, settings.TRAINER_PORT)
-        sock.send('%s,%d,%d,%d' % (BATCH, category.user.id, category.id, training_set.id))
-        return True
-    except:
-        return False
+    message = '%s,%d,%d,%d' % (BATCH, category.user.id, category.id, training_set.id)
+    host, port = settings.TRAINER_HOST, settings.TRAINER_PORT
+    TrainingThread(message, host, port).start()
+    
+class TrainingThread(threading.Thread):
+    
+    def __init__(self, message, host, port, *args, **kwargs):
+        self.message = message
+        self.host = host
+        self.port = port
+        super(TrainingThread, self).__init__(*args, **kwargs)
+    
+    def run(self):
+        try:
+            sock = Python2Java(self.host, self.port)
+            sock.send(self.message)
+        except:
+            sys.stderr.write("Connection Failed with message '%s' to Host: %s, Port %d" % (self.message, self.host, self.port))
+

@@ -16,7 +16,7 @@ class FormNode(template.Node):
     
     def render(self, context):
         try:
-            return str(CategoryChangeForm(self.user.resolve(context))['new_category']).replace('\n', ' ')
+            return str(CategoryChangeForm(self.user.resolve(context))['category']).replace('\n', ' ')
         except template.VariableDoesNotExist:
             return ''
 

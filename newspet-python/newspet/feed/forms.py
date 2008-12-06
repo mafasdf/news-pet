@@ -43,10 +43,13 @@ class CategoryChangeForm(forms.Form):
         """docstring for __init__"""
         super(CategoryChangeForm, self).__init__(*args, **kwargs)
         # self.fields['new_category'].choices = [(c.id, c) for c in Category.objects.filter(owner = user)]
-        self.fields['new_category'].queryset = Category.objects.filter(owner = user)
+        self.fields['category'].queryset = Category.objects.filter(owner = user)
         
-    new_category = forms.ModelChoiceField(Category.objects.none())
+    category = forms.ModelChoiceField(Category.objects.none())
     
+    def get_new_category(self):
+        return self.cleaned_data['category']
+    new_category = property(get_new_category)
 class PhraseForm(forms.Form):
     phrase = forms.CharField(max_length = 127)
 
