@@ -12,7 +12,7 @@ class Feed(models.Model):
     subscriber = models.ForeignKey(User)
     
     #denormalized data
-    last_crawled = models.DateTimeField(default=datetime.datetime.min)
+    last_crawled = models.DateTimeField(default=datetime.datetime(2000,1,1))
     
     def __unicode__(self):
         return self.title

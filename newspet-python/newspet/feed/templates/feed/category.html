@@ -1,29 +1,7 @@
 {% extends "base.html" %}
 {% load feedtags %}
 
-{% block extrahead %}
-<script>
-function change_category(id){
-    $('#form-category-'+id).toggle();
-    $('#category-'+id).toggle();
-    $('#change-'+id).text('Cancel').attr('href','javascript:cancel_change_category("'+id+'")');
-}
-function cancel_change_category(id, name){
-    $('#form-category-'+id).toggle();
-    $('#category-'+id).toggle();
-    $('#change-'+id).text('Move Item').attr('href','javascript:change_category("'+id+'")');
-}
-$(function() {
-    $(".star").hover(turn_gold, turn_blue)
-})
-function turn_gold(e){
-    $(this).attr('src', '{{MEDIA_URL}}img/gold_star.png')
-}
-function turn_blue(e){
-    $(this).attr('src', '{{MEDIA_URL}}img/star.png')
-}
-</script>
-{% endblock %}
+
 
 {% block content %}
 <h1>{{category}}</h1>
@@ -41,7 +19,7 @@ function turn_blue(e){
             {% endif %}
             <li>
                 <span id="category-{{item.id}}" class='category-name'>{{item.category}}</span>
-                <form style="display: none" class="category-select" method="post" action="{% url f_move_item item.id %}" id="form-category-{{item.id}}">{% get_category_select user %}</form>
+                <form style="display: none" class="category-select" method="post" action="{% url f_move_item item.id %}" id="form-category-{{item.id}}">{% get_category_select user item.category%}</form>
                 <a id="change-{{item.id}}" class="change" href="javascript:change_category('{{item.id}}')">Move Item</a>
             </li>
         </ul>

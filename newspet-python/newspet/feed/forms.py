@@ -39,13 +39,13 @@ class TrainingSetForm(forms.Form):
         return self.training_set
 
 class CategoryChangeForm(forms.Form):
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, user, category_id, *args, **kwargs):
         """docstring for __init__"""
         super(CategoryChangeForm, self).__init__(*args, **kwargs)
-        # self.fields['new_category'].choices = [(c.id, c) for c in Category.objects.filter(owner = user)]
         self.fields['category'].queryset = Category.objects.filter(owner = user)
+        self.fields['category'].initial = category_id
         
-    category = forms.ModelChoiceField(Category.objects.none())
+    category = forms.ModelChoiceField(Category.objects.none(), empty_label=None)
     
     def get_new_category(self):
         return self.cleaned_data['category']

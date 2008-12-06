@@ -8,9 +8,9 @@ $(function(){
             .toggle("fast")
     });
     $(".star").hover(turn_gold, turn_blue)
-    $('.category-selct select')
+    $('.category-select select')
     .change(function(){
-        $(this).parent().get(1).submit()
+        $(this).parent().get(0).submit()
     })
 });
 // $(function(){

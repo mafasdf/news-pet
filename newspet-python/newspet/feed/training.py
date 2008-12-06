@@ -27,7 +27,7 @@ def send_train_data(item, category, opinion):
         return False
     
 def train_category(category, training_set):
-    message = '%s,%d,%d,%d' % (BATCH, category.user.id, category.id, training_set.id)
+    message = '%s,%d,%d,%d' % (BATCH, category.owner.id, category.id, training_set.id)
     host, port = settings.TRAINER_HOST, settings.TRAINER_PORT
     TrainingThread(message, host, port).start()
     

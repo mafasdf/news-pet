@@ -27,6 +27,7 @@ a{
 .dropdown li{
     padding: 2px;
 }
+/* Category Changer */
 form.category-select{
     display: inline;
     vertical-align: top;
@@ -39,6 +40,12 @@ form.category-select{
     font-size: 12;
     vertical-align: top;
 }
+#id_category{
+    width: 120px;
+    min-width: 120px;
+}
+
+/* Other */
 .top{
     padding-bottom: 20px;
 }

@@ -117,7 +117,7 @@ def opinionate(request, item_id, opinion):
 
 @login_required
 def move(request, item_id):
-    category_change_form = CategoryChangeForm(request.POST)
+    category_change_form = CategoryChangeForm(request.user, None, data=request.POST)
     if category_change_form.is_valid():
         item = get_object_or_404(FeedItem, id = item_id, category__owner=request.user)
         category = item.category
@@ -126,4 +126,6 @@ def move(request, item_id):
         training.train_item(item, new_category, training.GOOD_OPINION)
         item.category = new_category
         item.save()
+    else:
+        print category_change_form.errors
     return HttpResponseRedirect(reverse('f_item', args=[item_id]))
