@@ -1,8 +1,11 @@
 \documentclass[letterpaper]{article}
 \usepackage{aaai}
+\usepackage{graphicx}
 \usepackage{times}
 \usepackage{helvet}
-\usepackage{courier}\title{NewsPet}
+\usepackage{courier}
+
+\title{NewsPet}
 \author{Michael Fulker, Anthony Hauber \and Tyson Williams \\
 COM S 472 : Principles of Artificial Intelligence\\Department of Computer Science\\ Iowa State University, Ames, IA 50011\\
 \texttt{\{calculo, thauber, tyson\}@cs.iastate.edu}}
@@ -61,10 +64,14 @@ We created an analysis program to use a Mallet Naive Bayes classifier in the sam
 
 We also set up a testing option where a number of categories are artifically grouped together as a ``trash'' category, to simulate typical use of our system.
 
-For the number of categories being 66, 20, and 5, we ran with each of these $16\times 19=304$ trials, (16 trials for each of 19 different training ratios). Results are given below.
+For the number of non-trash categories being 66, 30, and 5, we ran with each of these $16\times 19=304$ trials, (16 trials for each of 19 different training ratios). Results are given below.
 
 \subsection{Results}
-//TODO: compile results into a graph
+Each marker represents the average accuracy of the 16 trials for the specified number of non-trash categories and number of training items.
+
+The error bars signify the maximum and minimum accuracies found over the 16 trials.\\
+
+\includegraphics[width=3.2in]{data.pdf}
 
 \subsection{Conclusion}
 From the analysis,//TODO
