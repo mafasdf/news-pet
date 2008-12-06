@@ -7,6 +7,11 @@ $(function(){
             .css('left',$(this).position().left)
             .toggle("fast")
     });
+    $(".star").hover(turn_gold, turn_blue)
+    $('.category-selct select')
+    .change(function(){
+        $(this).parent().get(1).submit()
+    })
 });
 // $(function(){
 //     $('.list-element .post-body').hide()
@@ -29,7 +34,7 @@ function cancel_change_category(id, name){
     $('#change-'+id).text('Move Item').attr('href','javascript:change_category("'+id+'")');
 }
 $(function() {
-    $(".star").hover(turn_gold, turn_blue)
+
 })
 function turn_gold(e){
     $(this).attr('src', '{{MEDIA_URL}}img/gold_star.png')
