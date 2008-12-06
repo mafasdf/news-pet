@@ -16,51 +16,58 @@ For companies that do work updating data based on news stories, many manhours ar
 
 
 \section{Introduction}
-//TODO
+One of the team members, Michael Fulker, is currently an intern for a company that does management and maintaining of data about companies (relationships between companies, company executives, and similar information). The idea for this project was inspired by a full-time coworker of Michael, who stated it would be nice to be able to use some sort of AI system to analyze news feeds for changes in company relationships and similar information.
+
+//TODO: more intro
 
 \section{Architecture}
 //TODO
 \subsection{Database}
-//TODO
+//TODO: Insert database diagram
 
 \section{Implementation}
 \subsection{Web Interface}
-//TODO
+//TODO: describe django setup.
 
 \subsection{Trainer Service}
 The trainer service checks a message queue (see Message Queue subsection) to get training items (each of which consists of a classifier ID, a desired category ID, and a document's text).
-A batch of training items of the same classifier ID are collected, and a thread is spawned to process them.
-If multiple batches have the same classifier ID (for example, if new items are added to the message queue after the thread was spawned), the subsequent ones must wait for the first to finish.
+Whenever a message or messages are available on the queue, A batch of training items of the same classifier ID are collected, which are put in a runnable job for execution by a threadpool.
+
+If multiple batches have the same classifier ID (for example, if new items are added to the message queue when a thread is in the process of training), the access layer for the classifier/trainer objects ensures subsequent threads ones must wait for the preceeding thread to finish.
 
 The actual training is done with \texttt{NaiveBayesTrainer} objects from the Mallet framework \cite{McCallumMALLET}.
 Each training thread acquires a \texttt{NaiveBayesTrainer} object (either deserialized from database, or instantiated for initial training),
-passes the training items through a filter such that they are converted to objects the Mallet framework is compatible with,
+passes the training items through a custom filter such that they are converted to objects the Mallet framework is compatible with,
 runs these instances through the \texttt{ClassifierTrainer},
-and persists the \texttt{NaiveBayesTrainer} back to the database.
+and persists the trainer and classifier back to the database.
 
 \subsection{Reader/Categorizer Service}
-//TODO
+The reader service retreives a list of Feed urls from the database using a certain polling interval. Each time it does this, it creates and starts a series of threadpool jobs to retrieve the RSS data (using the Informa framework \cite{Informa}). When these jobs have all finished, the service creates another series of threadpool jobs, one for each news item. Each of these threads will retrieve the latest classifier for their associated user (deserialized from database), use it to determine the best category, and store their item to the database with the corresponding category ID.
+
+The classifier object is a \texttt{NaiveBayes} classifier from the Mallet framework (trained by the trainer service). The classifier can return a vector of category/probability pairs. The thread doing the classifying will determine the most probable category, and confirm that its probability scaled by the number of categories is at least greater than some value, and categorizes it as trash otherwise. (The rationale for this being that if there are three categories where the most probable category has probability 0.34, and the others have probability 0.33, then this represents a very uncertain classification, and it would be better to put it in the trash as effectively uncategorized.)
 
 \subsection{Message Queue}
 \label{MessageQueueSection}
-Both the Trainer Service and the Reader Service use the same Message Queue module (with different configuration and interpreting of messages).
-//TODO
+The trainer service uses a custom Message Queue module for receiving user feedback on classification.
+
+The web application layer makes socket connections to a listening thread spawned by the trainer service.//TODO
 
 \section{Analysis}
-For testing, an instance of NewsPet was batch-trained for the following categories, using data from Reuters-21578 corpus \cite{Reuters21578}:
-\begin{enumerate}
-\item //TODO
-\item //TODO
-\end{enumerate}
-//TODO
+Quantitative analysis of the Mallet Framework's Naive Bayes classifier was done using data from Reuters-21578 corpus \cite{Reuters21578} (a collection of pre-categorized news articles made available for research purposes).
 
+Since some of the news articles in this collection are listed under multiple categories, and our model allows one category per news item, we set up our parser to ignore all items that span multiple categories. Out of the 21578 articles, there are 9002 that have singular categories.
 
-\section{Results}
-//TODO
+We created an analysis program to use a Mallet Naive Bayes classifier in the same manner in which it is used in the main project, train it using a variable portion of the data (randomly selected), and test it using the remaining portion.
 
-\section{Conclusion}
-//TODO
+We also had a variable number of categories artifically grouped together as a ``trash'' category, to simulate typical use of our system. 
 
+For each of 9002, 100, and 10 categories, we ran $16\times 19=304$ trials, (16 trials for each of 19 different training ratios). Results are given below.
+
+\subsection{Results}
+//TODO: compile results into a graph
+
+\subsection{Conclusion}
+From the analysis,//TODO
 
 \bibliography{bibliography}
 \bibliographystyle{aaai}
