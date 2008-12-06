@@ -21,10 +21,20 @@ For companies that do work updating data based on news stories, many manhours ar
 \section{Introduction}
 One of the team members, Michael Fulker, is currently an intern for a company that does management and maintaining of data about companies (relationships between companies, company executives, and similar information). The idea for this project was inspired by a full-time coworker of Michael, who stated it would be nice to be able to use some sort of AI system to analyze news feeds for changes in company relationships and similar information.
 
-//TODO: more intro
+//TODO more intro?
 
+%TODO \pagebreak
 \section{Architecture}
-//TODO
+The system is designed as follows:
+
+\noindent\includegraphics[width=4in]{arch-diagram.pdf}
+
+The web application serves as the user interface, and displays/updates information on the database. Whenever a user gives input that serves as training data, the appropriate information is put on the database and a signal is sent to the trainer service telling it what to process.
+
+The reader service checks RSS feeds at regular intervals, classifies their news items, and stores them to the database.
+
+The trainer service listens for signals from the web application, and trains/updates database-stored classifier objects according to the indicated training data.
+
 \subsection{Database}
 //TODO: Insert database diagram
 
