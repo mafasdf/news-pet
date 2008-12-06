@@ -50,9 +50,9 @@ public class OriginalToNewFormat
 	{
 		Map<String, PrintWriter> mapTopicsToPrintWriters = getMapToTopicFiles(returnList);
 		
-		String topic = null;
 		for(int i = 0; i <= 21; i++)
 		{
+			String topic = null;
 			String fileName = getFileName(i);
 			Scanner fileIn = new Scanner(new File(fileName));
 			
@@ -122,9 +122,9 @@ public class OriginalToNewFormat
 		{
 			int goodGuess = 9003;
 			List<Pair<String, String>> list = new ArrayList<Pair<String, String>>(goodGuess);
-			for(String curTopic : mapTopicsToPrintWriters.keySet())
+			for(String topic : mapTopicsToPrintWriters.keySet())
 			{
-				for(String body : ((MyPrintWriter)mapTopicsToPrintWriters.get(curTopic)).getList())
+				for(String body : ((MyPrintWriter)mapTopicsToPrintWriters.get(topic)).getList())
 				{
 					list.add(new Pair<String, String>(topic, body));
 				}
@@ -132,9 +132,9 @@ public class OriginalToNewFormat
 			return list;
 		}
 		
-		for(String s : mapTopicsToPrintWriters.keySet())
+		for(String topic : mapTopicsToPrintWriters.keySet())
 		{
-			mapTopicsToPrintWriters.get(s).close();
+			mapTopicsToPrintWriters.get(topic).close();
 		}
 		
 		//not return value needed
