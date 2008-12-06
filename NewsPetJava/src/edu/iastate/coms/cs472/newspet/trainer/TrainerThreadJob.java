@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 import cc.mallet.types.InstanceList;
 import edu.iastate.coms.cs472.newspet.utils.dal.BatchTrainingSetDAL;
-import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL;
+import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierAccess;
 import edu.iastate.coms.cs472.newspet.utils.dal.FeedItemDAL;
 import edu.iastate.coms.cs472.newspet.utils.dal.TrainerCheckoutData;
 
@@ -40,7 +40,7 @@ public class TrainerThreadJob implements Runnable
 		TrainerCheckoutData checkoutData = null;
 		try
 		{
-			checkoutData = ClassifierDAL.getClassifier(classifierID);
+			checkoutData = ClassifierAccess.getClassifier(classifierID);
 		}
 		catch(InterruptedException e)
 		{
@@ -62,7 +62,7 @@ public class TrainerThreadJob implements Runnable
 			//persist
 			//(will unlock by ID)
 			//(DAL keeps checkoutdata in bookkeeping)
-			ClassifierDAL.giveClassifier(classifierID);
+			ClassifierAccess.giveClassifier(classifierID);
 		}
 	}
 	

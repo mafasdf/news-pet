@@ -5,7 +5,7 @@ import cc.mallet.pipe.Pipe;
 
 /**
  * Class for returning multiple values in
- * {@link DatabaseAccessLayer#getTrainerForUpdating(int)}
+ * {@link ClassifierDAL#getTrainerForUpdating(int)}
  * 
  * @author Michael Fulker
  */

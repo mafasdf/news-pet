@@ -25,7 +25,8 @@ public class ReaderService
 	public ReaderService()
 	{
 		//TODO: fine-tune / have configurable params
-		threadPool = new ThreadPoolExecutor(32, 32, 100, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+		//TODO: not one
+		threadPool = new ThreadPoolExecutor(1, 1, 100, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 	
 	private void run()

@@ -10,7 +10,7 @@ import de.nava.informa.core.ItemIF;
 import edu.iastate.coms.cs472.newspet.utils.Feed;
 import edu.iastate.coms.cs472.newspet.utils.Pair;
 import edu.iastate.coms.cs472.newspet.utils.dal.CategoryDAL;
-import edu.iastate.coms.cs472.newspet.utils.dal.DatabaseAccessLayer;
+import edu.iastate.coms.cs472.newspet.utils.dal.ClassifierDAL;
 import edu.iastate.coms.cs472.newspet.utils.dal.FeedItemDAL;
 
 public class ItemClassificationJob implements Runnable
@@ -47,7 +47,7 @@ public class ItemClassificationJob implements Runnable
 		//check if this item already exists for this user (using URL as an equivalence comparison), and abort if so
 		if(FeedItemDAL.existsURL(feedItem.getLink().toString(), feed.getUserId())) return;
 		
-		Classifier classifier = DatabaseAccessLayer.getClassifier(feed.getUserId());
+		Classifier classifier = ClassifierDAL.getClassifier(feed.getUserId());
 		
 		Integer trashCategory = CategoryDAL.getTrashCategoryIDForUser(feed.getUserId());
 		

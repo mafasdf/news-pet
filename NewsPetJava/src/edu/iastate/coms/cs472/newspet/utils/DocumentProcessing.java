@@ -10,7 +10,7 @@ import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceLowercase;
 
-public class DocumentConversion
+public class DocumentProcessing
 {
 	public static Pipe createConversionPipes()
 	{
