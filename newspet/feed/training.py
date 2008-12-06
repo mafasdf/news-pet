@@ -7,12 +7,11 @@ BATCH = "BATCH"
 GOOD_OPINION = 1
 BAD_OPINION = -1
 
-def train_item(item, category, opinion, trash):
+def train_item(item, category, opinion):
     if opinion is GOOD_OPINION:
         send_train_data(item, category, GOOD_OPINION)
     if opinion is BAD_OPINION:
         send_train_data(item, category, BAD_OPINION)
-        send_train_data(item, trash, GOOD_OPINION)
 
 def move_item(item, category, new_category):
     send_train_data(item, new_category, GOOD_OPINION)

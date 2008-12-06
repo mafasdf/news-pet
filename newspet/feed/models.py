@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 import datetime
+import training
 
 class Feed(models.Model):
     url = models.URLField("Feed Url", max_length=4000, unique=True)
@@ -44,6 +45,11 @@ class FeedItem(models.Model):
     
     def get_body(self): 
         return mark_safe(self.body)
+    
+    def is_liked(self):
+        if self.opinion is training.GOOD_OPINION:
+            return True
+        return False
         
     safe_body = property(get_body)
     

@@ -10,5 +10,5 @@ urlpatterns = patterns('',
     url(r'manage/feeds/delete/(\d+)/$', 'feed.views.delete_feed', name='f_delete_feed'),
     url(r'dissaprove/item/(\d+)/$', 'feed.views.love_item', name='f_love_item'),
     url(r'approve/item/(\d+)/$', 'feed.views.hate_item', name='f_hate_item'),
-    url(r'/move/(\d+)/(\d+)', 'feed.views.move', name='f_move_item'),
+    url(r'/move/(\d+)/', 'feed.views.move', name='f_move_item'),
 )

@@ -110,12 +110,14 @@ def hate_item(request, item_id):
 @login_required
 def opinionate(request, item_id, opinion):
     item = get_object_or_404(FeedItem, id = item_id, category__owner=request.user)
-    trash = Category.objects.get_trash(request.user)
-    training.train_item(item, item.category, opinion, trash)
+    item.opinion = opinion
+    item.save()
+    training.train_item(item, item.category, opinion)
     return HttpResponseRedirect(reverse('f_item', args=[item.id]))
 
 @login_required
 def move(request, item_id, new_category):
+    category_change_form = CategoryChangeForm(request.POST)
     item = get_object_or_404(FeedItem, id = item_id, category__owner=request.user)
     category = get_object_or_404(FeedItem, id = item_id, owner=request.user)
     training.train_item(item, category)

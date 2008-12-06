@@ -27,6 +27,18 @@ a{
 .dropdown li{
     padding: 2px;
 }
+form.category-select{
+    display: inline;
+    vertical-align: top;
+}
+.category-name{
+    font-size: 18;
+    vertical-align: top;
+}
+.change{
+    font-size: 12;
+    vertical-align: top;
+}
 .top{
     padding-bottom: 20px;
 }
@@ -214,6 +226,7 @@ form ul{
     width: 150;
     float: left;
     text-align: right;
+    vertical-align: top;
 }
 .post-header .author{
     width: 450px;

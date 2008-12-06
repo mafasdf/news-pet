@@ -37,6 +37,16 @@ class TrainingSetForm(forms.Form):
     
     def get_training_set(self):
         return self.training_set
+
+class CategoryChangeForm(forms.Form):
+    def __init__(self, user, *args, **kwargs):
+        """docstring for __init__"""
+        super(CategoryChangeForm, self).__init__(*args, **kwargs)
+        # self.fields['new_category'].choices = [(c.id, c) for c in Category.objects.filter(owner = user)]
+        self.fields['new_category'].queryset = Category.objects.filter(owner = user)
+        
+    new_category = forms.ModelChoiceField(Category.objects.none())
+    
 class PhraseForm(forms.Form):
     phrase = forms.CharField(max_length = 127)
 
