@@ -30,7 +30,7 @@ One of the team members, Michael Fulker, is currently an intern for a company th
 
 \section{Implementation}
 \subsection{Web Interface}
-//TODO: describe django setup.
+The user interface is purely a web interface.  The implementation was created using Django, a Python web-framework.  When a user is created it, it has an initial special category, Trash. All documents that fail to be categorized properly end up in the Trash.  The user has the ability to create as many categories as he or she chooses.  These categories will remain empty unless the user adds feeds, which is where the news items will come from. Both of these can  As news-items are categorized, the user will see them appear
 
 \subsection{Trainer Service}
 The trainer service checks a message queue (see Message Queue subsection) to get training items (each of which consists of a classifier ID, a desired category ID, and a document's text).

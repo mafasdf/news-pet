@@ -6,28 +6,7 @@
         <link rel="stylesheet" type="text/css" media="all" href="{{MEDIA_URL}}css/style.css" />
         <link rel="stylesheet" type="text/css" media="all" href="{{MEDIA_URL}}css/960.css" />
         <script src="{{MEDIA_URL}}js/jquery-1.2.6.min.js" type="text/javascript"></script>
-        <script type="text/javascript">
-            $(function(){
-                $('.dropdown').hide();
-                $('.menu').click(function(){
-                    $('.dropdown')
-                        .css('position','absolute')
-                        .css('top',$(this).position().top + $(this).outerHeight())
-                        .css('left',$(this).position().left)
-                        .toggle("fast")
-                });
-            });
-            // $(function(){
-            //     $('.list-element .post-body').hide()
-            //     $('.list-element .post-header')
-            //         .click(function(){
-            //             $(this)
-            //                 .next()
-            //                     .toggle('fast');
-            //             
-            //         });
-            // });
-        </script>
+        <script src="{{MEDIA_URL}}js/script.js"type="text/javascript"></script>
         {% block extrahead %}{% endblock %}
     </head>
     <body>
