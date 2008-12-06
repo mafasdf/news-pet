@@ -15,7 +15,7 @@ import edu.iastate.coms.cs472.newspet.utils.dal.FeedItemDAL;
 
 public class ItemClassificationJob implements Runnable
 {
-	private static final double PROBABILITY_SIGNIFICANCE_RATIO = 1.2;
+	public static final double PROBABILITY_SIGNIFICANCE_RATIO = 1.2;
 	
 	/**
 	 * The feed associated with the feed item to classify.
