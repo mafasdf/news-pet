@@ -1,0 +1,250 @@
+
+h1{
+    font-size: 36px;
+    padding: 10px 0px;
+    padding-bottom:0px;
+}
+p{
+    padding: 10px 0px;
+}
+/*domain specific*/
+body{
+    background: url("../img/navbar.png") repeat-x;
+    font-family: trebuchet "Trebuchet MS";
+    color: #4c67a2;
+}
+a{
+    cursor: pointer;
+}
+.dropdown{
+    background-color: #aec8fe;
+    padding: 5px;
+    border: 1px solid #4c67a2;;
+}
+.dropdown a{
+    color: #4c67a2;;
+}
+.dropdown li{
+    padding: 2px;
+}
+form.category-select{
+    display: inline;
+    vertical-align: top;
+}
+.category-name{
+    font-size: 18;
+    vertical-align: top;
+}
+.change{
+    font-size: 12;
+    vertical-align: top;
+}
+.top{
+    padding-bottom: 20px;
+}
+#logo{
+    margin-left: -40px;
+}
+#tag{
+    margin-top: 20px;
+    margin-left: -20px;
+}
+a, a:visited{
+    color: white;
+    text-decoration: none;
+}
+a:hover{
+    color: #283757;
+}
+#info-bar{
+    text-align: right;
+}
+#header{
+    padding-top: 20px;
+    margin-left: 40px;
+}
+#header > ul > li{
+    display: inline;
+    margin-left: 8px;
+    margin-right: 8px;
+    font-size: 14px;
+}
+#user-info{
+    color: white;
+    text-align: right;
+    padding: 0px;
+    font-size: 12px;
+}
+a.category{
+    color: #4c67a2;
+    font-size: 24px;
+}
+a.category:hover{
+    color: #283757;
+}
+a.category span{
+    color: #283757;
+}
+.unread{
+    font-weight: bold;
+}
+/*        #header ul li a, #header ul li a:visited{
+    display: table-cell;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    width: 170px;
+    background-color: #62b821;
+    border: solid #4c67a2;
+    font-size: 30px;
+    text-decoration: none;
+    color: #e9da32;
+}*/
+#header ul li a:hover{
+    color: #e9da32;
+}
+hr{
+    color: #4c67a2;
+    background-color: #4c67a2;
+    height: 3px;
+    padding: 0px;
+    margin: 0px;
+}
+#username{
+    font-weight: bold;
+}
+#header h1{
+    font-size: 72px;
+}
+
+
+#sidebar .article{
+    font-size: 20px;
+}
+#sidebar .feed{
+    color: #4c67a2;
+    padding-left: 20px;
+}
+#sidebar .feed a{
+    color: #4c67a2;
+}
+#sidebar .feed a:hover{
+    color: #283757;
+}
+#sidebar .subdirectory, #login{
+    padding: 10px 20px;
+    background-color: #aec8fe;
+}
+#sidebar p{
+    margin: 5px 5px;
+    padding: 0px;
+}
+#sidebar .subdirectory li{
+    margin-top: 5px;
+}
+#sidebar h1{
+    font-size: 26px;
+    padding-bottom: 20px;
+}
+.unread, .author{
+    font-weight: bold;
+}
+
+#login dt{
+    padding: 5px;
+}
+#login dd{
+    padding: 0px 5px;
+    padding-bottom: 5px;
+}
+#login input[type=text], #login input[type=password]{
+    width: 225;
+}
+#login input[type=submit]{
+    margin: 5px;
+}
+input[type=submit]{
+    margin: 10px 0px;
+}
+form dl{
+    margin: 10px 0px;
+}
+form dl dt{
+    margin: 10px 0px;
+}
+form dl dd{
+    margin: 10px 0px;
+}
+#sidebar ul.button-list{
+    display: inline;
+}
+#sidebar ul.button-list li{
+    display: inline;
+}
+.manage-list a{
+    color: #4c67a2;
+    margin-right: auto;
+}
+.manage-list ul{
+    margin-left: auto;
+}/*
+form ul{
+    list-style: none;
+    padding: 5px 0px;
+}*/
+
+
+/*   PPPPPPPPPP       OOOOOO        SSSS     TTTTTTTTTT
+     PP      PPP    OOO    OOO    SSS  SSS       TT
+     PP      PPP    OO      OO    SS             TT
+     PPPPPPPPPP     OO      OO     SSS           TT
+     PP             OO      OO        SSS        TT
+     PP             OOO    OOO    SSS   SSS      TT
+     PP               OOOOOO        SSSS         TT
+*/
+.post-header{
+    background-color: #dde5fe;
+}
+.post .text{
+    color: black;
+}
+.post-header h1{
+    width: 450px;
+    font-size: 42px;
+    font-weight: normal;
+    padding: 5px 10px;
+    float: left;
+}
+.post-header a{
+    color: #4c67a2;
+}
+.post-header a:hover{
+    color: #283757;
+}
+.post-header ul{
+    padding: 15px 0px;
+    width: 150;
+    float: left;
+    text-align: right;
+    vertical-align: top;
+}
+.post-header .author{
+    width: 450px;
+    padding: 5px 10px;
+}
+.post-header .author span{
+    color: black;
+    
+}
+.post-header .date{
+    width: 150px;
+    text-align: right;
+    font-size: 12px;
+}
+.post-header ul li{
+    display: inline;
+    font-size: 20px;
+}
+.post-header{
+    margin: 10px 0px;
+}
