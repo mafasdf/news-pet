@@ -86,6 +86,8 @@ public class TrainerThreadJob implements Runnable
 			TrainingItem toAdd = new TrainingItem(classifierID, categoryId, in.nextLine());
 			trainingItems.add(toAdd);
 		}
+		
+		in.close();
 	}
 	
 	public void add(Message trainingMessage)

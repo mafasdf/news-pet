@@ -22,7 +22,7 @@ public class BatchTrainingSetDAL
 		{
 			conn = ConnectionConfig.createConnection();
 			String query = String.format("SELECT %s FROM %s WHERE %s=?;", PATH_COLUMN, TABLE_NAME, ID_COLUMN);
-			getPath = conn.prepareCall(query);
+			getPath = conn.prepareStatement(query);
 			getPath.setInt(1, sourceId);
 			result = getPath.executeQuery();
 			String toReturn = null;

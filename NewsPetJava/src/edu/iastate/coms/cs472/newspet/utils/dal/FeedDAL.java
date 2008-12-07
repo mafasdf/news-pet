@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.iastate.coms.cs472.newspet.utils.Feed;
@@ -37,15 +38,16 @@ public class FeedDAL
 	public static List<Feed> getFeedsOlderThan(java.util.Date cutoff)
 	{
 		Connection conn = ConnectionConfig.createConnection();
-		//TODO: remove 1=1
-		String query = "SELECT " + ID_COLUMN + ", " + URL_COLUMN + ", " + USERID_COLUMN + ", " + LASTCRAWLED_COLUMN + " FROM " + FEED_TABLE + " WHERE " + LASTCRAWLED_COLUMN + " < ? OR 1=1 ORDER BY " + LASTCRAWLED_COLUMN + " ASC;";
+		String query = "SELECT " + ID_COLUMN + ", " + URL_COLUMN + ", " + USERID_COLUMN + ", " + LASTCRAWLED_COLUMN + " FROM " + FEED_TABLE
+				+ " WHERE " + LASTCRAWLED_COLUMN + " < datetime(?) ORDER BY " + LASTCRAWLED_COLUMN + " ASC;";
 		
 		PreparedStatement getFeeds = null;
 		ResultSet feedResults = null;
 		try
 		{
 			getFeeds = conn.prepareStatement(query);
-			getFeeds.setDate(1, new java.sql.Date(cutoff.getTime()));
+			//TODO: Don't rely on a string conversion 
+			getFeeds.setString(1, dateToString(cutoff));
 			feedResults = getFeeds.executeQuery();
 			
 			List<Feed> toReturn = new ArrayList<Feed>();
@@ -100,5 +102,10 @@ public class FeedDAL
 				System.err.println(e.getMessage());
 			}
 		}
+	}
+	
+	private static String dateToString(Date cutoff)
+	{
+		return String.format("%tFT%tT", cutoff, cutoff);
 	}
 }
