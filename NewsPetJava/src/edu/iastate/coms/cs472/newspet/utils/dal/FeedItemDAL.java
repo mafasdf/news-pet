@@ -20,8 +20,6 @@ public class FeedItemDAL
 	
 	static final String CATEGORYID_COLUMN = "category_id";
 	
-	static final String DATE_COLUMN = "date_added";
-	
 	static final String TITLE_COLUMN = "title";
 	
 	static final String AUTHOR_COLUMN = "author";
@@ -154,17 +152,16 @@ public class FeedItemDAL
 			if(!alreadyExists)
 			{
 				insert = conn.prepareStatement(String.format(
-						"INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s, %s) values (?, ?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME, DATE_COLUMN,
+						"INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s) values (?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME,
 						TITLE_COLUMN, AUTHOR_COLUMN, BODY_COLUMN, URL_COLUMN, OPINION_COLUMN, CATEGORYID_COLUMN, FEEDID_COLUMN, WASVIEWED_COLUMN));
-				insert.setDate(1, new java.sql.Date(System.currentTimeMillis()));
-				insert.setString(2, title == null ? "" : title);
-				insert.setString(3, creator == null ? "" : creator);
-				insert.setString(4, description == null ? "" : description);
-				insert.setString(5, url == null ? "" : url);
-				insert.setInt(6, DEFAULT_OPINION_VALUE);
-				insert.setInt(7, categoryId);
-				insert.setInt(8, feedId);
-				insert.setBoolean(9, DEFAULT_WASVIEWED_VALUE);
+				insert.setString(1, title == null ? "" : title);
+				insert.setString(2, creator == null ? "" : creator);
+				insert.setString(3, description == null ? "" : description);
+				insert.setString(4, url == null ? "" : url);
+				insert.setInt(5, DEFAULT_OPINION_VALUE);
+				insert.setInt(6, categoryId);
+				insert.setInt(7, feedId);
+				insert.setBoolean(8, DEFAULT_WASVIEWED_VALUE);
 				
 				insert.executeUpdate();
 			}
