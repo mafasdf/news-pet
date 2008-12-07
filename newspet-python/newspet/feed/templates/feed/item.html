@@ -2,19 +2,7 @@
 
 {% block content %}
 <div class="post">
-    <div class="post-header">
-        <div>
-            <h1><a href='{{item.get_external_url}}'>{{item.title}}</a></h1>
-            <ul>
-                <li><a href="{% url f_love_item item.id %}">[+]</a></li>
-                <li><a href="{% url f_hate_item item.id %}">[-]</a></li>
-            </ul>
-        </div>
-        <div>
-            <p class="author"><span>from</span> <a href="#">{{item.feed}}</a></p>
-        </div>
-    </div>
-    <p class="date">{{item.date_added|date:""}}Nov. 18, 2008</p>
+    {% include "partials/post-header.html" %}
     <div class="post-body">
         {{item.safe_body}}
     </div>

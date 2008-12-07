@@ -37,8 +37,8 @@ $(function() {
 
 })
 function turn_gold(e){
-    $(this).attr('src', '{{MEDIA_URL}}img/gold_star.png')
+    $(this).attr('src', '/site-media/img/gold_star.png')
 }
 function turn_blue(e){
-    $(this).attr('src', '{{MEDIA_URL}}img/star.png')
+    $(this).attr('src', '/site-media/img/star.png')
 }

@@ -1,0 +1,22 @@
+{% load feedtags %}
+<div class="post-header">
+    <div>
+        <h1><a href='{{item.get_internal_url}}'>{{item.title}}</a></h1>
+        <ul>
+            <li class="form-category">
+                <span id="category-{{item.id}}" class='category-name'>{{item.category}}</span>
+                <form style="display: none" class="category-select" method="post" action="{% url f_move_item item.id %}" id="form-category-{{item.id}}">{% get_category_select user item.category%}</form><br>
+                <a id="change-{{item.id}}" class="change" href="javascript:change_category('{{item.id}}')">Move Item</a>
+            </li>
+            {% if item.is_liked %}
+            <li><img class="gold-star" src={{MEDIA_URL}}img/gold_star.png></li>
+            {% else %}
+            <li><a href="{% url f_love_item item.id %}"><img class="star" src="{{MEDIA_URL}}img/star.png"></a></li>
+            {% endif %}
+
+        </ul>
+    </div>
+    <div>
+        <p class="author"><span>from</span> <a href="#">{{item.feed}}</a></p>
+    </div>
+</div>

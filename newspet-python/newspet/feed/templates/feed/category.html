@@ -1,37 +1,20 @@
 {% extends "base.html" %}
-{% load feedtags %}
+{% load pagination_tags %}
 
-
+{% autopaginate category 10 %}
 
 {% block content %}
 <h1>{{category}}</h1>
 {% if category.feed_items %}
 {% for item in category.feed_items %}
 <div class="post list-element">
-<div class="post-header">
-    <div>
-        <h1><a href='{{item.get_internal_url}}'>{{item.title}}</a></h1>
-        <ul>
-            {% if item.is_liked %}
-            <li><img class="gold-star" src={{MEDIA_URL}}img/gold_star.png></li>
-            {% else %}
-            <li><a href="{% url f_love_item item.id %}"><img class="star" src="{{MEDIA_URL}}img/star.png"></a></li>
-            {% endif %}
-            <li>
-                <span id="category-{{item.id}}" class='category-name'>{{item.category}}</span>
-                <form style="display: none" class="category-select" method="post" action="{% url f_move_item item.id %}" id="form-category-{{item.id}}">{% get_category_select user item.category%}</form>
-                <a id="change-{{item.id}}" class="change" href="javascript:change_category('{{item.id}}')">Move Item</a>
-            </li>
-        </ul>
-    </div>
-    <div>
-        <p class="author"><span>from</span> <a href="#">{{item.feed}}</a></p>
-    </div>
-</div>
+{% include "partials/post-header.html" %}
 <div class="post-body">
     {{item.safe_body}}
 </div>
+</div>
 {% endfor %}
+{% paginate %}
 {% else %}
 <p>There are no items in this category yet</p>
 {% endif %}
