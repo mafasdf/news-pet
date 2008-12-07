@@ -104,6 +104,49 @@ public class FeedDAL
 		}
 	}
 	
+	public static void updateCrawlTime(java.util.Date crawlTime, int feedID)
+	{
+		Connection conn = null;
+		PreparedStatement update=null;
+		
+		try{
+			conn = ConnectionConfig.createConnection();
+			update = conn.prepareStatement(String.format("UPDATE %s SET %s=datetime(?) WHERE %s=?;", FEED_TABLE, LASTCRAWLED_COLUMN, ID_COLUMN));
+			update.setString(1, dateToString(crawlTime));
+			update.setInt(2,feedID);
+			
+			update.executeUpdate();
+		}catch(SQLException e)
+		{
+			throw new RuntimeException("Could not update crawl time", e);
+		}
+		finally
+		{
+			try
+			{
+				if(update!= null) update.close();
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a PreparedStatement!");
+				System.err.println(e.getMessage());
+			}
+			try
+			{
+				if(conn != null)
+				{
+					if(!conn.getAutoCommit()) conn.commit();
+					conn.close();
+				}
+			}
+			catch(SQLException e)
+			{
+				System.err.println("SQLException while trying to close a Connection!");
+				System.err.println(e.getMessage());
+			}
+		}
+	}
+	
 	private static String dateToString(Date cutoff)
 	{
 		return String.format("%tFT%tT", cutoff, cutoff);

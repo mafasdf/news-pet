@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Date;
 
 import de.nava.informa.core.ChannelIF;
 import de.nava.informa.core.ParseException;
@@ -11,6 +12,7 @@ import de.nava.informa.impl.basic.ChannelBuilder;
 import de.nava.informa.parsers.FeedParser;
 import edu.iastate.coms.cs472.newspet.utils.Feed;
 import edu.iastate.coms.cs472.newspet.utils.Pair;
+import edu.iastate.coms.cs472.newspet.utils.dal.FeedDAL;
 
 /**
  * Job that retrieves
@@ -79,5 +81,6 @@ public class RSSRetrievalJob implements Runnable
 		{
 			resultStorage.add(toAdd);
 		}
+		FeedDAL.updateCrawlTime(new Date(System.currentTimeMillis()), feed.getId());
 	}
 }
