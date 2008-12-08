@@ -58,6 +58,7 @@ public class RSSRetrievalJob implements Runnable
 		}
 		catch(MalformedURLException e)
 		{
+			System.err.println(e.getClass().getName());
 			e.printStackTrace();
 			return;
 		}
@@ -67,11 +68,13 @@ public class RSSRetrievalJob implements Runnable
 		}
 		catch(IOException e)
 		{
+			System.err.println(e.getClass().getName());
 			e.printStackTrace();
 			return;
 		}
 		catch(ParseException e)
 		{
+			System.err.println(e.getClass().getName());
 			e.printStackTrace();
 			return;
 		}
