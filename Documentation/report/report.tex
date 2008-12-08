@@ -63,7 +63,7 @@ The system is split into four modules: Training, Model, View, Controller.  The C
 
 There are several actions the user is able to do: give an item positive feedback by ``starring'', recategorizing an item, creating or editing a category, creating or editing a feed, logging in and out, and viewing feed items.
 
-The training actions -- starring and moving a feed item, and creating a category -- use the Training module. This module contacts the training service via the Python to Java message queue. To not interrupt the user's experience, a thread is create with a Python2Java socket wrapper that sends a set of predefined messages to the trainer service message queue.
+The training actions -- starring and moving a feed item, and creating a category -- use the Training module. This module contacts the training service via the Python to Java message queue. To not interrupt the user's experience, a thread is created with a Python2Java socket wrapper that sends a set of predefined messages to the trainer service message queue.
 
 Logging in and out creates and destroys sessions via cookies in the client side browser. This portion of authentication is handled at a controller level. The database only stores hashed versions of the password so they are not readable by us.
 
