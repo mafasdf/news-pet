@@ -6,14 +6,12 @@
             {% if category.has_unread %} <span>({{category.unread_count}})</span>{% endif %}
         </a>
     </p>
-    {%if category.has_unread %}
     <ul class="subdirectory">
-        {% for item in category.unread %}
+        {% for item in category.sorted_items %}
         <li>
             <p class="article"><a href="{{item.get_internal_url}}">{{item.title}}</a></p>
             <p class="feed"><a href="{{item.feed.get_absolute_url}}">{{item.feed}}</a></p>
         </li>
         {% endfor %}
     </ul>
-    {% endif %}
 {% endfor %}

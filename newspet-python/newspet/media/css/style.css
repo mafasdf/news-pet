@@ -7,7 +7,12 @@ h1{
 p{
     padding: 10px 0px;
 }
-/*domain specific*/
+
+
+
+/*/////////////////
+| domain specific |
+/////////////////*/
 body{
     background: url("../img/navbar.png") repeat-x;
     font-family: trebuchet "Trebuchet MS";
@@ -34,7 +39,12 @@ a:hover{
 .dropdown li{
     padding: 2px;
 }
-/* Category Changer */
+
+
+
+/*//////////////////
+| Category Changer |
+//////////////////*/
 form.category-select{
     display: inline;
     vertical-align: top;
@@ -56,16 +66,20 @@ form.category-select{
     min-width: 100%;
 }
 
-/* Post Header */
+
+
+/*/////////////
+| Post Header |
+/////////////*/
 .post-header{
     background-color: #dde5fe;
     float: left;
 }
 .post-header h1{
     width: 450px;
-    font-size: 30px;
+    font-size: 26px;
     font-weight: normal;
-    padding: 5px 10px;
+    padding: 5px 12px;
     float: left;
 }
 .post-header a{
@@ -76,7 +90,7 @@ form.category-select{
 }
 .post-header ul{
     margin: 10px 0px;
-    margin-right: 10px;
+    margin-right: 12px;
     width: 150;
     float: left;
     text-align: right;
@@ -105,12 +119,86 @@ form.category-select{
     text-align: right;
     font-size: 12px;
 }
-}
 .post-header{
     margin: 10px 0px;
+    margin-bottom: 5px;
 }
 
-/* Other */
+
+
+/*////////////
+| Pagination |
+////////////*/
+.pagination{
+    padding: 20px;
+}
+.pagination a{
+    color: #4c67a2;
+}
+.pagination a:hover{
+    background-color: #dde5fe;
+    color: #283757;
+}   
+.page, .prev, .next{
+    border: #283757 solid 1px;
+    padding: 5px;
+}
+.current{
+    color: black;
+    border: dashed 1px #283757;
+}
+.disabled{
+    display: none;
+}
+
+
+
+/*//////////
+| Side Bar |
+//////////*/
+#sidebar .article{
+    font-size: 20px;
+}
+#sidebar .feed{
+    color: #4c67a2;
+    padding-left: 20px;
+}
+#sidebar .feed a{
+    color: #4c67a2;
+}
+#sidebar .feed a:hover{
+    color: #283757;
+}
+#sidebar .subdirectory, #login{
+    padding: 10px 20px;
+    background-color: #aec8fe;
+}
+#sidebar p{
+    margin: 5px 5px;
+    padding: 0px;
+}
+#sidebar .subdirectory li{
+    margin-top: 5px;
+}
+#sidebar h1{
+    font-size: 26px;
+    padding-bottom: 20px;
+}
+.unread, .author{
+    font-weight: bold;
+}
+#sidebar ul.button-list{
+    display: inline;
+}
+#sidebar ul.button-list li{
+    display: inline;
+}
+
+
+
+/*///////
+| Other |
+///////*/
 .top{
     padding-bottom: 20px;
 }
@@ -184,37 +272,7 @@ hr{
 }
 
 
-#sidebar .article{
-    font-size: 20px;
-}
-#sidebar .feed{
-    color: #4c67a2;
-    padding-left: 20px;
-}
-#sidebar .feed a{
-    color: #4c67a2;
-}
-#sidebar .feed a:hover{
-    color: #283757;
-}
-#sidebar .subdirectory, #login{
-    padding: 10px 20px;
-    background-color: #aec8fe;
-}
-#sidebar p{
-    margin: 5px 5px;
-    padding: 0px;
-}
-#sidebar .subdirectory li{
-    margin-top: 5px;
-}
-#sidebar h1{
-    font-size: 26px;
-    padding-bottom: 20px;
-}
-.unread, .author{
-    font-weight: bold;
-}
+
 
 #login dt{
     padding: 5px;
@@ -241,12 +299,7 @@ form dl dt{
 form dl dd{
     margin: 10px 0px;
 }
-#sidebar ul.button-list{
-    display: inline;
-}
-#sidebar ul.button-list li{
-    display: inline;
-}
+
 .manage-list a{
     color: #4c67a2;
     margin-right: auto;
@@ -269,6 +322,17 @@ form ul{
      PP               OOOOOO        SSSS         TT
 */
 
-.post .text{
+
+.post-body{
     color: black;
+}
+.post-body a{
+    color: #4c67a2;
+}
+.post-body h1{
+    font-weight: bold;
+}
+.post-body{
+    padding: 10px;
+    padding-top: 0px;
 }

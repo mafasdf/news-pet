@@ -6,6 +6,10 @@
     <div class="manage-list">
         <ul class="button-list">
             <li>
+                <ul>
+                    <li><img src="{{MEDIA_URL}}img/up_arrow.png" /></li>
+                    <li><img src="{{MEDIA_URL}}img/down_arrow.png" /></li>
+                </ul>
                 {% if category.is_trash %}
                 <img src="{{MEDIA_URL}}img/edit_disabled.png" />
                 {% else %}

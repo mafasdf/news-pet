@@ -24,7 +24,7 @@ def my_categories(request):
 @login_required
 def category(request, category_id):
     category = get_object_or_404(Category, id = category_id, owner = request.user)
-    context = {'category': category}
+    context = {'category': category, 'items': category.feed_items()}
     return render_to_response('feed/category.html', context, context_instance = RequestContext(request))
 
 @login_required

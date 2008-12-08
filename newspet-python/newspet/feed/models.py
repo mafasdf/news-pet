@@ -68,7 +68,7 @@ class CategoryManager(models.Manager):
             trash.save()
     
 class Category(models.Model):
-    name = models.CharField(max_length=63)
+    name = models.CharField(max_length=25)
     is_trash = models.BooleanField(default=False)
     owner = models.ForeignKey(User)
     
@@ -79,6 +79,9 @@ class Category(models.Model):
         
     def has_unread(self):
         return self.unread_count() > 0
+    
+    def sorted_items(self):
+        return self.feeditem_set.order_by('was_viewed')[:5]
     
     def unread_count(self):
         return self.unread().count()
