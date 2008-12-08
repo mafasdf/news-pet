@@ -39,6 +39,7 @@
             </div>
             <div id="sidebar" class='grid_5 alpha'>
                 {% block sidebar %}
+                <h1>Categories</h1>
                 {% if user.is_authenticated %}
                 {% show_categories user %}
                 {% endif %}

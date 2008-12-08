@@ -55,6 +55,8 @@ class FeedItem(models.Model):
     
     def __unicode__(self):
         return self.title
+    class Meta:
+        ordering = ['-date_added']
     
 class CategoryManager(models.Manager):
     def get_trash(self, user):

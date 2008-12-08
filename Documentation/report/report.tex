@@ -55,13 +55,14 @@ A classifier record stores the serialized form of all objects needed for classif
 
 \section{Implementation}
 \subsection{Web Interface}
-The user interface is purely a web interface.
-The implementation was created using Django, a Python web-framework.
-When a user is created it,//TODO it has an initial special category, Trash.
-All documents that fail to be categorized properly end up in the Trash.
-The user has the ability to create as many categories as he or she chooses.
-These categories will remain empty unless the user adds feeds, which is where the news items will come from.
-Both of these can //TODO As news-items are categorized, the user will see them appear //TODO
+
+\subsubsection{Design}
+The interface of the website can be separated into three parts, the header, the sidebar, and the content pane.  
+\noindent\includegraphics[width=3.5in]{NewsPet.png}
+The Header contains the logo, management commands and navigation commands. 
+\subsubsection{Implementation}
+The web interface is purely http.  It can be reached by requesting pages from a server.  All of the client-side code (strictly code to enhance user interaction ie slide-down windows and collapsable categories) is written in JavaScript. The templates for the pages is written to HTML 4.0 standards. To handle requests on the server, we have implemented an Model-View-Controller patter using Django, a Python web-framework.  The View is responsible for creating the 
+
 
 \subsection{Trainer Service}
 The trainer service checks a message queue (see Message Queue subsection) to get training items, each of which consists of a classifier ID, a desired category ID, and a location to find text (either a training set record, or a feed item record).

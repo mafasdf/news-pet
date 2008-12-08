@@ -181,8 +181,14 @@ form.category-select{
     margin-top: 5px;
 }
 #sidebar h1{
+    font-size: 32px;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+}
+#sidebar h2{
     font-size: 26px;
-    padding-bottom: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
 }
 .unread, .author{
     font-weight: bold;
