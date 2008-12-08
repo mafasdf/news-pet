@@ -18,7 +18,6 @@ For companies that do work updating data based on news stories, many manhours ar
 We aim to enhance productivity of this work by creating and analyzing NewsPet: an automated news-feed categorizer which utilizes a Naive Bayes text classifier.
 \end{abstract}
 
-
 \section{Introduction}
 One of the team members, Michael Fulker, is currently an intern for a company that does management and maintaining of data about companies (relationships between companies, company executives, and other such information).
 The idea for this project was inspired by a full-time coworker of Michael, who stated it would be nice to be able to use some sort of AI system to analyze news feeds to and mark items relevant to changes in company relationships and similar information.
@@ -85,16 +84,15 @@ The classifier object is a \texttt{NaiveBayes} classifier from the Mallet framew
 
 \subsection{Message Queue}
 \label{MessageQueueSection}
-The trainer service uses a custom Message Queue module for receiving user feedback on classification.
-
-The web application layer makes socket connections to a listening thread spawned by the trainer service.//TODO
+The trainer service uses a custom Message Queue module for receiving user feedback on classification. The feedback from a single user is used for further training of the Naive Bayes classifier. The training requests are sent from the frontend webserver to another server using sockets. We did this to communicate between our frontend python code and backend Java code, but this structure is also useful in that it moves work off of the webserver. The Message Queue is necessary because we wanted to ensure that all user feedback was processed and that it was processed in order.
 
 \subsection{Remark on Classifier Choice}
 We wanted to incorporate pre-made libraries in our project where possible, and the classifier was no exception. We considered several different classification frameworks, including Weka and jBNC.
 
 The common way to represent documents when utilizing Naive Bayes is in a feature vector form: each document is represented by an $n$-dimensional vector, given $n$ words in the vocabulary, where the value at a word's index is 1 (or optionally the number of occurences), and 0 otherwise.
+
 Clearly since most documents don't consist of the entire English language, most of these vectors are very sparse (have mostly zeros).
-A major performance issue encountered was that some frameworks stored such a vector in a non-sparse manner, leading to problems with memory overusage when training on moderately large data sets.
+A major performance issue encountered was that some frameworks stored such a vector in a non-sparse manner, leading to problems with memory usage when training on moderately large data sets.
 
 Another problem encountered was how some frameworks did not seem to be intended for developer use, and were intended to be used only as a standalone program. The problems encountered with these were sparse/nonexistent documentation, non-modular code, and overall difficulty of incorporating into a different project than their own.
 
@@ -107,7 +105,7 @@ Since some of the news articles in this collection are listed under multiple cat
 
 We created an analysis program to use a Mallet Naive Bayes classifier in the same manner in which it is used in the main project, train it using a variable portion of the data (randomly selected), and test it using the remaining portion.
 
-We also set up a testing option where a number of categories are artifically grouped together as a ``trash'' category, to simulate typical use of our system.
+We also set up a testing option where a number of categories are artificaially grouped together as a ``trash'' category, to simulate typical use of our system.
 
 For the number of non-trash categories being 66, 30, and 5, we ran with each of these $16\times 19=304$ trials, (16 trials for each of 19 different training ratios). Results are given below.
 
@@ -120,6 +118,11 @@ The error bars signify the maximum and minimum accuracies found over the 16 tria
 
 \subsection{Conclusion}
 From the above test results, it is apparent that our inital goal of at least 75\% average accuracy is achieved, provided that the user has a reasonably small number of categories, and/or the classifier has a large enough set of training examples. (To be precise, the classifier had over 75\% average accuracy if over 8550 training items were used in the all-category case, or if over 450 training items were used in the 5-category case.)
+
+\section{Future Work}
+We believe that this project has potential beyond this course. It is a novel idea in line with the current trend of online services.
+
+The Mallet framework has preformed wonderfully in our project. However, it does have one major disadvantage. Once it has been trained on a class, it will always remember that class. A standard use case for our program involves the deletion of a category by the user, but the Mallet classifier does not support this action. We have thought about a few ways to solve this. The uneloquent solution is to have a classifier for each category (instead of each user) and use each of them as described in class. That is, ask each classifier for its probability that a given article has that class and return the class with the highest probability. A better solution would be to modify the Mallet source code to allow the deletion of a class. It may be possible to negatively train the Mallet classifiers, but this approach would require a batch training job consisting of all articles previously identified as being in this category.
 
 Overall, we are pleased with the success of our project, and we plan to continue improving upon it in terms of usefulness and scalability.
 
