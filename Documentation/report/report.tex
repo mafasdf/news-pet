@@ -112,13 +112,13 @@ We eventually decided on Mallet, due to how it has comparatively reasonable perf
 \section{Analysis}
 Quantitative analysis of the Mallet Framework's Naive Bayes classifier was done using data from Reuters-21578 corpus \cite{Reuters21578} (a collection of pre-categorized news articles made available for research purposes).
 
-Since some of the news articles in this collection are listed under multiple categories, and our model allows one category per news item, we set up our parser to ignore all items that span multiple categories. Out of the 21578 articles, there are 9002 that have singular categories.
+Since some of the news articles in this collection are listed under multiple categories, and our model allows one category per news item, we set up our parser to ignore all items that span multiple categories. Out of the 21578 articles, there are 9002 that have singular categories, (this creates a set of 66 possible categories for testing).
 
 We created an analysis program to use a Mallet Naive Bayes classifier in the same manner in which it is used in the main project, train it using a variable portion of the data (randomly selected), and test it using the remaining portion.
 
-We also set up a testing option where a number of categories are artificially grouped together as a ``trash'' category, to simulate typical use of our system.
+We also set up a testing option where a number of categories are artificially grouped together as a ``trash'' category, to simulate typical use of our system. The categories that are grouped together are chosen by the test program randomly at runtime.
 
-For the number of non-trash categories being 66, 30, and 5, we ran with each of these $16\times 19=304$ trials, (16 trials for each of 19 different training ratios). Results are given below.
+For each case of setting the number of non-trash categories to 66, 30, and 5, we ran $16\times 19=304$ trials, (16 trials for each of 19 different training ratios). Results are given below.
 
 \subsection{Results}
 Each marker represents the average accuracy of the 16 trials for the specified number of non-trash categories and number of training items.
