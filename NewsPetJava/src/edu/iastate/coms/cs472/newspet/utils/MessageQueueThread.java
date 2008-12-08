@@ -114,7 +114,7 @@ public class MessageQueueThread extends Thread
 			{
 				serverSocket.close();
 			}
-			catch(Exception e)
+			catch(IOException e)
 			{
 				System.err.println(e.getClass().getName() + " while trying to close the ServerSocker: " + serverSocket);
 				System.err.println(e.getMessage());
