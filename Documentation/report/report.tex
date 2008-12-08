@@ -10,7 +10,7 @@
 COM S 472 : Principles of Artificial Intelligence\\Department of Computer Science\\ Iowa State University, Ames, IA 50011\\
 \texttt{\{calculo, thauber, tyson\}@cs.iastate.edu}}
 \begin{document}
-\nocopyright%TODO: do we want this?
+\nocopyright
 \maketitle
 
 \begin{abstract}
@@ -71,9 +71,9 @@ Whenever a message or messages are available on the queue, a batch of training i
 If multiple batches have the same classifier ID (for example, if new items are added to the message queue when a thread is in the process of training), the access layer for the classifier/trainer objects ensures subsequent threads ones must wait for the preceeding thread to finish.
 
 The actual training is done with \texttt{NaiveBayesTrainer} objects from the Mallet framework \cite{McCallumMALLET}.
-Each training thread acquires a \texttt{NaiveBayesTrainer} object (either deserialized from database, or instantiated for initial training),
+Each training thread acquires a trainer object (either deserialized from database, or instantiated for initial training),
 passes the training items through a custom filter such that they are converted to objects the Mallet framework is compatible with,
-runs these instances through the \texttt{ClassifierTrainer},
+runs these instances through the trainer,
 and persists the trainer and classifier back to the database.
 
 A benefit to using this particular framework is that the trainer does not need to know all of the possible categories beforehand. It is possible for a user to add a category and the trainer subsequently receive incremental training items for it, since it detects when new categories are seen and internally modifies its data structures as needed.
@@ -92,7 +92,7 @@ The web application layer makes socket connections to a listening thread spawned
 \subsection{Remark on Classifier Choice}
 We wanted to incorporate pre-made libraries in our project where possible, and the classifier was no exception. We considered several different classification frameworks, including Weka and jBNC.
 
-The common way to represent documents when utilizing Naive Bayes is in a feature vector form: each document is represented by an $n$-dimensional vector, given $n$ words in the vocabulary, where the value at a word's index is 1 (or optionally the number of occurences), and 0 otherwise. //TODO: add ref?
+The common way to represent documents when utilizing Naive Bayes is in a feature vector form: each document is represented by an $n$-dimensional vector, given $n$ words in the vocabulary, where the value at a word's index is 1 (or optionally the number of occurences), and 0 otherwise.
 Clearly since most documents don't consist of the entire English language, most of these vectors are very sparse (have mostly zeros).
 A major performance issue encountered was that some frameworks stored such a vector in a non-sparse manner, leading to problems with memory overusage when training on moderately large data sets.
 
