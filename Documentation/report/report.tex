@@ -76,6 +76,8 @@ passes the training items through a custom filter such that they are converted t
 runs these instances through the \texttt{ClassifierTrainer},
 and persists the trainer and classifier back to the database.
 
+A benefit to using this particular framework is that the trainer does not need to know all of the possible categories beforehand. It is possible for a user to add a category and the trainer subsequently receive incremental training items for it, since it detects when new categories are seen and internally modifies its data structures as needed.
+
 \subsection{Reader/Categorizer Service}
 The reader service retreives a list of Feed urls from the database using a certain polling interval. Each time it does this, it creates and starts a series of threadpool jobs to retrieve the RSS data (using the Informa framework \cite{Informa}). When these jobs have all finished, the service creates another series of threadpool jobs, one for each news item. Each of these threads will retrieve the latest classifier for their associated user (deserialized from database), use it to determine the best category, and store their item to the database with the corresponding category ID.
 
