@@ -80,6 +80,9 @@ class Category(models.Model):
     def feed_items(self):
         return self.feeditem_set.all()
         
+    def condensed_feed_items(self):
+        return self.feeditem_set.all()[:5]
+        
     def has_unread(self):
         return self.unread_count() > 0
     

@@ -162,7 +162,12 @@ div.unread ul{
 | Side Bar |
 //////////*/
 #sidebar .article{
-    font-size: 20px;
+    font-size: 14px;   
+}
+#sidebar .article a{
+    color: #283757;
+}#sidebar .article a:hover{
+    color: white;
 }
 #sidebar .feed{
     color: #4c67a2;
@@ -174,16 +179,22 @@ div.unread ul{
 #sidebar .feed a:hover{
     color: #283757;
 }
-#sidebar .subdirectory, #login{
+#login{
     padding: 10px 20px;
     background-color: #aec8fe;
 }
-#sidebar p{
-    margin: 5px 5px;
-    padding: 0px;
+#sidebar .subdirectory{
+    border-bottom: 1px solid #283757;
 }
 #sidebar .subdirectory li{
-    margin-top: 5px;
+    padding: 2px 5px;
+    background-color: #dde5fe;
+    border-top: 1px solid #283757;
+    
+}
+#sidebar p{
+    margin: 2px 2px;
+    padding: 0px;
 }
 #sidebar h1{
     font-size: 32px;
@@ -195,8 +206,13 @@ div.unread ul{
     margin-bottom: 15px;
     padding-bottom: 5px;
 }
-.unread, .author{
+#sidebar li.unread{
     font-weight: bold;
+    background-color: #f0f3fb;
+    
+}
+.author, .feed{
+    font-size: 12px;
 }
 #sidebar ul.button-list{
     display: inline;
@@ -223,6 +239,16 @@ div.unread ul{
 }
 p.unread{
     font-weight: bold;
+}
+a.category{
+    color: #4c67a2;
+    font-size: 24px;
+}
+a.category:hover{
+    color: #283757;
+}
+a.category span{
+    color: #283757;
 }
 
 
@@ -258,16 +284,6 @@ p.unread{
     text-align: right;
     padding: 0px;
     font-size: 12px;
-}
-a.category{
-    color: #4c67a2;
-    font-size: 24px;
-}
-a.category:hover{
-    color: #283757;
-}
-a.category span{
-    color: #283757;
 }
 .unread{
     font-weight: bold;
