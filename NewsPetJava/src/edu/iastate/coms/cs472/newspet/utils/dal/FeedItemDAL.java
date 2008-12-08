@@ -32,6 +32,8 @@ public class FeedItemDAL
 	static final String WASVIEWED_COLUMN = "was_viewed";
 	static final boolean DEFAULT_WASVIEWED_VALUE = false;
 	
+	static final String DATEADDED_COLUMN = "date_added";
+	
 	//used in multiple methods
 	static final String URL_EXISTS_QUERY = String.format("SELECT EXISTS ( SELECT * FROM %s F INNER JOIN %s C ON F.%s=C.%s WHERE F.%s=? AND C.%s=?);",
 			TABLE_NAME, CategoryDAL.TABLE_NAME, CATEGORYID_COLUMN, CategoryDAL.ID_COLUMN, URL_COLUMN, CategoryDAL.USERID_COLUMN);
@@ -151,9 +153,10 @@ public class FeedItemDAL
 			//only insert if item with same url doesn't exist
 			if(!alreadyExists)
 			{
+				//TODO: make sure time_added 
 				insert = conn.prepareStatement(String.format(
-						"INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s) values (?, ?, ?, ?, ?, ?, ?, ?);", TABLE_NAME,
-						TITLE_COLUMN, AUTHOR_COLUMN, BODY_COLUMN, URL_COLUMN, OPINION_COLUMN, CATEGORYID_COLUMN, FEEDID_COLUMN, WASVIEWED_COLUMN));
+						"INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s, %s) values (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);", TABLE_NAME,
+						TITLE_COLUMN, AUTHOR_COLUMN, BODY_COLUMN, URL_COLUMN, OPINION_COLUMN, CATEGORYID_COLUMN, FEEDID_COLUMN, WASVIEWED_COLUMN, DATEADDED_COLUMN));
 				insert.setString(1, title == null ? "" : title);
 				insert.setString(2, creator == null ? "" : creator);
 				insert.setString(3, description == null ? "" : description);

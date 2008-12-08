@@ -36,6 +36,10 @@ public class TrainerThreadJob implements Runnable
 			else if(message.getMessageType() == Message.MessageType.BATCH) addBatchItems(message.getSourceId(), message.getCategoryId());
 		}
 		
+		//if there's no training data (for example, an empty training file), return.
+		if(trainingItems.isEmpty())
+			return;
+		
 		//get trainer (lock by ID)
 		TrainerCheckoutData checkoutData = null;
 		try
