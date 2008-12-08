@@ -6,10 +6,6 @@ public class Pair<A, B>
 	
 	private B b;
 	
-	/**
-	 * @param a
-	 * @param b
-	 */
 	public Pair(A a, B b)
 	{
 		this.a = a;
@@ -65,5 +61,4 @@ public class Pair<A, B>
 		else if(!b.equals(other.b)) return false;
 		return true;
 	}
-	
 }
