@@ -25,7 +25,7 @@ class FeedItemManager(models.Manager):
         return self.filter(was_viewed = False)
 
 class FeedItem(models.Model):
-    date_added = models.DateTimeField()
+# TODO    date_added = models.DateTimeField()
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     body = models.TextField()
@@ -55,8 +55,8 @@ class FeedItem(models.Model):
     
     def __unicode__(self):
         return self.title
-    class Meta:
-        ordering = ['-date_added']
+    # TODO class Meta:
+    #     ordering = ['-date_added']
     
 class CategoryManager(models.Manager):
     def get_trash(self, user):
@@ -73,6 +73,7 @@ class Category(models.Model):
     name = models.CharField(max_length=25)
     is_trash = models.BooleanField(default=False)
     owner = models.ForeignKey(User)
+    position = models.IntegerField()
     
     objects = CategoryManager()
     
@@ -96,6 +97,15 @@ class Category(models.Model):
     
     def get_absolute_url(self):
         return reverse('f_category', args=[self.id])
+
+    def save(self):
+        if self.id is None:
+            self.position = len(Category.objects.filter(owner = self.owner))
+        super(Category,self).save()
+        
+        
+    class Meta:
+        ordering = ['position']
         
 class TrainingSet(models.Model):
     name = models.CharField(max_length=255)

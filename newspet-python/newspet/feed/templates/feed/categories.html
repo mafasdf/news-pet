@@ -2,11 +2,11 @@
 
 {% for category in categories %}
     <p>
-        <a class="category{% if category.has_unread %} unread{% endif %}" href="{{category.get_absolute_url}}">{{category.name}}
+        <img id="category-{{category.id}}" class="collapser" src="{{MEDIA_URL}}img/collapsed.png" /><a class="category{% if category.has_unread %} unread{% endif %}" href="{{category.get_absolute_url}}">{{category.name}}
             {% if category.has_unread %} <span>({{category.unread_count}})</span>{% endif %}
         </a>
     </p>
-    <ul class="subdirectory">
+    <ul id="subdirectory-category-{{category.id}}" class="subdirectory">
         {% for item in category.sorted_items %}
         <li>
             <p class="article"><a href="{{item.get_internal_url}}">{{item.title}}</a></p>

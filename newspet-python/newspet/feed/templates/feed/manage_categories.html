@@ -5,17 +5,25 @@
     {% for category in categories %}
     <div class="manage-list">
         <ul class="button-list">
-            <li>
-                <ul>
-                    <li><img src="{{MEDIA_URL}}img/up_arrow.png" /></li>
-                    <li><img src="{{MEDIA_URL}}img/down_arrow.png" /></li>
-                </ul>
+            
+                <li><div class="stacked">
+                    {% if forloop.first %}
+                    <img src="{{MEDIA_URL}}img/up-arrow-disabled.png" />
+                    {% else %}           
+                    <a href="{% url f_category_up category.id %}"><img src="{{MEDIA_URL}}img/up-arrow.png" /></a>
+                    {% endif %}          
+                    {% if forloop.last %}
+                    <img src="{{MEDIA_URL}}img/down-arrow-disabled.png" />
+                    {% else %}           
+                    <a href="{% url f_category_down category.id %}"><img src="{{MEDIA_URL}}img/down-arrow.png" /></a>
+                    {% endif %}
+                </div></li>
                 {% if category.is_trash %}
-                <img src="{{MEDIA_URL}}img/edit_disabled.png" />
+                <li><img src="{{MEDIA_URL}}img/edit_disabled.png" /></li>
                 {% else %}
-                <a href={% url f_edit_category category.id %}><img src="{{MEDIA_URL}}img/edit.png" /></a>
+                <li><a href={% url f_edit_category category.id %}><img src="{{MEDIA_URL}}img/edit.png" /></a></li>
                 {% endif %}
-            </li>
+            
         </ul>
         <a href="{{category.get_absolute_url}}">
         {{category.name}}

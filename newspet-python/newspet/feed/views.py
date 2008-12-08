@@ -125,7 +125,30 @@ def move(request, item_id):
         training.train_item(item, category, training.BAD_OPINION)
         training.train_item(item, new_category, training.GOOD_OPINION)
         item.category = new_category
+        item.opinion = training.GOOD_OPINION
         item.save()
     else:
         print category_change_form.errors
     return HttpResponseRedirect(reverse('f_item', args=[item_id]))
+
+UP_DIRECTION = 'up'
+DOWN_DIRECTION = 'down'
+#TODO add normalization incase of improper ordering
+def category_position_change(request, category_id, direction):
+    category = get_object_or_404(Category, id = category_id)
+    position = category.position
+    categories = Category.objects.filter(owner = request.user).order_by('position')
+    if direction is UP_DIRECTION:
+        new_position = position - 1
+    else:
+        new_position = position + 1
+    if new_position >= 0 and new_position < len(categories):
+        categories[new_position].position = position
+        categories[new_position].save()
+        category.position = new_position
+        category.save()
+    return HttpResponseRedirect(reverse('f_manage_categories'))
+
+        
+    
+    

@@ -198,9 +198,24 @@ form.category-select{
 }
 #sidebar ul.button-list li{
     display: inline;
+    vertical-align: middle;
+    padding: 2px 0px;
 }
-
-
+#sidebar .stacked img{
+    padding: 2px;
+    margin-right: 3px;
+}
+#sidebar .stacked{
+    width: 15px;
+    float: left;
+    padding-right: 3px;
+}
+#sidebar .manage-list{
+    padding: 2px 0px;
+}
+.collapser{
+    padding-right: 2px;
+}
 
 /*///////
 | Other |

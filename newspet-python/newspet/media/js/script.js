@@ -7,12 +7,23 @@ $(function(){
             .css('left',$(this).position().left)
             .toggle("fast")
     });
-    $(".star").hover(turn_gold, turn_blue)
+    $(".star").hover(turn_gold, turn_blue);
     $('.category-select select')
     .change(function(){
-        $(this).parent().get(0).submit()
+        $(this).parent().get(0).submit();
     })
+    $(".collapser").toggle(uncollapse, collapse);
+    $(".subdirectory").hide();
 });
+
+function uncollapse(){
+    $(this).attr('src', '/site-media/img/uncollapsed.png');
+    $('#subdirectory-'+this.id).show('fast');
+}
+function collapse(){
+    $(this).attr('src', '/site-media/img/collapsed.png');
+    $('#subdirectory-'+this.id).hide('fast');
+}
 // $(function(){
 //     $('.list-element .post-body').hide()
 //     $('.list-element .post-header')

@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from feed import views
 
 urlpatterns = patterns('',
     url(r'^item/(\d+)/$', 'feed.views.item', name='f_item'),
@@ -11,4 +12,6 @@ urlpatterns = patterns('',
     url(r'^dissaprove/item/(\d+)/$', 'feed.views.love_item', name='f_love_item'),
     url(r'^approve/item/(\d+)/$', 'feed.views.hate_item', name='f_hate_item'),
     url(r'^move/(\d+)/', 'feed.views.move', name='f_move_item'),
+    url(r'^category/(\d+)/up/$', 'feed.views.category_position_change', {'direction': views.UP_DIRECTION}, name='f_category_up'),
+    url(r'^category/(\d+)/down/$', 'feed.views.category_position_change', {'direction': views.DOWN_DIRECTION}, name='f_category_down'),
 )

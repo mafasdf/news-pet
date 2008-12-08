@@ -1,12 +1,12 @@
 from django import template
 from feed.forms import CategoryChangeForm
-
+from django.conf import settings
 register = template.Library()
 
 @register.inclusion_tag('feed/categories.html')
 def show_categories(user):
     categories = user.category_set.all()
-    return {'categories': categories}
+    return {'categories': categories, 'MEDIA_URL': settings.MEDIA_URL}
 
 
 

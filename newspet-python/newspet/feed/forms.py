@@ -5,7 +5,7 @@ class CategoryForm(forms.ModelForm):
     name = forms.CharField(max_length = 63)
     class Meta:
         model = Category
-        exclude = ('is_trash', 'owner')
+        exclude = ('is_trash', 'owner', 'position')
 
 TRAINING_CHOICES = (('Pre-Trained Categories', 0),
                     ('Word or Phrase', 1),
