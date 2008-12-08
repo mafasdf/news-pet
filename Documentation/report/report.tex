@@ -14,7 +14,7 @@ COM S 472 : Principles of Artificial Intelligence\\Department of Computer Scienc
 \maketitle
 
 \begin{abstract}
-For companies that do work updating data based on news stories, many manhours are wasted by reading irrelevant articles.
+For companies that do work updating data based on news stories, many man-hours are wasted by reading irrelevant articles.
 We aim to enhance productivity of this work by creating and analyzing NewsPet: an automated news-feed categorizer which utilizes a Naive Bayes text classifier.
 \end{abstract}
 
@@ -22,7 +22,7 @@ We aim to enhance productivity of this work by creating and analyzing NewsPet: a
 One of the team members, Michael Fulker, is currently an intern for a company that does management and maintaining of data about companies (relationships between companies, company executives, and other such information).
 The idea for this project was inspired by a full-time coworker of Michael, who stated it would be nice to be able to use some sort of AI system to analyze news feeds to and mark items relevant to changes in company relationships and similar information.
 
-As an attempt to create a solution for this problem, we decided to build a web application around a Naive Bayes classifier. Not being limited to Boolean classification (i.e. ``spam'' and ``not spam''), this application allows users to create an arbitrary number of categories, as well as set up an arbitrary number of news feeds to scan. Our system then places news items into these categories according to its current knowledge, and allows the user to submit performance feedback as training by either manually giving positive feedback (called ``starring'') or moving items to a different category.
+As an attempt to create a solution for this problem, we decided to build a web application around a Naive Bayes classifier. Not being limited to Boolean classification (i.e. ``spam'' and ``not spam''), this application allows users to create an arbitrary number of categories, as well as set up an arbitrary number of news feeds to scan. Our system then places news items into these categories according to its current knowledge, and allows the user to submit performance feedback as training (by either manually ``starring'' or recategorizing items).
 
 \pagebreak
 \section{Architecture}
@@ -42,7 +42,7 @@ The database is structured as follows (omitting tables automatically set up by t
 
 \noindent\includegraphics[width=3.5in]{db-diagram-no-transparency.png}
 
-(Arrows indicate a foriegn key reference)
+(Arrows indicate a foreign key reference)
 
 A user has multiple feeds, multiple categories, and one classifier object.
 
@@ -57,7 +57,7 @@ A classifier record stores the serialized form of all objects needed for classif
 The web application service is responsible for retrieving user input, manage the creation and edition of feeds and categories, displaying feed items, and managing authentication of the users.
 
 \subsubsection{Overview}
-The system is split into four modules: Training, Model, View, and Controller.  The Controller module is responsible for processing the requests and sending the responses, the Model module persists objects to the database, the View module contains information about the environment that the user will operate in, and the training module alerts the trainer service of new training operations the user has decided on. 
+The system is split into four modules: Training, Model, View, Controller.  The Controller module is responsible for processing the requests and sending the responses, the Model module persists objects to the database, the View module contains information about the environment that the user will operate in, and the training module alerts the trainer service of new training operations the user has decided on. 
 
 \noindent\includegraphics[width=3.5in]{MVC.png}
 
@@ -71,7 +71,7 @@ If users add, edit, or delete feeds, the web application access its Model module
 
 \subsubsection{Technologies}
 
-The web interface is purely HTTP.  It can be reached by requesting pages from a server.  All of the client-side code (strictly code to enhance user interaction ie slide-down windows and collapsable categories) is written in JavaScript and run in the user's internet browser. The templates for the pages are written to HTML 4.0 standards. To handle requests on the server, we have implemented an Model-View-Controller patter using Django, a Python web-framework.  
+The web interface is purely HTTP.  It can be reached by requesting pages from a server.  All of the client-side code (strictly code to enhance user interaction, i.e. slide-down windows and collapsible categories) is written in JavaScript and run in the user's internet browser. The templates for the pages are written to HTML 4.0 standards. To handle requests on the server, we have implemented an Model-View-Controller patter using Django, a Python web-framework.  
 
 
 \subsection{Trainer Service}
@@ -116,7 +116,7 @@ Since some of the news articles in this collection are listed under multiple cat
 
 We created an analysis program to use a Mallet Naive Bayes classifier in the same manner in which it is used in the main project, train it using a variable portion of the data (randomly selected), and test it using the remaining portion.
 
-We also set up a testing option where a number of categories are artificaially grouped together as a ``trash'' category, to simulate typical use of our system.
+We also set up a testing option where a number of categories are artificially grouped together as a ``trash'' category, to simulate typical use of our system.
 
 For the number of non-trash categories being 66, 30, and 5, we ran with each of these $16\times 19=304$ trials, (16 trials for each of 19 different training ratios). Results are given below.
 
@@ -133,7 +133,7 @@ From the above test results, it is apparent that our initial goal of at least 75
 \section{Future Work}
 We believe that this project has potential beyond this course. It is a novel idea in line with the current trend of online services.
 
-The Mallet framework has preformed wonderfully in our project. However, it does have one major disadvantage. Once it has been trained on a class, it will always remember that class. A standard use case for our program involves the deletion of a category by the user, but the Mallet classifier does not support this action. We have thought about a few ways to solve this. The uneloquent solution is to have a classifier for each category (instead of each user) and use each of them as described in class. That is, ask each classifier for its probability that a given article has that class and return the class with the highest probability. A better solution would be to modify the Mallet source code to allow the deletion of a class. It may be possible to negatively train the Mallet classifiers, but this approach would require a batch training job consisting of all articles previously identified as being in this category.
+The Mallet framework has preformed wonderfully in our project. However, it does have one major disadvantage. Once it has been trained on a class, it will always remember that class. A standard use case for our program involves the deletion of a category by the user, but the Mallet classifier does not support this action. We have thought about a few ways to solve this. The ineloquent solution is to have a classifier for each category (instead of each user) and use each of them as described in class. That is, ask each classifier for its probability that a given article has that class and return the class with the highest probability. A better solution would be to modify the Mallet source code to allow the deletion of a class. It may be possible to negatively train the Mallet classifiers, but this approach would require a batch training job consisting of all articles previously identified as being in this category.
 
 Overall, we are pleased with the success of our project, and we plan to continue improving upon it in terms of usefulness and scalability.
 
