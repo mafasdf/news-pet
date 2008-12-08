@@ -22,7 +22,7 @@ We aim to enhance productivity of this work by creating and analyzing NewsPet: a
 One of the team members, Michael Fulker, is currently an intern for a company that does management and maintaining of data about companies (relationships between companies, company executives, and other such information).
 The idea for this project was inspired by a full-time coworker of Michael, who stated it would be nice to be able to use some sort of AI system to analyze news feeds to and mark items relevant to changes in company relationships and similar information.
 
-As an attempt to create a solution for this problem, we decided to build a web application around a Naive Bayes classifier. Not being limited to boolean classification (i.e. ``spam'' and ``not spam''), this application allows users to create an arbitrary number of categories, as well as set up an arbitrary number of news feeds to scan. Our system then places news items into these categories according to its current knowledge, and allows the user to submit performance feedback as training (by either manually ``starring'' or recategorizing items).
+As an attempt to create a solution for this problem, we decided to build a web application around a Naive Bayes classifier. Not being limited to Boolean classification (i.e. ``spam'' and ``not spam''), this application allows users to create an arbitrary number of categories, as well as set up an arbitrary number of news feeds to scan. Our system then places news items into these categories according to its current knowledge, and allows the user to submit performance feedback as training (by either manually ``starring'' or recategorizing items).
 
 \pagebreak
 \section{Architecture}
@@ -70,14 +70,14 @@ Logging in and out creates and destroys sessions via cookies in the client side 
 If users add, edit, or delete feeds, the web application access its Model module to edit the database itself.  Feeds have a field which contains the date it has last been crawled.  This is used by the reader service to sort the feeds by priority for reading.  When created feeds are given the date January 1st, 2000, so it will immediately be crawled.  Therefore no direct interaction is needed between the reader service and the web application service.
 
 \subsubsection{Implementation}
-The web interface is purely http.  It can be reached by requesting pages from a server.  All of the client-side code (strictly code to enhance user interaction ie slide-down windows and collapsable categories) is written in JavaScript. The templates for the pages is written to HTML 4.0 standards. To handle requests on the server, we have implemented an Model-View-Controller patter using Django, a Python web-framework.  The View is responsible for creating the 
+The web interface is purely http.  It can be reached by requesting pages from a server.  All of the client-side code (strictly code to enhance user interaction ie slide-down windows and collapsible categories) is written in JavaScript. The templates for the pages is written to HTML 4.0 standards. To handle requests on the server, we have implemented an Model-View-Controller patter using Django, a Python web-framework.  The View is responsible for creating the 
 
 
 \subsection{Trainer Service}
 The trainer service checks a message queue (see Message Queue subsection) to get training items, each of which consists of a classifier ID, a desired category ID, and a location to find text (either a training set record, or a feed item record).
 Whenever a message or messages are available on the queue, a batch of training items of the same classifier ID are collected, which are put in a runnable job for execution by a threadpool.
 
-If multiple batches have the same classifier ID (for example, if new items are added to the message queue when a thread is in the process of training), the access layer for the classifier/trainer objects ensures subsequent threads ones must wait for the preceeding thread to finish.
+If multiple batches have the same classifier ID (for example, if new items are added to the message queue when a thread is in the process of training), the access layer for the classifier/trainer objects ensures subsequent threads ones must wait for the preceding thread to finish.
 
 The actual training is done with \texttt{NaiveBayesTrainer} objects from the Mallet framework \cite{McCallumMALLET}.
 Each training thread acquires a trainer object (either deserialized from database, or instantiated for initial training),
@@ -88,7 +88,7 @@ and persists the trainer and classifier back to the database.
 A benefit to using this particular framework is that the trainer does not need to know all of the possible categories beforehand. It is possible for a user to add a category and the trainer subsequently receive incremental training items for it, since it detects when new categories are seen and internally modifies its data structures as needed.
 
 \subsection{Reader/Categorizer Service}
-The reader service retreives a list of Feed urls from the database using a certain polling interval. Each time it does this, it creates and starts a series of threadpool jobs to retrieve the RSS data (using the Informa framework \cite{Informa}). When these jobs have all finished, the service creates another series of threadpool jobs, one for each news item. Each of these threads will retrieve the latest classifier for their associated user (deserialized from database), use it to determine the best category, and store their item to the database with the corresponding category ID.
+The reader service retrieves a list of Feed urls from the database using a certain polling interval. Each time it does this, it creates and starts a series of threadpool jobs to retrieve the RSS data (using the Informa framework \cite{Informa}). When these jobs have all finished, the service creates another series of threadpool jobs, one for each news item. Each of these threads will retrieve the latest classifier for their associated user (deserialized from database), use it to determine the best category, and store their item to the database with the corresponding category ID.
 
 The classifier object is a \texttt{NaiveBayes} classifier from the Mallet framework (trained by the trainer service). The classifier can return a vector of category/probability pairs. The thread doing the classifying will determine the most probable category, and confirm that its probability scaled by the number of categories is at least greater than some value, and categorizes it as trash otherwise. (The rationale for this being that if there are three categories where the most probable category has probability 0.34, and the others have probability 0.33, then this represents a very uncertain classification, and it would be better to put it in the trash as effectively uncategorized.)
 
@@ -99,7 +99,7 @@ The trainer service uses a custom Message Queue module for receiving user feedba
 \subsection{Remark on Classifier Choice}
 We wanted to incorporate pre-made libraries in our project where possible, and the classifier was no exception. We considered several different classification frameworks, including Weka and jBNC.
 
-The common way to represent documents when utilizing Naive Bayes is in a feature vector form: each document is represented by an $n$-dimensional vector, given $n$ words in the vocabulary, where the value at a word's index is 1 (or optionally the number of occurences), and 0 otherwise.
+The common way to represent documents when utilizing Naive Bayes is in a feature vector form: each document is represented by an $n$-dimensional vector, given $n$ words in the vocabulary, where the value at a word's index is 1 (or optionally the number of occurrences), and 0 otherwise.
 
 Clearly since most documents don't consist of the entire English language, most of these vectors are very sparse (have mostly zeros).
 A major performance issue encountered was that some frameworks stored such a vector in a non-sparse manner, leading to problems with memory usage when training on moderately large data sets.
@@ -127,7 +127,7 @@ The error bars signify the maximum and minimum accuracies found over the 16 tria
 \noindent\includegraphics[width=3.35in]{data.pdf}
 
 \subsection{Conclusion}
-From the above test results, it is apparent that our inital goal of at least 75\% average accuracy is achieved, provided that the user has a reasonably small number of categories, and/or the classifier has a large enough set of training examples. (To be precise, the classifier had over 75\% average accuracy if over 8550 training items were used in the all-category case, or if over 450 training items were used in the 5-category case.)
+From the above test results, it is apparent that our initial goal of at least 75\% average accuracy is achieved, provided that the user has a reasonably small number of categories, and/or the classifier has a large enough set of training examples. (To be precise, the classifier had over 75\% average accuracy if over 8550 training items were used in the all-category case, or if over 450 training items were used in the 5-category case.)
 
 \section{Future Work}
 We believe that this project has potential beyond this course. It is a novel idea in line with the current trend of online services.
