@@ -108,7 +108,7 @@ Another problem encountered was how some frameworks did not seem to be intended 
 We eventually decided on Mallet, due to how it has comparatively reasonable performance and how it lends itself better to developer use. There are still some places where some performance enhancements could be done, for example: each classifier keeps its own hashtable of words to vector-indices, meaning many classifiers being serialized and stored on a database have large amounts of vocabulary information that could be consolidated into a global lookup table. We are ignoring this efficiency problem for now, since the serialized classifiers are currently only 1MB or less in size (which a database can still reasonably handle), and fixing it would require much re-engineering.
 
 \section{Analysis}
-Quantitative analysis of the Mallet Framework's Naive Bayes classifier was done using data from Reuters-21578 corpus \cite{Reuters21578} (a collection of pre-categorized news articles made available for research purposes).
+Quantitative analysis of the Mallet Framework's Naive Bayes classifier was done using data from Reuters-21578 corpus \cite{Reuters21578}, a collection of pre-categorized news articles made available for research purposes.
 
 Since some of the news articles in this collection are listed under multiple categories, and our model allows one category per news item, we set up our parser to ignore all items that span multiple categories. Out of the 21578 articles, there are 9002 that have singular categories, (this creates a set of 66 possible categories for testing).
 
