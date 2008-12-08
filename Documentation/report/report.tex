@@ -59,20 +59,18 @@ The web application service is responsible for retrieving user input, manage the
 \subsubsection{Overview}
 The system is split into four modules: Training, Model, View, Controller.  The Controller module is responsible for processing the requests and sending the responses, the Model module persists objects to the database, the View module contains information about the environment that the user will operate in, and the training module alerts the trainer service of new training operations the user has decided on. 
 
-\noindent\includegraphics[width=3.5in]{MVC.png}
+\noindent\includegraphics[width=3.4in]{MVC.png}
 
-There are several actions the user is able to do: ``starring'' an item (giving positive feedback), recategorizing an item, creating or editing a category, creating or editing a feed, logging in and out, and viewing feed items . 
+There are several actions the user is able to do: give an item positive feedback by ``starring'', recategorizing an item, creating or editing a category, creating or editing a feed, logging in and out, and viewing feed items . 
 
-The training actions -- starring and moving a feed item, and creating a category -- use the Training module. This module contacts the training service via the Python to Java message queue. To not interrupt the user's experience, a thread is create with a Python2Java socket wrapper that sends a set of predefined messages to the trainer service message queue. 
-  
-Logging in and out creates and destroys sessions via cookies in the client side browser. This portion of authentication is handled at a controller level. The database only stores hashed versions of the password so they are not readable by us. 
+The training actions -- starring and moving a feed item, and creating a category -- use the Training module. This module contacts the training service via the Python to Java message queue. To not interrupt the user's experience, a thread is create with a Python2Java socket wrapper that sends a set of predefined messages to the trainer service message queue.
+
+Logging in and out creates and destroys sessions via cookies in the client side browser. This portion of authentication is handled at a controller level. The database only stores hashed versions of the password so they are not readable by us.
 
 If users add, edit, or delete feeds, the web application access its Model module to edit the database itself.  Feeds have a field which contains the date it has last been crawled.  This is used by the reader service to sort the feeds by priority for reading.  When created feeds are given the date January 1st, 2000, so it will immediately be crawled.  Therefore no direct interaction is needed between the reader service and the web application service.
 
 \subsubsection{Technologies}
-
 The web interface is purely HTTP.  It can be reached by requesting pages from a server.  All of the client-side code (strictly code to enhance user interaction, i.e. slide-down windows and collapsible categories) is written in JavaScript and run in the user's internet browser. The templates for the pages are written to HTML 4.0 standards. To handle requests on the server, we have implemented an Model-View-Controller patter using Django, a Python web-framework.  
-
 
 \subsection{Trainer Service}
 The trainer service checks a message queue (see Message Queue subsection) to get training items, each of which consists of a classifier ID, a desired category ID, and a location to find text (either a training set record, or a feed item record).
