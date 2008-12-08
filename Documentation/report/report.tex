@@ -14,22 +14,25 @@ COM S 472 : Principles of Artificial Intelligence\\Department of Computer Scienc
 \maketitle
 
 \begin{abstract}
-For companies that do work updating data based on news stories, many manhours are wasted by reading irrelevant articles. We aim to enhance productivity of this work by creating and analyzing NewsPet: an automated news-feed categorizer which utilizes a Naive Bayes text classifier.
+For companies that do work updating data based on news stories, many manhours are wasted by reading irrelevant articles.
+We aim to enhance productivity of this work by creating and analyzing NewsPet: an automated news-feed categorizer which utilizes a Naive Bayes text classifier.
 \end{abstract}
 
 
 \section{Introduction}
-One of the team members, Michael Fulker, is currently an intern for a company that does management and maintaining of data about companies (relationships between companies, company executives, and similar information). The idea for this project was inspired by a full-time coworker of Michael, who stated it would be nice to be able to use some sort of AI system to analyze news feeds for changes in company relationships and similar information.
+One of the team members, Michael Fulker, is currently an intern for a company that does management and maintaining of data about companies (relationships between companies, company executives, and other such information).
+The idea for this project was inspired by a full-time coworker of Michael, who stated it would be nice to be able to use some sort of AI system to analyze news feeds to and mark items relevant to changes in company relationships and similar information.
 
-//TODO more intro?
+As an attempt to create a solution for this problem, we decided to build a web application around a Naive Bayes classifier. Not being limited to boolean classification (i.e. ``spam'' and ``not spam''), this application allows users to create an arbitrary number of categories, as well as set up an arbitrary number of news feeds to scan. Our system then places news items into these categories according to its current knowledge, and allows the user to submit performance feedback as training (by either manually ``starring'' or recategorizing items).
 
-%TODO \pagebreak
+\pagebreak
 \section{Architecture}
 The system is designed as follows:
 
 \noindent\includegraphics[width=4in]{arch-diagram.pdf}
 
-The web application serves as the user interface, and displays/updates information on the database. Whenever a user gives input that serves as training data, the appropriate information is put on the database and a signal is sent to the trainer service telling it what to process.
+The web application serves as the user interface, and displays/updates information on the database.
+Whenever a user gives input that serves as training data, the appropriate information is put on the database and a signal is sent to the trainer service telling it what to process.
 
 The reader service checks RSS feeds at regular intervals, classifies their news items, and stores them to the database.
 
@@ -38,17 +41,31 @@ The trainer service listens for signals from the web application, and trains/upd
 \subsection{Database}
 The database is structured as follows:
 
-\noindent\includegraphics[width=3.5in]{db-diagram.png}
-//TODO: describe
+\noindent\includegraphics[width=3.5in]{db-diagram-no-transparency.png}
 
+(Arrows indicate a foriegn key reference)
+
+A user has multiple feeds, multiple categories, and one classifier object.
+
+A feed item belongs to a single category and a single feed.
+
+A training set consists of a file path on the application server where a text file can be found.
+
+A classifier record stores the serialized form of all objects needed for classifying and training.
 
 \section{Implementation}
 \subsection{Web Interface}
-The user interface is purely a web interface.  The implementation was created using Django, a Python web-framework.  When a user is created it, it has an initial special category, Trash. All documents that fail to be categorized properly end up in the Trash.  The user has the ability to create as many categories as he or she chooses.  These categories will remain empty unless the user adds feeds, which is where the news items will come from. Both of these can  As news-items are categorized, the user will see them appear
+The user interface is purely a web interface.
+The implementation was created using Django, a Python web-framework.
+When a user is created it,//TODO it has an initial special category, Trash.
+All documents that fail to be categorized properly end up in the Trash.
+The user has the ability to create as many categories as he or she chooses.
+These categories will remain empty unless the user adds feeds, which is where the news items will come from.
+Both of these can //TODO As news-items are categorized, the user will see them appear //TODO
 
 \subsection{Trainer Service}
-The trainer service checks a message queue (see Message Queue subsection) to get training items (each of which consists of a classifier ID, a desired category ID, and a document's text).
-Whenever a message or messages are available on the queue, A batch of training items of the same classifier ID are collected, which are put in a runnable job for execution by a threadpool.
+The trainer service checks a message queue (see Message Queue subsection) to get training items, each of which consists of a classifier ID, a desired category ID, and a location to find text (either a training set record, or a feed item record).
+Whenever a message or messages are available on the queue, a batch of training items of the same classifier ID are collected, which are put in a runnable job for execution by a threadpool.
 
 If multiple batches have the same classifier ID (for example, if new items are added to the message queue when a thread is in the process of training), the access layer for the classifier/trainer objects ensures subsequent threads ones must wait for the preceeding thread to finish.
 
@@ -68,6 +85,17 @@ The classifier object is a \texttt{NaiveBayes} classifier from the Mallet framew
 The trainer service uses a custom Message Queue module for receiving user feedback on classification.
 
 The web application layer makes socket connections to a listening thread spawned by the trainer service.//TODO
+
+\subsection{Remark on Classifier Choice}
+We wanted to incorporate pre-made libraries in our project where possible, and the classifier was no exception. We considered several different classification frameworks, including Weka and jBNC.
+
+The common way to represent documents when utilizing Naive Bayes is in a feature vector form: each document is represented by an $n$-dimensional vector, given $n$ words in the vocabulary, where the value at a word's index is 1 (or optionally the number of occurences), and 0 otherwise. //TODO: add ref?
+Clearly since most documents don't consist of the entire English language, most of these vectors are very sparse (have mostly zeros).
+A major performance issue encountered was that some frameworks stored such a vector in a non-sparse manner, leading to problems with memory overusage when training on moderately large data sets.
+
+Another problem encountered was how some frameworks did not seem to be intended for developer use, and were intended to be used only as a standalone program. The problems encountered with these were sparse/nonexistent documentation, non-modular code, and overall difficulty of incorporating into a different project than their own.
+
+We eventuallly decided on Mallet, due to how it has comparatively reasonable performance and how it lends itself better to developer use. There are still some places where some performance enhancements could be done, for example: each classifier keeps its own hashtable of words to vector-indices, meaning many classifiers being serialized and stored on a database have large amounts of vocabulary information that could be consolidated into a global lookup table. We are ignoring this efficiency problem for now, since the serialized classifiers are currently only 1MB or less in size (which a database can still reasonably handle), and fixing it would require much re-engineering.
 
 \section{Analysis}
 Quantitative analysis of the Mallet Framework's Naive Bayes classifier was done using data from Reuters-21578 corpus \cite{Reuters21578} (a collection of pre-categorized news articles made available for research purposes).
