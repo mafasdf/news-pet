@@ -1,5 +1,5 @@
 {% load feedtags %}
-<div class="post-header">
+<div class="post-header{% if not item.was_viewed %} unread{% endif %}">
     <div>
         <h1><a href='{{item.get_external_url}}'>{{item.title}}</a></h1>
         <ul>

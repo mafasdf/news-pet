@@ -9,7 +9,7 @@
     <ul id="subdirectory-category-{{category.id}}" class="subdirectory">
         {% for item in category.sorted_items %}
         <li>
-            <p class="article"><a href="{{item.get_internal_url}}">{{item.title}}</a></p>
+            <p class="article{% if not item.was_viewed %} unread{% endif %}"><a href="{{item.get_internal_url}}">{{item.title}}</a></p>
             <p class="feed"><a href="{{item.feed.get_absolute_url}}">{{item.feed}}</a></p>
         </li>
         {% endfor %}

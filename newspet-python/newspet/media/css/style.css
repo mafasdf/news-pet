@@ -123,7 +123,12 @@ form.category-select{
     margin: 10px 0px;
     margin-bottom: 5px;
 }
-
+div.unread{
+    border: solid 3px #4c67a2;
+}
+div.unread ul{
+    margin-right: 9px;
+}
 
 
 /*////////////
@@ -216,6 +221,10 @@ form.category-select{
 .collapser{
     padding-right: 2px;
 }
+p.unread{
+    font-weight: bold;
+}
+
 
 /*///////
 | Other |
