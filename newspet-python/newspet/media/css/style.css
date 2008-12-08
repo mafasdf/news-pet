@@ -185,6 +185,7 @@ div.unread ul{
 }
 #sidebar .subdirectory{
     border-bottom: 1px solid #283757;
+    padding-top: 5px;
 }
 #sidebar .subdirectory li{
     padding: 2px 5px;
@@ -209,7 +210,6 @@ div.unread ul{
 #sidebar li.unread{
     font-weight: bold;
     background-color: #f0f3fb;
-    
 }
 .author, .feed{
     font-size: 12px;
