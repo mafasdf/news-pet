@@ -51,7 +51,7 @@ public class OriginalToNewFormat
 		Map<String, PrintWriter> mapTopicsToPrintWriters = getMapToTopicFiles(returnList);
 		
 //		int count = 0;
-		for(int i = 17; i <= 21; i++)
+		for(int i = 0; i <= 21; i++)
 		{
 			String topic = null;
 			String fileName = getFileName(i);
