@@ -20,8 +20,8 @@ public class DocumentProcessing
 		pipesArr.add(new CharSequence2TokenSequence());//TODO pass in pattern
 		//make lowercase
 		pipesArr.add(new TokenSequenceLowercase());
-		//TODO conversionPipes.add(new TokenSequenceRemoveStopwords(false, false));
-		//convert words to integers with centralized mapping.
+		// conversionPipes.add(new TokenSequenceRemoveStopwords(false, false));
+		// convert words to integers
 		pipesArr.add(new TokenSequence2FeatureSequence());
 		
 		//TODO: needed? is there a more efficient workaround?
