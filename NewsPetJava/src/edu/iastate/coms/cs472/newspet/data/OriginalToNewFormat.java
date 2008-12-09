@@ -50,7 +50,8 @@ public class OriginalToNewFormat
 	{
 		Map<String, PrintWriter> mapTopicsToPrintWriters = getMapToTopicFiles(returnList);
 		
-		for(int i = 0; i <= 21; i++)
+//		int count = 0;
+		for(int i = 17; i <= 21; i++)
 		{
 			String topic = null;
 			String fileName = getFileName(i);
@@ -89,7 +90,7 @@ public class OriginalToNewFormat
 						line = doRegularExpressionReplacements(line);
 						
 						PrintWriter topicPW = mapTopicsToPrintWriters.get(topic);
-						topicPW.print(line + " ");
+						topicPW.print(line);
 						
 						state = State.LOOKING_FOR_BODY;
 					}
@@ -97,12 +98,17 @@ public class OriginalToNewFormat
 				case LOOKING_FOR_BODY:
 					if(line.contains(BODY_OPEN_ELEMENT))
 					{
+//						count++;
+//						if(count == 394)
+//						{
+//							System.out.println();
+//						}
 						line = line.substring(line.indexOf(BODY_OPEN_ELEMENT) + BODY_OPEN_ELEMENT.length());
 						StringBuilder sb = new StringBuilder();
 						while(!line.contains(BODY_CLOSE_ELEMENT))
 						{
 							line = doRegularExpressionReplacements(line);
-							sb.append(line);
+							sb.append(" " + line);
 							line = fileIn.nextLine();
 						}
 						int endIndex = line.indexOf(BODY_CLOSE_ELEMENT);
