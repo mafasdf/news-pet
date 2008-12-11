@@ -1,0 +1,37 @@
+\documentclass[12pt]{article}
+
+% Title Page
+\title{COM S 472 Term Project Proposal}
+\author{Michael Fulker, Tony Hauber, Tyson Williams}
+
+
+\begin{document}
+\maketitle
+
+\section{Outline}
+One of the team members, Michael Fulker, is currently an intern for a company that does management and maintaining of data about companies (relationships between companies, company executives, and similar information). The idea for this project was inspired by a full-time coworker of Michael, who stated it would be nice to be able to use some sort of AI system to analyze news feeds for changes in company relationships and similar information.\\
+
+The project will be designing and implementing a system that will:
+\begin{itemize}
+\item Read news feeds from configurable source(s).
+ \item Analyze the text of the news feeds to determine what category(ies) they correspond to (for some configurable set of categories), and notify the user as news items are read that fit these categories.
+ \item The initial feed configuration will be for rss feeds from money.cnn.com.
+ \item The categories that will be initially configured and trained will be:
+	\subitem Company relationship changes.
+	\subitem Company board member changes.
+	\subitem Executives changing.
+\end{itemize}
+
+The preliminary plan for the system is for it to be a web application (for presenting categories and their news items, as well as a means for the user to provide feedback to the system) with a background service that constantly checks feeds.
+
+\section{Member Roles}
+\begin{itemize}
+ \item Michael Fulker: Setting up feed reading module, coordinating AI training.
+ \item Tony Hauber: Setting up Django framework for system.
+ \item Tyson Williams: Algorithms expert.
+ \item All: Development of AI module.
+\end{itemize}
+
+
+
+\end{document}
