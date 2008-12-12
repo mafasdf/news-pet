@@ -29,9 +29,9 @@
                     </ul>
                     <p id="user-info" class="grid_5 omega">
                         {% if user.is_authenticated %}
-                        Welcome <span id="username">{{user}}</span> (<a href="{% url np_logout %}">Log Out</a>)
+                        Welcome <span id="username">{{user}}</span> (<a href="{% url acct_logout %}">Log Out</a>)
                         {% else %}
-                        Please <a href="#">Sign In!</a>
+                        Please <a href="{% url acct_login %}">Sign In!</a>
                         {% endif %}
                     </p>
                 </div>
@@ -46,7 +46,7 @@
                 {% endblock %}
             </div>
             <div id="content" class="grid_11 omega">
-                {% block content %}
+                {% block body %}
                 {% endblock %}
             </div>
         </div>

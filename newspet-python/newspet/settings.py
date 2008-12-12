@@ -64,6 +64,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'pagination.middleware.PaginationMiddleware',
+    'account.middleware.LocaleMiddleware',
+    'django_openid.consumer.SessionConsumer',
+
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -71,7 +74,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
-    "django.core.context_processors.request"
+    "django.core.context_processors.request",
+    "account.context_processors.openid",
+    "account.context_processors.account",
+    "misc.context_processors.contact_email",
+    "misc.context_processors.site_name",
 )
 
 ROOT_URLCONF = 'newspet.urls'
@@ -87,10 +94,16 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
+    'django.contrib.sites',	
     'django.contrib.admin',
     'django_extensions',
     'pagination',
+    'account',
+    'misc',
+    'ajax_validation',
+    'emailconfirmation',
+    'django_openid',
+    'timezones',
 )
 
 LOGIN_REDIRECT_URL = '/'
@@ -98,3 +111,10 @@ LOGIN_URL = '/'
 
 TRAINER_HOST = '129.186.150.71'
 TRAINER_PORT = 60000
+
+EMAIL_CONFIRMATION_DAYS = 2
+EMAIL_DEBUG = DEBUG
+CONTACT_EMAIL = "newspet.issues@gmail.com"
+SITE_NAME = "NewsPet"
+LOGIN_URL = "/account/login"
+LOGIN_REDIRECT_URLNAME = "home"

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "site_base.html" %}
 
 {% block sidebar %}
     <h2>Manage Categories</h2>
@@ -32,7 +32,7 @@
     {% endfor %}
 {% endblock %}
 
-{% block content %}
+{% block body %}
 {% if category %}
 <h1>Edit Category: {{category}}</h1>
 {% else %}

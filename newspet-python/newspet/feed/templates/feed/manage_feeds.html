@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "site_base.html" %}
 
 {% block sidebar %}
     <h2>Manage Feeds</h2>
@@ -17,7 +17,7 @@
     {% endfor %}
 {% endblock %}
 
-{% block content %}
+{% block body %}
 {% if feed %}
 <h1>Edit Feed: {{feed}}</h1>
 {% else %}

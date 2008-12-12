@@ -9,7 +9,6 @@ p{
 }
 
 
-
 /*/////////////////
 | domain specific |
 /////////////////*/
@@ -34,7 +33,7 @@ a:hover{
     border: 1px solid #4c67a2;;
 }
 .dropdown a{
-    color: #4c67a2;;
+    color: #4c67a2;
 }
 .dropdown li{
     padding: 2px;
@@ -64,6 +63,51 @@ form.category-select{
 #id_category{
     width: 100%;
     min-width: 100%;
+}
+
+
+/*/////////
+| Content |
+/////////*/
+#content a{
+    color: #283757;
+}
+#content a:hover{
+    color: #4c67a2;
+}
+
+
+/*/////////////////
+| Authentication |
+////////////////*/
+.left-form{
+    width: 300px;
+    float: left;
+    padding-right: 30px;
+}
+#basic-form legend{
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 10px;
+}
+#basic-form img{
+    vertical-align: middle;
+    padding-right: 10px
+}
+.login td.label{
+    min-width: 150px;
+}
+.login td.field{
+    width: 100%;
+}
+.login td.field input{
+    width: 100%;
+}
+.login td.field input[type=checkbox]{
+    width: 1px;
+}
+#basic-form p, #basic-form span{
+    font-size: 12px;
 }
 
 

@@ -44,7 +44,7 @@ def home(request):
         return login(request, template_name = 'feed/home.html')
 
 @login_required
-def manage_categories(request, category_id=None):
+def manage_categories(request, category_id=None, template='feed/manage_categories.html'):
     category = None
     training_set_form = None
     if category_id is not None:
@@ -61,7 +61,7 @@ def manage_categories(request, category_id=None):
         return HttpResponseRedirect(reverse('f_manage_categories'))
     categories = request.user.category_set.all()
     context = {'category_form': category_form, 'categories': categories, 'training_set_form': training_set_form, 'category': category}
-    return render_to_response('feed/manage_categories.html',context, context_instance = RequestContext(request))
+    return render_to_response(template,context, context_instance = RequestContext(request))
 
 @login_required
 def manage_feeds(request, feed_id=None):
