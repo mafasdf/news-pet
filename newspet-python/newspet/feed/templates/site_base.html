@@ -1,4 +1,5 @@
 {% load feedtags %}
+{% load simpleblog_tags %}
 <html>
     <head>
         <title>NewsPet</title>
@@ -38,12 +39,17 @@
                 <img id="tag" src="/site-media/img/tag.png" />
             </div>
             <div id="sidebar" class='grid_5 alpha'>
-                {% block sidebar %}
-                <h1>Categories</h1>
                 {% if user.is_authenticated %}
-                {% show_categories user %}
+                    {% block sidebar %}
+                    <h1>Categories</h1>
+                    {% if user.is_authenticated %}
+                    {% show_categories user %}
+                    {% endif %}
+                    {% endblock %}
+                {% else %}
+                    <h1>Recent News</h1>
+                    {% get_news 5 %}
                 {% endif %}
-                {% endblock %}
             </div>
             <div id="content" class="grid_11 omega">
                 {% block body %}

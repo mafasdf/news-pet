@@ -1,0 +1,10 @@
+{% if news %}
+<dl class="news">
+    {% for item in news %}
+        <dt>{{ item.title }}</dt>
+        <dd>{{ item.short_blurb }} <a href = '{{ item.get_absolute_url }}'>...</a></dd>
+    {% endfor %}
+</dl>
+{% else %}
+    <p>There currently is no recent news</p>
+{% endif %}

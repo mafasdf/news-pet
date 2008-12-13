@@ -35,13 +35,13 @@ function collapse(){
 //         });
 // });
 function change_category(id){
-    $('#form-category-'+id).toggle();
-    $('#category-'+id).toggle();
+    $('#form-category-name-'+id).toggle();
+    $('#category-name-'+id).toggle();
     $('#change-'+id).text('Cancel').attr('href','javascript:cancel_change_category("'+id+'")');
 }
-function cancel_change_category(id, name){
-    $('#form-category-'+id).toggle();
-    $('#category-'+id).toggle();
+function cancel_change_category(id){
+    $('#form-category-name-'+id).toggle();
+    $('#category-name-'+id).toggle();
     $('#change-'+id).text('Move Item').attr('href','javascript:change_category("'+id+'")');
 }
 $(function() {

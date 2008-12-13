@@ -25,7 +25,7 @@ class FeedItemManager(models.Manager):
         return self.filter(was_viewed = False)
 
 class FeedItem(models.Model):
-# TODO    date_added = models.DateTimeField()
+    date_added = models.DateTimeField()
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     body = models.TextField()
@@ -55,8 +55,8 @@ class FeedItem(models.Model):
     
     def __unicode__(self):
         return self.title
-    # TODO class Meta:
-    #     ordering = ['-date_added']
+    class Meta:
+        ordering = ['-date_added']
     
 class CategoryManager(models.Manager):
     def get_trash(self, user):

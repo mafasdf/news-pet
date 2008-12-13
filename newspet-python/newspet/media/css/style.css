@@ -9,6 +9,18 @@ p{
 }
 
 
+/*/////////
+| Content |
+/////////*/
+#content a{
+    color: #283757;
+}
+#content a:hover{
+    color: #4c67a2;
+}
+
+
+
 /*/////////////////
 | domain specific |
 /////////////////*/
@@ -30,7 +42,7 @@ a:hover{
 .dropdown{
     background-color: #aec8fe;
     padding: 5px;
-    border: 1px solid #4c67a2;;
+    border: 1px solid #4c67a2;
 }
 .dropdown a{
     color: #4c67a2;
@@ -66,15 +78,29 @@ form.category-select{
 }
 
 
-/*/////////
-| Content |
-/////////*/
-#content a{
+
+/*//////
+| News |
+//////*/
+.news a{
+    color: #4c67a2;
+    text-decoration: underline;
+}
+.news a:hover{
     color: #283757;
 }
-#content a:hover{
-    color: #4c67a2;
+.news dt{
+    font-weight: bold;
+    padding: 10px;
 }
+.news dd{
+    padding: 0px 15px;
+    padding-bottom: 10px;
+}
+.news{
+    background-color: #dde5fe;
+}
+
 
 
 /*/////////////////
@@ -126,10 +152,10 @@ form.category-select{
     padding: 5px 12px;
     float: left;
 }
-.post-header a{
+#content .post-header a{
     color: #4c67a2;
 }
-.post-header a:hover{
+#content .post-header a:hover{
     color: #283757;
 }
 .post-header ul{
@@ -156,7 +182,6 @@ form.category-select{
 }
 .post-header .author span{
     color: black;
-    
 }
 .post-header .date{
     width: 150px;

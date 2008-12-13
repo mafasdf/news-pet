@@ -104,12 +104,13 @@ INSTALLED_APPS = (
     'emailconfirmation',
     'django_openid',
     'timezones',
+    'simpleblog',
 )
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/'
 
-TRAINER_HOST = '129.186.150.71'
+TRAINER_HOST = 'bender2k14.dyndns.org'
 TRAINER_PORT = 60000
 
 EMAIL_CONFIRMATION_DAYS = 2

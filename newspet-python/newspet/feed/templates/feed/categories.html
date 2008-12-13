@@ -10,8 +10,9 @@
         {% for item in category.condensed_feed_items %}
         <li {% if not item.was_viewed %}class="unread"{% endif %}>
             <p class="article"><a href="{{item.get_internal_url}}">{{item.title}}</a></p>
-            <p class="feed"><a href="{{item.feed.get_absolute_url}}">{{item.feed}}</a></p>
+            <p class="feed"><a href="{{item.feed.get_absolute_url}}">{{item.feed}} on {{item.date_added}}</a></p>
         </li>
         {% endfor %}
+        <li><p class="feed"><a href="{{ category.get_absolute_url }}">more...</a></p></li>
     </ul>
 {% endfor %}
