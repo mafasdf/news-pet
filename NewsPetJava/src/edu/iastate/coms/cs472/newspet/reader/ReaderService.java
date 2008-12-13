@@ -53,7 +53,7 @@ public class ReaderService
 				}
 				catch(InterruptedException e)
 				{
-					e.printStackTrace();
+					System.err.println("Interrupted while waiting (for " + timeToWait + " ms) to update news feeds.");
 				}
 			}
 			
