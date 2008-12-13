@@ -1,4 +1,5 @@
 {% load feedtags %}
+{% load timezone_filters %}
 <div class="post-header{% if not item.was_viewed %} unread{% endif %}">
     <div>
         <h1><a href='{{item.get_external_url}}'>{{item.title}}</a></h1>
@@ -21,6 +22,8 @@
         </ul>
     </div>
     <div>
-        <p class="author"><span>from</span> <a href="{{item.feed.get_absolute_url}}">{{item.feed}}</a> <span>on {{item.date_added}}</span></p>
+        <p class="author"><span>from</span>
+        <a href="{{item.feed.get_absolute_url}}">{{item.feed}}</a>
+         <span>on {{item.date_added|localtime:account.timezone|date:"l d M Y"}} {{item.date_added|localtime:account.timezone|time:"H:i "}}</span></p>
     </div>
 </div>
