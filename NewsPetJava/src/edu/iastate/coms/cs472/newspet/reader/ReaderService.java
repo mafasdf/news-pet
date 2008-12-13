@@ -20,7 +20,9 @@ public class ReaderService
 {
 	private long rssPollingPeriodMS;
 	
-	private ThreadPoolExecutor threadPool;
+	private ThreadPoolExecutor readRSSThreadPool;
+	
+	private ThreadPoolExecutor processRSSResultThreadPool;
 	
 	public ReaderService()
 	{
@@ -30,7 +32,8 @@ public class ReaderService
 	public ReaderService(long rssPollingPeriodMS, int corePoolSize, int maximumPoolSize, int keepAliveTime, TimeUnit unit)
 	{
 		this.rssPollingPeriodMS = rssPollingPeriodMS;
-		threadPool = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, new LinkedBlockingQueue<Runnable>());
+		readRSSThreadPool = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, new LinkedBlockingQueue<Runnable>());
+		processRSSResultThreadPool = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, new LinkedBlockingQueue<Runnable>());
 	}
 	
 	private void run()
@@ -65,7 +68,7 @@ public class ReaderService
 			for(Feed rssFeed : rssFeeds)
 			{
 				RSSRetrievalJob toRun = new RSSRetrievalJob(channelData, rssFeed);
-				futures.add(threadPool.submit(toRun));
+				futures.add(readRSSThreadPool.submit(toRun));
 			}
 			blockUntilDone(futures);
 			futures.clear();
@@ -76,7 +79,7 @@ public class ReaderService
 				for(ItemIF item : channelPair.getB().getItems())
 				{
 					ItemClassificationJob toRun = new ItemClassificationJob(channelPair.getA(), item);
-					futures.add(threadPool.submit(toRun));
+					futures.add(processRSSResultThreadPool.submit(toRun));
 				}
 			}
 			blockUntilDone(futures);
