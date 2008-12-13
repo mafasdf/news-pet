@@ -1,10 +1,7 @@
 package edu.iastate.coms.cs472.newspet.reader;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -12,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import de.nava.informa.core.ChannelIF;
 import de.nava.informa.core.ItemIF;
 import edu.iastate.coms.cs472.newspet.utils.Feed;
-import edu.iastate.coms.cs472.newspet.utils.Pair;
 import edu.iastate.coms.cs472.newspet.utils.dal.ConnectionConfig;
 import edu.iastate.coms.cs472.newspet.utils.dal.FeedDAL;
 
@@ -60,50 +56,22 @@ public class ReaderService
 			//get list of RSS feeds that need checking
 			List<Feed> rssFeeds = FeedDAL.getFeedsOlderThan(new Date(currentTime + rssPollingPeriodMS));
 			
-			//list to store retrieved channel data
-			List<Pair<Feed, ChannelIF>> channelData = new ArrayList<Pair<Feed, ChannelIF>>(rssFeeds.size());
-			//so we can block until all retrievals are complete
-			List<Future<?>> futures = new ArrayList<Future<?>>(rssFeeds.size());
-			
 			for(Feed rssFeed : rssFeeds)
 			{
-				RSSRetrievalJob toRun = new RSSRetrievalJob(channelData, rssFeed);
-				futures.add(readRSSThreadPool.submit(toRun));
+				RSSRetrievalJob toRun = new RSSRetrievalJob(rssFeed, this);
+				readRSSThreadPool.submit(toRun);
 			}
-			blockUntilDone(futures);
-			futures.clear();
-			
-			//extract out downloaded feeditem information, and create (and submit) a classification job for each  
-			for(Pair<Feed, ChannelIF> channelPair : channelData)
-			{
-				for(ItemIF item : channelPair.getB().getItems())
-				{
-					ItemClassificationJob toRun = new ItemClassificationJob(channelPair.getA(), item);
-					futures.add(processRSSResultThreadPool.submit(toRun));
-				}
-			}
-			blockUntilDone(futures);
 			
 			lastRunTime = System.currentTimeMillis();
 		}
 	}
 	
-	private void blockUntilDone(List<Future<?>> futures)
+	public void addToRSSResultProcessingThreadPool(Feed feed, ChannelIF channel)
 	{
-		for(Future<?> future : futures)
+		for(ItemIF item : channel.getItems())
 		{
-			try
-			{
-				future.get();
-			}
-			catch(InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-			catch(ExecutionException e)
-			{
-				e.printStackTrace();
-			}
+			ItemClassificationJob toRun = new ItemClassificationJob(feed, item);
+			processRSSResultThreadPool.submit(toRun);
 		}
 	}
 	

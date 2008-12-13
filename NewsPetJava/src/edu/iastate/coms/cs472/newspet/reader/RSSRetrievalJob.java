@@ -3,7 +3,6 @@ package edu.iastate.coms.cs472.newspet.reader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Date;
 
 import de.nava.informa.core.ChannelIF;
@@ -11,7 +10,6 @@ import de.nava.informa.core.ParseException;
 import de.nava.informa.impl.basic.ChannelBuilder;
 import de.nava.informa.parsers.FeedParser;
 import edu.iastate.coms.cs472.newspet.utils.Feed;
-import edu.iastate.coms.cs472.newspet.utils.Pair;
 import edu.iastate.coms.cs472.newspet.utils.dal.FeedDAL;
 
 /**
@@ -22,27 +20,22 @@ import edu.iastate.coms.cs472.newspet.utils.dal.FeedDAL;
 public class RSSRetrievalJob implements Runnable
 {
 	/**
-	 * Shared list of results. Must be added to in a synchronized manner.
-	 */
-	private Collection<Pair<Feed, ChannelIF>> resultStorage;
-	
-	/**
 	 * Feed to read from.
 	 */
 	private Feed feed;
 	
+	private ReaderService readerService; 
+	
 	/**
 	 * Creates a new RSS Retrieval job.
-	 * 
-	 * @param resultStorage
-	 *        The location to store retrieved channel data.
 	 * @param feed
 	 *        Feed to read from.
+	 * @param readerService TODO
 	 */
-	public RSSRetrievalJob(Collection<Pair<Feed, ChannelIF>> resultStorage, Feed feed)
+	public RSSRetrievalJob(Feed feed, ReaderService readerService)
 	{
-		this.resultStorage = resultStorage;
 		this.feed = feed;
+		this.readerService = readerService;
 	}
 	
 	/**
@@ -79,11 +72,7 @@ public class RSSRetrievalJob implements Runnable
 			return;
 		}
 		
-		Pair<Feed, ChannelIF> toAdd = new Pair<Feed, ChannelIF>(feed, channel);
-		synchronized(resultStorage)
-		{
-			resultStorage.add(toAdd);
-		}
+		readerService.addToRSSResultProcessingThreadPool(feed, channel);
 		FeedDAL.updateCrawlTime(new Date(System.currentTimeMillis()), feed.getId());
 	}
 }
