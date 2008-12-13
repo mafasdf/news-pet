@@ -18,15 +18,19 @@ import edu.iastate.coms.cs472.newspet.utils.dal.FeedDAL;
 
 public class ReaderService
 {
-	private static final long RSS_POLLING_PERIOD_MILLIS = 60000;//TODO: Is 1 minute for now.
+	private long rssPollingPeriodMS;
 	
 	private ThreadPoolExecutor threadPool;
 	
 	public ReaderService()
 	{
-		//TODO: fine-tune / have configurable params
-		//TODO: not one
-		threadPool = new ThreadPoolExecutor(1, 1, 100, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+		this(60000, 0, 10, 30, TimeUnit.SECONDS);
+	}
+	
+	public ReaderService(long rssPollingPeriodMS, int corePoolSize, int maximumPoolSize, int keepAliveTime, TimeUnit unit)
+	{
+		this.rssPollingPeriodMS = rssPollingPeriodMS;
+		threadPool = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, new LinkedBlockingQueue<Runnable>());
 	}
 	
 	private void run()
@@ -37,7 +41,7 @@ public class ReaderService
 		{
 			long currentTime = System.currentTimeMillis();
 			//wait 
-			long timeToWait = lastRunTime + RSS_POLLING_PERIOD_MILLIS - currentTime;
+			long timeToWait = lastRunTime + rssPollingPeriodMS - currentTime;
 			if(timeToWait >= 0)
 			{
 				try
@@ -51,7 +55,7 @@ public class ReaderService
 			}
 			
 			//get list of RSS feeds that need checking
-			List<Feed> rssFeeds = FeedDAL.getFeedsOlderThan(new Date(currentTime + RSS_POLLING_PERIOD_MILLIS));
+			List<Feed> rssFeeds = FeedDAL.getFeedsOlderThan(new Date(currentTime + rssPollingPeriodMS));
 			
 			//list to store retrieved channel data
 			List<Pair<Feed, ChannelIF>> channelData = new ArrayList<Pair<Feed, ChannelIF>>(rssFeeds.size());
