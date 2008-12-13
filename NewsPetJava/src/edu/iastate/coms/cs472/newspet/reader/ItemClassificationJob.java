@@ -52,7 +52,7 @@ public class ItemClassificationJob implements Runnable
 		Integer trashCategory = CategoryDAL.getTrashCategoryIDForUser(feed.getUserId());
 		
 		//if no classifier trained yet, put all in trash
-		if(classifier==null)
+		if(classifier == null)
 		{
 			FeedItemDAL.saveNewFeedItem(feedItem.getTitle(), feedItem.getCreator(), feedItem.getDescription(), feedItem.getLink().toString(), trashCategory, feed.getId(), feed.getUserId());
 			return;
