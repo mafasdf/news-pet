@@ -9,6 +9,7 @@ import cc.mallet.pipe.SerialPipes;
 import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceLowercase;
+import cc.mallet.pipe.TokenSequenceRemoveStopwords;
 
 public class DocumentProcessing
 {
@@ -20,7 +21,7 @@ public class DocumentProcessing
 		pipesArr.add(new CharSequence2TokenSequence());//TODO pass in pattern
 		//make lowercase
 		pipesArr.add(new TokenSequenceLowercase());
-		// conversionPipes.add(new TokenSequenceRemoveStopwords(false, false));
+		pipesArr.add(new TokenSequenceRemoveStopwords(false, false));
 		// convert words to integers
 		pipesArr.add(new TokenSequence2FeatureSequence());
 		
