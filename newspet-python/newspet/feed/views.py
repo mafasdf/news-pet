@@ -157,6 +157,13 @@ def category_position_change(request, category_id, direction):
         category.save()
     return HttpResponseRedirect(reverse('f_manage_categories'))
 
+def read_all(request, category_id):
+    category = get_object_or_404(Category, id = category_id)
+    for feeditem in category.feed_items():
+        feeditem.was_viewed = True
+        feeditem.save()
+    return HttpResponseRedirect(reverse('f_category', args=[category.id]))
+
 def _check_next_url(next):
     """
     Checks to make sure the next url is not redirecting to another page.

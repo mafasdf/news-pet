@@ -15,4 +15,5 @@ urlpatterns = patterns('',
     url(r'^category/(\d+)/up/$', 'feed.views.category_position_change', {'direction': views.UP_DIRECTION}, name='f_category_up'),
     url(r'^category/(\d+)/down/$', 'feed.views.category_position_change', {'direction': views.DOWN_DIRECTION}, name='f_category_down'),
     url(r'^category/create/$', 'feed.views.manage_categories', name = "what_next", kwargs = {'template':'feed/create_category'}),
+    url(r'^category/(\d+)/readall/$', 'feed.views.read_all', name="f_read_all"),
 )
