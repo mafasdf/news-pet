@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Sun Dec 14 14:19:17 CST 2008
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=TrainerService.jar
+manifest.mergeall=true
+manifest.mainclass=edu.iastate.coms.cs472.newspet.reader.ReaderService
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<po|NewsPetJava>~edu/~iastate/~coms/~cs472/~newspet/~reader/;<po|NewsPetJava>~edu/~iastate/~coms/~cs472/~newspet/~data/;<po|NewsPetJava>~edu/~iastate/~coms/~cs472/~newspet/~analysis/;<po|NewsPetJava>~DemonstrateProblem.class;<jar|commons-logging.jar>;<jar|informa.jar>;<jar|jdom.jar>
+includes=
