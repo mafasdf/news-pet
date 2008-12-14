@@ -178,7 +178,11 @@ public class FeedItemDAL
 		}
 		catch(SQLException e)
 		{
-			throw new RuntimeException("Could not insert feedItem:" + url, e);
+			System.err.println(e.getClass().getName() + " while trying to save a new feed item!");
+			System.err.println("Vender-specific exception code: " + e.getErrorCode());
+			System.err.println("SQL state: " + e.getSQLState());
+			System.err.println("Going to throw a RuntimeException.");
+			throw new RuntimeException("Could not insert feedItem: " + url, e);
 		}
 		finally
 		{
