@@ -6,7 +6,7 @@
         <ul>
             <li class="form-category">
                 <span id="category-name-{{item.id}}" class='category-name'>{{item.category}}</span>
-                <form style="display: none" class="category-select" method="post" action="{% url f_move_item item.id %}" id="form-category-name-{{item.id}}">{% get_category_select user item.category%}</form><br>
+                <form style="display: none" class="category-select" method="post" action="{% url f_move_item item.id %}?next={{request.path}}" id="form-category-name-{{item.id}}">{% get_category_select user item.category%}</form><br>
                 <a id="change-{{item.id}}" class="change" href="javascript:change_category('{{item.id}}')">Move Item</a>
             </li>
             {% if item.category.is_trash %}
@@ -15,7 +15,7 @@
                 {% if item.is_liked %}
                 <li><img class="gold-star" src="{{MEDIA_URL}}img/gold_star.png" /></li>
                 {% else %}
-                <li><a href="{% url f_love_item item.id %}"><img class="star" src="{{MEDIA_URL}}img/star.png" /></a></li>
+                <li><a href="{% url f_love_item item.id %}?next={{request.path}}"><img class="star" src="{{MEDIA_URL}}img/star.png" /></a></li>
                 {% endif %}
             {% endif %}
 
@@ -23,7 +23,7 @@
     </div>
     <div>
         <p class="author"><span>from</span>
-        <a href="{{item.feed.get_absolute_url}}">{{item.feed}}</a>
+        <a href="{{item.feed.get_absolute_url}}?next={{request.path}}">{{item.feed}}</a>
          <span>on {{item.date_added|localtime:account.timezone|date:"l d M Y"}} {{item.date_added|localtime:account.timezone|time:"H:i "}}</span></p>
     </div>
 </div>

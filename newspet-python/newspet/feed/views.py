@@ -109,14 +109,21 @@ def hate_item(request, item_id):
     
 @login_required
 def opinionate(request, item_id, opinion):
+    next = reverse('f_item', args=[item_id])
+    if 'next' in request.GET:
+        next = _check_next_url(request.GET['next']) or next
     item = get_object_or_404(FeedItem, id = item_id, category__owner=request.user)
     item.opinion = opinion
+    item.was_viewed = True
     item.save()
     training.train_item(item, item.category, opinion)
-    return HttpResponseRedirect(reverse('f_item', args=[item.id]))
+    return HttpResponseRedirect(next)
 
 @login_required
-def move(request, item_id):
+def move(request, item_id, redirect=None):
+    next = redirect or reverse('f_item', args=[item_id])
+    if 'next' in request.GET:
+        next = _check_next_url(request.GET['next']) or next
     category_change_form = CategoryChangeForm(request.user, None, data=request.POST)
     if category_change_form.is_valid():
         item = get_object_or_404(FeedItem, id = item_id, category__owner=request.user)
@@ -126,10 +133,11 @@ def move(request, item_id):
         training.train_item(item, new_category, training.GOOD_OPINION)
         item.category = new_category
         item.opinion = training.GOOD_OPINION
+        item.was_viewed = True
         item.save()
     else:
         print category_change_form.errors
-    return HttpResponseRedirect(reverse('f_item', args=[item_id]))
+    return HttpResponseRedirect(next)
 
 UP_DIRECTION = 'up'
 DOWN_DIRECTION = 'down'
@@ -149,6 +157,11 @@ def category_position_change(request, category_id, direction):
         category.save()
     return HttpResponseRedirect(reverse('f_manage_categories'))
 
-        
-    
-    
+def _check_next_url(next):
+    """
+    Checks to make sure the next url is not redirecting to another page.
+    Basically it is a minimal security check.
+    """
+    if '://' in next:
+        return None
+    return next
