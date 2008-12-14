@@ -44,66 +44,74 @@ public class ItemClassificationJob implements Runnable
 	 */
 	public void run()
 	{
-		//check if this item already exists for this user (using URL as an equivalence comparison), and abort if so
-		if(FeedItemDAL.existsURL(feedItem.getLink().toString(), feed.getUserId())) return;
-		
-		Classifier classifier = ClassifierDAL.getClassifier(feed.getUserId());
-		
-		Integer trashCategory = CategoryDAL.getTrashCategoryIDForUser(feed.getUserId());
-		
-		//if no classifier trained yet, put all in trash
-		if(classifier == null)
+		try
 		{
-			FeedItemDAL.saveNewFeedItem(feedItem.getTitle(), feedItem.getCreator(), feedItem.getDescription(), feedItem.getLink().toString(), trashCategory, feed.getId(), feed.getUserId());
-			return;
+			//check if this item already exists for this user (using URL as an equivalence comparison), and abort if so
+			if(FeedItemDAL.existsURL(feedItem.getLink().toString(), feed.getUserId())) return;
+			
+			Classifier classifier = ClassifierDAL.getClassifier(feed.getUserId());
+			
+			Integer trashCategory = CategoryDAL.getTrashCategoryIDForUser(feed.getUserId());
+			
+			//if no classifier trained yet, put all in trash
+			if(classifier == null)
+			{
+				FeedItemDAL.saveNewFeedItem(feedItem.getTitle(), feedItem.getCreator(), feedItem.getDescription(), feedItem.getLink().toString(), trashCategory, feed.getId(), feed.getUserId());
+				return;
+			}
+			
+			//extract out all textual information
+			StringBuilder text = new StringBuilder();
+			if(feedItem.getCreator() != null)
+			{
+				text.append(feedItem.getCreator());
+				text.append(" ");
+			}
+			if(feedItem.getDescription() != null)
+			{
+				text.append(feedItem.getDescription());
+				text.append(" ");
+			}
+			if(feedItem.getSubject() != null)
+			{
+				text.append(feedItem.getSubject());
+				text.append(" ");
+			}
+			if(feedItem.getTitle() != null)
+			{
+				text.append(feedItem.getTitle());
+				text.append(" ");
+			}
+			
+			//strip out any remnant html tags (img tags in description, etc)
+			String bareText = text.toString().replaceAll("<[^<>]*>", " ");
+			
+			LabelVector classificationResultVector = classifier.classify(bareText).getLabelVector();
+			List<Pair<Integer, Double>> categoryProbabilities = getClassificationValues(classificationResultVector);
+			
+			//get maximum probability category
+			Pair<Integer, Double> bestCategory = findBestCategory(categoryProbabilities);
+			
+			int bestCategoryID;
+			//check if probability scaled by the number of categories is at least some cutoff value
+			//(If the probability is too close to 1/numCategories, trash is the chosen category)  
+			if(bestCategory.getB() * categoryProbabilities.size() > PROBABILITY_SIGNIFICANCE_RATIO)
+			{
+				bestCategoryID = bestCategory.getA();
+			}
+			else
+			{
+				bestCategoryID = trashCategory;
+			}
+			
+			//persist a new FeedItem in the proper category
+			FeedItemDAL.saveNewFeedItem(feedItem.getTitle(), feedItem.getCreator(), feedItem.getDescription(), feedItem.getLink().toString(), bestCategoryID, feed.getId(), feed.getUserId());
 		}
-		
-		//extract out all textual information
-		StringBuilder text = new StringBuilder();
-		if(feedItem.getCreator() != null)
+		catch(RuntimeException e)
 		{
-			text.append(feedItem.getCreator());
-			text.append(" ");
+			System.err.println(e.getClass().getName() + " while trying to classifiy an item from the following feed: " + feed);
+			e.printStackTrace();
 		}
-		if(feedItem.getDescription() != null)
-		{
-			text.append(feedItem.getDescription());
-			text.append(" ");
-		}
-		if(feedItem.getSubject() != null)
-		{
-			text.append(feedItem.getSubject());
-			text.append(" ");
-		}
-		if(feedItem.getTitle() != null)
-		{
-			text.append(feedItem.getTitle());
-			text.append(" ");
-		}
-		
-		//strip out any remnant html tags (img tags in description, etc)
-		String bareText = text.toString().replaceAll("<[^<>]*>", " ");
-		
-		LabelVector classificationResultVector = classifier.classify(bareText).getLabelVector();
-		List<Pair<Integer, Double>> categoryProbabilities = getClassificationValues(classificationResultVector);
-		
-		//get maximum probability category
-		Pair<Integer, Double> bestCategory = findBestCategory(categoryProbabilities);
-		
-		int bestCategoryID;
-		//check if probability scaled by the number of categories is at least some cutoff value
-		//(If the probability is too close to 1/numCategories, trash is the chosen category)  
-		if(bestCategory.getB() * categoryProbabilities.size() > PROBABILITY_SIGNIFICANCE_RATIO)
-		{
-			bestCategoryID = bestCategory.getA();
-		}
-		else
-		{
-			bestCategoryID = trashCategory;
-		}
-		
-		//persist a new FeedItem in the proper category
-		FeedItemDAL.saveNewFeedItem(feedItem.getTitle(), feedItem.getCreator(), feedItem.getDescription(), feedItem.getLink().toString(), bestCategoryID, feed.getId(), feed.getUserId());
 	}
 	
 	public static List<Pair<Integer, Double>> getClassificationValues(LabelVector classificationResultVector)

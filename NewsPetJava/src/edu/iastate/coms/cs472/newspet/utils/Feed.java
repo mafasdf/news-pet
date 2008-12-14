@@ -44,4 +44,10 @@ public class Feed
 	{
 		return lastCrawled;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return url;
+	}
 }

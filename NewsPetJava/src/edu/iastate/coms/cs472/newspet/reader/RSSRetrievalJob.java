@@ -43,36 +43,44 @@ public class RSSRetrievalJob implements Runnable
 	 */
 	public void run()
 	{
-		URL url;
-		ChannelIF channel;
 		try
 		{
-			url = new URL(feed.getUrl());
+			URL url;
+			ChannelIF channel;
+			try
+			{
+				url = new URL(feed.getUrl());
+			}
+			catch(MalformedURLException e)
+			{
+				System.err.println(e.getClass().getName());
+				e.printStackTrace();
+				return;
+			}
+			try
+			{
+				channel = FeedParser.parse(new ChannelBuilder(), url);
+			}
+			catch(IOException e)
+			{
+				System.err.println(e.getClass().getName());
+				e.printStackTrace();
+				return;
+			}
+			catch(ParseException e)
+			{
+				System.err.println(e.getClass().getName());
+				e.printStackTrace();
+				return;
+			}
+			
+			readerService.addToRSSResultProcessingThreadPool(feed, channel);
+			FeedDAL.updateCrawlTime(new Date(System.currentTimeMillis()), feed.getId());
 		}
-		catch(MalformedURLException e)
+		catch(RuntimeException e)
 		{
-			System.err.println(e.getClass().getName());
+			System.err.println(e.getClass().getName() + " while trying to update " + feed);
 			e.printStackTrace();
-			return;
 		}
-		try
-		{
-			channel = FeedParser.parse(new ChannelBuilder(), url);
-		}
-		catch(IOException e)
-		{
-			System.err.println(e.getClass().getName());
-			e.printStackTrace();
-			return;
-		}
-		catch(ParseException e)
-		{
-			System.err.println(e.getClass().getName());
-			e.printStackTrace();
-			return;
-		}
-		
-		readerService.addToRSSResultProcessingThreadPool(feed, channel);
-		FeedDAL.updateCrawlTime(new Date(System.currentTimeMillis()), feed.getId());
 	}
 }
